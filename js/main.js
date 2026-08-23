@@ -78,6 +78,43 @@
     el.textContent = new Date().getFullYear();
   });
 
+  /* Fade-in suave de imágenes al cargar (evita el "pop-in" brusco) */
+  document.querySelectorAll("img").forEach(function (img) {
+    if (img.complete && img.naturalWidth) return;
+    img.style.opacity = "0";
+    img.style.transition = "opacity 0.5s ease-out";
+    img.addEventListener("load", function () { img.style.opacity = "1"; }, { once: true });
+  });
+
+  /* Parallax sutil de los blobs del hero al hacer scroll */
+  var blobs = document.querySelectorAll(".hero-bg .blob");
+  if (blobs.length && window.matchMedia("(hover: hover)").matches) {
+    window.addEventListener(
+      "scroll",
+      function () {
+        var y = window.scrollY;
+        blobs.forEach(function (b, i) {
+          b.style.transform = "translateY(" + y * (i % 2 ? 0.12 : -0.08) + "px)";
+        });
+      },
+      { passive: true }
+    );
+  }
+
+  /* Copiar al portapapeles (teléfono / correo) con confirmación */
+  document.querySelectorAll("[data-copy]").forEach(function (el) {
+    el.style.cursor = "pointer";
+    el.addEventListener("click", function () {
+      var value = el.getAttribute("data-copy");
+      var done = function () { showToast("Copiado", value); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done, done);
+      } else {
+        done();
+      }
+    });
+  });
+
   /* ------------------------------------------------------------------ */
   /* Barra de progreso de scroll                                         */
   /* ------------------------------------------------------------------ */
@@ -302,8 +339,13 @@
 
     var statsWrap = modalOverlay.querySelector("[data-m-stats]");
     statsWrap.innerHTML = spec.stats
-      .map(function (s) { return '<div class="spec-item"><b>' + s.v + "</b><span>" + s.u + "</span></div>"; })
+      .map(function (s, i) { return '<div class="spec-item" style="--si:' + i + '"><b>' + s.v + "</b><span>" + s.u + "</span></div>"; })
       .join("");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        statsWrap.querySelectorAll(".spec-item").forEach(function (el) { el.classList.add("in"); });
+      });
+    });
 
     var listWrap = modalOverlay.querySelector("[data-m-list]");
     listWrap.innerHTML = spec.list
