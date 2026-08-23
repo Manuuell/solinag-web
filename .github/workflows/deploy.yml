@@ -50,12 +50,17 @@ jobs:
           # scripts/ son utilidades de Python para recortar imágenes y .claude/
           # es configuración local del editor: nada de eso es parte del sitio
           # publicado, y subirlo solo expondría herramientas internas.
+          # brand/ es material fuente interno (manual de identidad, infografías
+          # del catálogo): ninguna página lo referencia, y publicarlo dejaba el
+          # manual corporativo descargable por cualquiera.
           rsync -az --delete \
             --exclude '.git/' \
             --exclude '.github/' \
             --exclude '.claude/' \
             --exclude 'scripts/' \
+            --exclude 'brand/' \
             --exclude 'README.md' \
+            --exclude 'CONTRIBUTING.md' \
             --exclude '.gitignore' \
             -e "ssh -i ~/.ssh/deploy_key" \
             ./ "$VPS_USER@$VPS_HOST:$DEPLOY_PATH/"
