@@ -1,0 +1,82 @@
+name: Deploy a VPS
+
+# Sitio estático: no hay build ni runtime que reiniciar. El despliegue consiste
+# en copiar los archivos al directorio que nginx sirve.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Dos despliegues solapados escribirían sobre el mismo directorio.
+concurrency:
+  group: deploy-solinag
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # El default de GitHub son 6 horas; esto debería tardar menos de un minuto.
+    timeout-minutes: 10
+    env:
+      DEPLOY_PATH: /var/www/solinag
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar clave SSH
+        # Los secrets se pasan por "env" y no interpolados con ${{ }} dentro del
+        # script: así su valor nunca forma parte del texto del comando.
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Subir el sitio
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          # Red de seguridad: --delete borra en destino lo que no venga en el
+          # repo, así que una ruta de sistema aquí sería destructiva.
+          case "$DEPLOY_PATH" in
+            ""|"/"|"/var"|"/var/www"|"/etc"|"/usr"|"/home"|"/root"|"/opt"|"/bin"|"/boot")
+              echo "::error::DEPLOY_PATH inseguro ('$DEPLOY_PATH'). Debe ser /var/www/solinag."
+              exit 1
+              ;;
+          esac
+          # scripts/ son utilidades de Python para recortar imágenes y .claude/
+          # es configuración local del editor: nada de eso es parte del sitio
+          # publicado, y subirlo solo expondría herramientas internas.
+          rsync -az --delete \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.claude/' \
+            --exclude 'scripts/' \
+            --exclude 'README.md' \
+            --exclude '.gitignore' \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            ./ "$VPS_USER@$VPS_HOST:$DEPLOY_PATH/"
+
+      - name: Verificar el despliegue
+        run: |
+          # Todo curl con --max-time: sin él, un cuelgue de red dejaría el job
+          # corriendo hasta el timeout del runner.
+          curl -fsS --max-time 20 -o /dev/null -w "Inicio: HTTP %{http_code}\n" \
+            https://solinag.duckdns.org/
+          curl -fsS --max-time 20 -o /dev/null -w "CSS:    HTTP %{http_code}\n" \
+            https://solinag.duckdns.org/css/styles.css
+
+          # Una ruta inexistente debe dar 404. Si diera 200, significaría que el
+          # try_files quedó mal y el sitio responde la home a cualquier URL,
+          # que es peor que un 404 porque Google indexaría rutas fantasma.
+          code=$(curl -s --max-time 20 -o /dev/null -w "%{http_code}" \
+            https://solinag.duckdns.org/ruta-que-no-existe)
+          if [ "$code" = "404" ]; then
+            echo "404:    HTTP 404 (correcto)"
+          else
+            echo "::error::Se esperaba 404 en una ruta inexistente, llegó $code."
+            exit 1
+          fi
