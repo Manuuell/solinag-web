@@ -22,3 +22,14 @@ crop_save(base + "sol_p2_x64_575x1280.jpeg", (0, 0, 575, 650), out + "prod-ingen
 
 # Fachada + equipo SOLINAG (real team photo)
 crop_save(base + "sol_p3_x103_399x212.jpeg", (0, 0, 399, 212), out + "team-solinag.jpg")
+
+# --- Catálogo WhatsApp (brand/catalogo/) ---
+cat = "brand/catalogo/"
+
+# Compactadora vertical SOL-CV -- vista frontal completa, con logo SOLINAG visible
+crop_save(cat + "Compactadora Vertical de 60 ton SOL-CV60M.jpeg", (680, 190, 1015, 545),
+          out + "prod-compactadora-vertical.jpg")
+
+# Línea de lavado y secado PET SOL-LP -- fila de equipos del encabezado
+crop_save(cat + "Líneas de Lavado y Secado de Hojuelas PET - Serie SOL-LP.jpeg", (410, 208, 1024, 412),
+          out + "prod-lavado-pet.jpg")

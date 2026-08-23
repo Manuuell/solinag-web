@@ -165,19 +165,17 @@
   /* ------------------------------------------------------------------ */
   /* Widget stack: chips que rotan automáticamente (estilo iOS widget)   */
   /* ------------------------------------------------------------------ */
-  var stack = document.querySelector(".widget-stack");
-  if (stack) {
+  document.querySelectorAll(".widget-stack").forEach(function (stack) {
     var items = stack.querySelectorAll(".w-item");
     var wi = 0;
-    if (items.length) {
-      items[0].classList.add("show");
-      setInterval(function () {
-        items[wi].classList.remove("show");
-        wi = (wi + 1) % items.length;
-        items[wi].classList.add("show");
-      }, 2600);
-    }
-  }
+    if (!items.length) return;
+    items[0].classList.add("show");
+    setInterval(function () {
+      items[wi].classList.remove("show");
+      wi = (wi + 1) % items.length;
+      items[wi].classList.add("show");
+    }, 2600);
+  });
 
   /* ------------------------------------------------------------------ */
   /* Sub-nav tipo segmented control con scroll-spy                       */
@@ -222,34 +220,74 @@
   /* Quick look: modal de ficha técnica con datos reales de producto     */
   /* ------------------------------------------------------------------ */
   var SPECS = {
-    compactadora: {
+    molino: {
       tag: "Maquinaria y equipos",
-      title: "Compactadora SOL-MTC-15",
+      title: "Molino Triturador Compacto SOL-MTC",
       img: "assets/img/prod-compactadora.jpg",
-      intro: "Trituradora/compactadora industrial para reciclaje, diseñada para trabajo pesado y operación continua.",
+      intro: "Molino triturador industrial para reciclaje de plásticos, con corte progresivo tipo tijera, disponible en tres capacidades según tu operación.",
       stats: [
-        { v: "200–250", u: "kg/h de capacidad" },
+        { v: "200–250", u: "kg/h de capacidad (MTC-15)" },
         { v: "15 HP", u: "potencia del motor" },
         { v: "500–520", u: "RPM del rotor" },
         { v: "4:1", u: "relación de corte" },
       ],
+      table: {
+        headers: ["Modelo", "Capacidad (PET)", "Motor", "RPM rotor"],
+        rows: [
+          ["SOL-MTC-05", "50–100 kg/h", "5 HP", "430–450"],
+          ["SOL-MTC-15", "200–250 kg/h", "15 HP", "500–520"],
+          ["SOL-MTC-30", "450–500 kg/h", "30 HP", "550–600"],
+        ],
+      },
       list: [
         "Alimentación eléctrica 220/440 V trifásico – 60 Hz",
         "Sistema de trituración de corte progresivo tipo tijera",
         "Transmisión por poleas y doble banda tipo C",
       ],
     },
+    "compactadora-vertical": {
+      tag: "Maquinaria y equipos",
+      title: "Compactadora Hidráulica Vertical SOL-CV",
+      img: "assets/img/prod-compactadora-vertical.jpg",
+      intro: "Compactadora hidráulica vertical multipropósito para reducir el volumen de cartón, PET, archivo, plásticos y latas, disponible en tres capacidades de fuerza.",
+      stats: [
+        { v: "15–60", u: "toneladas de fuerza" },
+        { v: "hasta 1.000", u: "kg por fardo" },
+        { v: "220V", u: "trifásico según modelo" },
+      ],
+      table: {
+        headers: ["Modelo", "Fuerza", "Cámara", "Peso equipo"],
+        rows: [
+          ["SOL-CV15M", "15 Ton", "1,0 m³", "1.050 kg"],
+          ["SOL-CV30M", "30 Ton", "1,20 m³", "2.500 kg"],
+          ["SOL-CV60M", "60 Ton · doble cilindro", "1,80 m³", "≈4.200 kg"],
+        ],
+      },
+      list: [
+        "Estructura en acero reforzado de alta resistencia",
+        "Sistema hidráulico de alta presión y operación eléctrica segura",
+        "Compatible con PET, cartón, archivo, plásticos y latas",
+        "Reduce volumen y costos logísticos de transporte",
+      ],
+    },
     bicitriciclo: {
       tag: "Movilidad y reciclaje",
-      title: "Bicitriciclo SOL-BT-M01",
+      title: "Bicitriciclo de carga SOL-BT",
       img: "assets/img/prod-bicitriciclo.jpg",
-      intro: "Vehículo de tracción manual para recolección y logística urbana o rural, de bajas emisiones.",
+      intro: "Vehículo de tracción manual o eléctrica para recolección y logística urbana o rural, de bajas emisiones y bajo costo de operación.",
       stats: [
         { v: "250 kg", u: "carga útil" },
         { v: "1,0 m³", u: "capacidad canastilla" },
       ],
+      table: {
+        headers: ["Modelo", "Tracción", "Batería", "Autonomía"],
+        rows: [
+          ["SOL-BT-M01", "Manual (pedaleo)", "—", "—"],
+          ["SOL-BT-ME01G", "Eléctrica", "GEL 48V", "Hasta 30 km"],
+          ["SOL-BT-ME01L", "Eléctrica", "Litio 48V", "Hasta 50 km"],
+        ],
+      },
       list: [
-        "Tracción manual por pedaleo",
         "Frenos de disco delantero y trasero",
         "Suspensión delantera para mayor comodidad",
         "Estructura en acero al carbono de alta resistencia",
@@ -258,19 +296,44 @@
     },
     "linea-pet": {
       tag: "Estructuras industriales",
-      title: "Línea de reciclaje SMC-PET 4",
+      title: "Sistema modular de clasificación PET SMC-PET 4",
       img: "assets/img/prod-linea-pet.jpg",
-      intro: "Línea modular para clasificación y transformación de botellas PET, escalable según el volumen de operación.",
+      intro: "Sistema modular de clasificación para 4 operarios, que separa y recupera botellas PET postconsumo antes del lavado o la compactación.",
       stats: [
         { v: "150–400", u: "kg/h de PET mixto" },
         { v: "2100 mm", u: "altura de descarga" },
         { v: "1,0 m³", u: "capacidad de tolva" },
       ],
       list: [
-        "Estructura modular y escalable",
-        "Estructura industrial robusta para trabajo pesado",
-        "Ideal para cooperativas y plantas de aprovechamiento",
-        "Ideal para empresas de gestión de residuos y proyectos municipales",
+        "Estructura modular y escalable, banda transportadora de 5.000 mm",
+        "4 tolvas de recolección desmontables en lámina galvanizada",
+        "Ideal para cooperativas, plantas de aprovechamiento y proyectos municipales",
+        "Compatible con molino, compactadora y Big Bag para completar la línea",
+      ],
+    },
+    "lavado-pet": {
+      tag: "Estructuras industriales",
+      title: "Líneas de Lavado y Secado PET SOL-LP",
+      img: "assets/img/prod-lavado-pet.jpg",
+      intro: "Línea modular de lavado, enjuague y secado de hojuelas PET postconsumo, que elimina impurezas, etiquetas y residuos para obtener hojuela limpia y seca de alta calidad.",
+      stats: [
+        { v: "100–500", u: "kg/h según modelo" },
+        { v: "1,5–3,0", u: "m³/h de agua" },
+        { v: "AISI 304", u: "en contacto con el material" },
+      ],
+      table: {
+        headers: ["Modelo", "Capacidad", "Aplicación recomendada"],
+        rows: [
+          ["SOL-LP100", "Hasta 100 kg/h", "Recicladores y centros de acopio"],
+          ["SOL-LP250", "Hasta 250 kg/h", "Reciclaje de pequeña y mediana escala"],
+          ["SOL-LP500", "Hasta 500 kg/h", "Plantas de mediana y alta producción"],
+        ],
+      },
+      list: [
+        "Estructura en acero ASTM A36 con pintura epóxica de alta resistencia",
+        "Operación continua, requiere 1–2 operadores por turno",
+        "Complemento opcional: Skid de tratamiento y recuperación de agua SOL-WR500, recircula hasta 70% del agua del proceso",
+        "Garantía de 12 meses por defectos de fabricación",
       ],
     },
     medida: {
@@ -307,6 +370,7 @@
       '<div class="modal-media"><img data-m-img alt="" /></div>' +
       '<p data-m-intro style="color:var(--ink-soft)"></p>' +
       '<div class="spec-grid" data-m-stats></div>' +
+      '<div class="table-wrap" data-m-table-wrap style="display:none"><table class="spec-compare" data-m-table></table></div>' +
       '<ul class="modal-list" data-m-list></ul>' +
       '<div class="modal-actions">' +
       '<a class="btn btn-primary" data-m-cta target="_blank" rel="noopener">Cotizar por WhatsApp</a>' +
@@ -346,6 +410,19 @@
         statsWrap.querySelectorAll(".spec-item").forEach(function (el) { el.classList.add("in"); });
       });
     });
+
+    var tableWrap = modalOverlay.querySelector("[data-m-table-wrap]");
+    if (spec.table) {
+      var table = modalOverlay.querySelector("[data-m-table]");
+      var theadHtml = "<thead><tr>" + spec.table.headers.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr></thead>";
+      var tbodyHtml = "<tbody>" + spec.table.rows.map(function (row) {
+        return "<tr>" + row.map(function (cell) { return "<td>" + cell + "</td>"; }).join("") + "</tr>";
+      }).join("") + "</tbody>";
+      table.innerHTML = theadHtml + tbodyHtml;
+      tableWrap.style.display = "";
+    } else {
+      tableWrap.style.display = "none";
+    }
 
     var listWrap = modalOverlay.querySelector("[data-m-list]");
     listWrap.innerHTML = spec.list
