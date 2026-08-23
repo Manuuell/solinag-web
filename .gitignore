@@ -1,3 +1,4 @@
 scripts/_*.png
+scripts/_extracted/
 .DS_Store
 Thumbs.db
