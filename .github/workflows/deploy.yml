@@ -53,7 +53,11 @@ jobs:
           # brand/ es material fuente interno (manual de identidad, infografías
           # del catálogo): ninguna página lo referencia, y publicarlo dejaba el
           # manual corporativo descargable por cualquiera.
-          rsync -az --delete \
+          # --delete-excluded, además de --delete: sin él, rsync trata lo
+          # excluido como intocable y también lo protege del borrado, así que
+          # brand/ seguía publicado de un despliegue anterior. Con esta bandera
+          # el destino queda siendo exactamente lo que el repo publica.
+          rsync -az --delete --delete-excluded \
             --exclude '.git/' \
             --exclude '.github/' \
             --exclude '.claude/' \
