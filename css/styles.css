@@ -751,7 +751,7 @@ body.modal-lock { overflow: hidden; }
 /* --------------------------------- Mobile tab bar -------------------------------- */
 .tab-bar {
   display: none;
-  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 140;
+  position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 140;
   background: rgba(255,255,255,0.82);
   border: 1px solid rgba(255,255,255,0.6);
   backdrop-filter: saturate(180%) blur(20px);
@@ -770,8 +770,8 @@ body.modal-lock { overflow: hidden; }
 .tab-bar a.active { color: var(--blue-600); background: var(--blue-100); transform: translateY(-2px); }
 @media (max-width: 720px) {
   .tab-bar { display: flex; }
-  .wa-float { bottom: 92px; }
-  body { padding-bottom: 84px; }
+  .wa-float { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  body { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* --------------------------------- Responsive -------------------------------- */
