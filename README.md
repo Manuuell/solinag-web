@@ -57,6 +57,22 @@ los archivos al VPS por rsync y verifica que el sitio responda.
 No hay que reiniciar nada — al ser estático, los archivos nuevos se sirven de
 inmediato.
 
+### Al pasar a producción
+
+Hay configuración que **vive en el servidor, no en el repo**, y por lo tanto no
+viaja con el despliegue. Al montar el vhost de `www.solinag.com.co`:
+
+- **El vhost de producción NO debe llevar `X-Robots-Tag`.** El de staging sí lo
+  tiene (`noindex, nofollow`), que es lo que evita que los dos sitios compitan
+  como contenido duplicado mientras sirven lo mismo. Si el vhost nuevo se copia
+  del de staging, se arrastra la cabecera y el sitio real queda desindexado sin
+  que nada parezca roto.
+- El paso *Verificar el despliegue* del workflow apunta a `solinag.duckdns.org`
+  por URL fija: hay que decidir si sigue validando staging o pasa a producción.
+- Lo que ya está listo en el repo y no hay que tocar: los `canonical`, `og:url`
+  y `og:image` de las cuatro páginas, `robots.txt` y `sitemap.xml` apuntan todos
+  a `https://www.solinag.com.co/`.
+
 ## Marca
 
 - Azul corporativo `#2144A1` · Verde corporativo `#89F336`
