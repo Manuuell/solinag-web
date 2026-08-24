@@ -1,7 +1,8 @@
 name: Deploy a VPS
 
-# Sitio estático: no hay build ni runtime que reiniciar. El despliegue consiste
-# en copiar los archivos al directorio que nginx sirve.
+# El sitio pasó a ser un proyecto Astro: ya no se copian los archivos del repo
+# tal cual, sino el resultado de `npm run build`. Sigue siendo HTML estático,
+# así que nginx no necesita nada nuevo y no hay proceso que reiniciar.
 on:
   push:
     branches: [main]
@@ -15,12 +16,37 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # El default de GitHub son 6 horas; esto debería tardar menos de un minuto.
-    timeout-minutes: 10
+    # El default de GitHub son 6 horas; esto debería tardar un par de minutos.
+    timeout-minutes: 15
     env:
       DEPLOY_PATH: /var/www/solinag
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` y no `npm install`: instala exactamente lo que fija
+      # package-lock.json y falla si los dos archivos se desincronizan.
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar el sitio
+        run: npm run build
+
+      # Si el build se vacía o falla a medias, sin esta comprobación el rsync
+      # de más abajo borraría el sitio en producción con --delete.
+      - name: Verificar el build
+        run: |
+          for pagina in index soluciones proyectos nosotros 404; do
+            if [ ! -s "dist/$pagina.html" ]; then
+              echo "::error::Falta dist/$pagina.html o está vacío. No se despliega."
+              exit 1
+            fi
+          done
+          echo "5 páginas generadas correctamente."
 
       - name: Preparar clave SSH
         # Los secrets se pasan por "env" y no interpolados con ${{ }} dentro del
@@ -40,43 +66,42 @@ jobs:
           VPS_USER: ${{ secrets.VPS_USER }}
         run: |
           # Red de seguridad: --delete borra en destino lo que no venga en el
-          # repo, así que una ruta de sistema aquí sería destructiva.
+          # origen, así que una ruta de sistema aquí sería destructiva.
           case "$DEPLOY_PATH" in
             ""|"/"|"/var"|"/var/www"|"/etc"|"/usr"|"/home"|"/root"|"/opt"|"/bin"|"/boot")
               echo "::error::DEPLOY_PATH inseguro ('$DEPLOY_PATH'). Debe ser /var/www/solinag."
               exit 1
               ;;
           esac
-          # scripts/ son utilidades de Python para recortar imágenes y .claude/
-          # es configuración local del editor: nada de eso es parte del sitio
-          # publicado, y subirlo solo expondría herramientas internas.
-          # brand/ es material fuente interno (manual de identidad, infografías
-          # del catálogo): ninguna página lo referencia, y publicarlo dejaba el
-          # manual corporativo descargable por cualquiera.
-          # --delete-excluded, además de --delete: sin él, rsync trata lo
-          # excluido como intocable y también lo protege del borrado, así que
-          # brand/ seguía publicado de un despliegue anterior. Con esta bandera
-          # el destino queda siendo exactamente lo que el repo publica.
-          rsync -az --delete --delete-excluded \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude '.claude/' \
-            --exclude 'scripts/' \
-            --exclude 'brand/' \
-            --exclude 'README.md' \
-            --exclude 'CONTRIBUTING.md' \
-            --exclude '.gitignore' \
+
+          # Ya no hace falta la lista de --exclude que tenía la versión anterior
+          # (brand/, scripts/, .claude/, README…): dist/ contiene exactamente lo
+          # que se publica y nada más. El material fuente sigue versionado en el
+          # repo, pero no entra al build.
+          rsync -az --delete \
             -e "ssh -i ~/.ssh/deploy_key" \
-            ./ "$VPS_USER@$VPS_HOST:$DEPLOY_PATH/"
+            dist/ "$VPS_USER@$VPS_HOST:$DEPLOY_PATH/"
 
       - name: Verificar el despliegue
         run: |
           # Todo curl con --max-time: sin él, un cuelgue de red dejaría el job
           # corriendo hasta el timeout del runner.
-          curl -fsS --max-time 20 -o /dev/null -w "Inicio: HTTP %{http_code}\n" \
+          curl -fsS --max-time 20 -o /dev/null -w "Inicio:     HTTP %{http_code}\n" \
             https://solinag.duckdns.org/
-          curl -fsS --max-time 20 -o /dev/null -w "CSS:    HTTP %{http_code}\n" \
-            https://solinag.duckdns.org/css/styles.css
+          curl -fsS --max-time 20 -o /dev/null -w "Soluciones: HTTP %{http_code}\n" \
+            https://solinag.duckdns.org/soluciones.html
+
+          # El CSS ya no vive en una ruta fija: Astro le pone un hash al nombre.
+          # Se extrae del HTML y se comprueba que realmente se sirva, que es lo
+          # que detectaría un despliegue a medias.
+          css=$(curl -fsS --max-time 20 https://solinag.duckdns.org/ \
+                | grep -o '/_astro/[^"]*\.css' | head -1)
+          if [ -z "$css" ]; then
+            echo "::error::No se encontró la hoja de estilos en el HTML publicado."
+            exit 1
+          fi
+          curl -fsS --max-time 20 -o /dev/null -w "CSS:        HTTP %{http_code} ($css)\n" \
+            "https://solinag.duckdns.org$css"
 
           # Una ruta inexistente debe dar 404. Si diera 200, significaría que el
           # try_files quedó mal y el sitio responde la home a cualquier URL,
@@ -84,7 +109,7 @@ jobs:
           code=$(curl -s --max-time 20 -o /dev/null -w "%{http_code}" \
             https://solinag.duckdns.org/ruta-que-no-existe)
           if [ "$code" = "404" ]; then
-            echo "404:    HTTP 404 (correcto)"
+            echo "404:        HTTP 404 (correcto)"
           else
             echo "::error::Se esperaba 404 en una ruta inexistente, llegó $code."
             exit 1

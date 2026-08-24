@@ -1,0 +1,24 @@
+---
+/** Banner degradado de llamada a la acción, al pie de varias páginas. */
+const { titulo, texto } = Astro.props;
+---
+
+<div
+  class="reveal relative flex flex-wrap items-center justify-between gap-7 overflow-hidden
+         rounded-xl bg-linear-120 from-blue-800 from-0% via-blue-600 via-60% to-green-700
+         px-7 py-10 md:px-12 md:py-14"
+>
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background: radial-gradient(420px 220px at 90% 10%, rgb(137 243 54 / 0.35), transparent 60%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative">
+    <h3 class="max-w-[20ch] text-[clamp(22px,3vw,30px)] text-white">{titulo}</h3>
+    {texto && <p class="mt-2.5 max-w-[46ch] text-white/78">{texto}</p>}
+  </div>
+
+  <div class="relative flex flex-wrap gap-3"><slot /></div>
+</div>

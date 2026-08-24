@@ -1,0 +1,43 @@
+---
+/**
+ * Botón del sistema de diseño. Renderiza <a> si recibe href, si no <button>.
+ * Reemplaza a las clases .btn / .btn-primary / .btn-dark… del CSS original.
+ */
+const {
+  variante = "primary",
+  tamano = "md",
+  bloque = false,
+  href,
+  class: clase = "",
+  ...resto
+} = Astro.props;
+
+const BASE =
+  "inline-flex items-center justify-center gap-2 rounded-full font-bold whitespace-nowrap " +
+  "transition-[transform,box-shadow,background-color,color] duration-200 ease-spring active:scale-[0.96] " +
+  "[&_svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:flex-none";
+
+const VARIANTES = {
+  primary: "bg-green-500 text-blue-900 shadow-green hover:-translate-y-0.5 hover:scale-[1.015]",
+  dark: "bg-blue-600 text-white shadow-blue hover:-translate-y-0.5 hover:scale-[1.015] hover:bg-blue-700",
+  ghost:
+    "bg-white/60 text-ink border border-line backdrop-blur-[10px] hover:bg-white hover:-translate-y-0.5",
+  "outline-light":
+    "bg-white/10 text-white border-[1.5px] border-white/40 backdrop-blur-[10px] hover:bg-white/20 hover:-translate-y-0.5",
+  whatsapp:
+    "bg-whatsapp text-whatsapp-ink shadow-[0_16px_34px_-14px_rgb(37_211_102/0.55)] hover:-translate-y-0.5 hover:scale-[1.015]",
+};
+
+const TAMANOS = {
+  md: "px-[26px] py-[15px] text-[15px]",
+  sm: "px-[18px] py-2.5 text-[13.5px]",
+};
+
+const clases = [BASE, VARIANTES[variante], TAMANOS[tamano], bloque && "w-full", clase]
+  .filter(Boolean)
+  .join(" ");
+
+const Etiqueta = href ? "a" : "button";
+---
+
+<Etiqueta class={clases} href={href} {...resto}><slot /></Etiqueta>

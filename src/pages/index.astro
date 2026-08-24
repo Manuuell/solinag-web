@@ -1,0 +1,266 @@
+---
+import Base from "../layouts/Base.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Seccion from "../components/Seccion.astro";
+import CabeceraSeccion from "../components/CabeceraSeccion.astro";
+import TarjetaPilar from "../components/TarjetaPilar.astro";
+import BannerCta from "../components/BannerCta.astro";
+import Boton from "../components/Boton.astro";
+import Icono from "../components/Icono.astro";
+import { ruta } from "../data/sitio.js";
+
+const EJES = [
+  {
+    icono: "agro",
+    tono: "green",
+    titulo: "Agro",
+    texto: "Soluciones para procesos y operaciones agroindustriales, pensadas para aumentar la productividad en campo y planta.",
+  },
+  {
+    icono: "engranaje",
+    tono: "blue",
+    titulo: "Industria",
+    texto: "Maquinaria, equipos y estructuras industriales diseñadas y fabricadas para exigencias reales de operación.",
+  },
+  {
+    icono: "proceso",
+    tono: "navy",
+    titulo: "Sostenibilidad",
+    texto: "Tecnología para reciclaje, aprovechamiento de recursos y economía circular con impacto ambiental positivo.",
+  },
+];
+
+const PORQUE = [
+  { icono: "llave", titulo: "Ingeniería", texto: "Diseñamos soluciones a medida para tu necesidad." },
+  { icono: "fabrica", titulo: "Fabricación", texto: "Transformamos el diseño en equipos reales." },
+  { icono: "bombilla", titulo: "Innovación", texto: "Aplicamos tecnología y mejoramos procesos." },
+  { icono: "hoja", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente." },
+];
+
+const VISTAZO = [
+  { icono: "caja", tono: "blue", titulo: "Maquinaria y equipos", texto: "Compactadoras, equipos de reciclaje y máquinas especiales.", ancla: "maquinaria" },
+  { icono: "edificio", tono: "navy", titulo: "Estructuras industriales", texto: "Plataformas, mezanines, cubiertas y estructuras especiales.", ancla: "estructuras" },
+  { icono: "bici", tono: "green", titulo: "Movilidad y reciclaje", texto: "Bicitriciclos y sistemas de recolección para economía circular.", ancla: "movilidad" },
+  { icono: "diana", tono: "blue", titulo: "Ingeniería a medida", texto: "Diseño mecánico, modelado 3D e ingeniería de detalle.", ancla: "medida" },
+];
+
+const INSIGNIAS = [
+  { valor: "Agro", texto: "Soluciones agroindustriales" },
+  { valor: "Industria", texto: "Maquinaria y estructuras" },
+  { valor: "Sostenibilidad", texto: "Economía circular" },
+];
+
+const CHIPS_HERO = [
+  { icono: "grafico", texto: "Ingeniería a medida" },
+  { icono: "reloj", texto: "200–400 kg/h de capacidad" },
+  { icono: "mas", texto: "Modelado 3D y detalle" },
+];
+---
+
+<Base
+  titulo="SOLINAG SAS · Innovación que transforma"
+  descripcion="SOLINAG SAS diseña y fabrica soluciones de ingeniería para el agro, la industria y la sostenibilidad: maquinaria, estructuras industriales, movilidad y reciclaje, e ingeniería a medida."
+  ogDescripcion="Ingeniería, fabricación e innovación para el agro, la industria y la sostenibilidad."
+  actual="inicio"
+  datosEstructurados
+>
+  <section class="sobre-oscuro relative overflow-hidden rounded-b-xl pt-16 pb-18 md:pb-25">
+    <div class="hero-bg" data-hero-bg>
+      <span class="blob blob-1"></span>
+      <span class="blob blob-2"></span>
+    </div>
+
+    <Contenedor class="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <span
+          class="inline-flex items-center gap-2 rounded-full border border-white/24 bg-white/12
+                 px-4 py-2 text-[13px] font-bold tracking-[0.03em] text-white backdrop-blur-[10px]
+                 [&_svg]:h-2.5 [&_svg]:w-2.5 [&_svg]:text-green-500"
+        >
+          <Icono nombre="punto" />
+          Ingeniería · Agro · Industria · Sostenibilidad
+        </span>
+
+        <h1 class="mt-5 text-[clamp(38px,5.6vw,64px)] text-white">
+          Innovación<br /><span class="text-green-500">que transforma</span>
+        </h1>
+
+        <p class="mt-4.5 max-w-[52ch] text-[clamp(16px,1.7vw,19px)] text-white/78">
+          Diseñamos y fabricamos soluciones de ingeniería a la medida de nuestros clientes,
+          integrando diseño, fabricación y tecnología para el agro, la industria y la
+          sostenibilidad.
+        </p>
+
+        <div class="mt-8.5 flex flex-wrap gap-3.5">
+          <Boton href={ruta("soluciones")} variante="primary">
+            Ver soluciones
+            <Icono nombre="flecha" />
+          </Boton>
+          <Boton href={ruta("nosotros", "contacto")} variante="outline-light">Cotizar ahora</Boton>
+        </div>
+
+        <div class="mt-12 flex flex-wrap gap-7">
+          {INSIGNIAS.map((i) => (
+            <div>
+              <b class="block text-[22px] font-extrabold text-white">{i.valor}</b>
+              <span class="text-[13px] text-white/60">{i.texto}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div
+        class="relative mx-auto -order-1 grid aspect-square w-full max-w-[420px] place-items-center
+               [perspective:1200px] lg:order-none lg:max-w-none"
+        data-hero-visual
+      >
+        <span
+          class="absolute inset-0 rounded-full border-[1.5px] border-dashed border-white/22"
+          style="animation: spin 40s linear infinite"
+          aria-hidden="true"></span>
+
+        <div
+          class="relative z-2 w-[82%] rounded-xl border border-white/25 bg-white/10 p-10
+                 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.45)] backdrop-blur-[18px]
+                 [transform-style:preserve-3d] [transition:transform_0.35s_var(--ease-out-soft)]
+                 animate-floaty"
+          data-hero-card
+        >
+          <img
+            src="/assets/img/logo-icon.png"
+            alt="Símbolo SOLINAG: ingeniería y sostenibilidad"
+            width="707"
+            height="684"
+            class="w-full [filter:drop-shadow(0_20px_40px_rgb(0_0_0/0.35))]"
+          />
+        </div>
+
+        <div
+          class="absolute top-[6%] -left-[4%] z-3 flex w-52 items-center gap-2.5 rounded-md
+                 bg-white px-4 py-3 text-[13.5px] font-bold text-ink shadow-lg animate-floaty
+                 [animation-delay:0.4s]"
+        >
+          <div class="widget-stack h-[46px] w-full">
+            {CHIPS_HERO.map((c) => (
+              <span class="w-item">
+                <Icono nombre={c.icono} class="h-4 w-4 flex-none text-blue-600" />
+                {c.texto}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div
+          class="absolute -right-[6%] bottom-[8%] z-3 flex items-center gap-2.5 rounded-md bg-white
+                 px-4 py-3 text-[13.5px] font-bold text-ink shadow-lg animate-floaty"
+        >
+          <Icono nombre="check" class="h-4 w-4 text-green-700" />
+          Fabricación con calidad
+        </div>
+      </div>
+    </Contenedor>
+  </section>
+
+  <Seccion>
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="¿Qué hacemos?"
+        titulo="Tres ejes, una misma transformación"
+        entradilla="Resolvemos necesidades reales de nuestros clientes integrando diseño, fabricación y tecnología, con un enfoque responsable con el medio ambiente."
+      />
+      <div class="reveal-stagger grid gap-6 lg:grid-cols-3">
+        {EJES.map((e, i) => (
+          <TarjetaPilar icono={e.icono} tono={e.tono} titulo={e.titulo} indice={i}>
+            {e.texto}
+          </TarjetaPilar>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta>
+    <Contenedor>
+      <div class="reveal relative overflow-hidden rounded-xl bg-blue-900 px-7 py-16 md:px-10">
+        <div
+          class="pointer-events-none absolute inset-0"
+          style="background: radial-gradient(500px 260px at 90% 100%, rgb(137 243 54 / 0.14), transparent 60%);"
+          aria-hidden="true"
+        >
+        </div>
+
+        <div class="sobre-oscuro relative mb-11 text-center">
+          <span class="eyebrow">¿Por qué SOLINAG?</span>
+          <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)] text-white">
+            Un equipo de ingeniería a tu lado
+          </h2>
+        </div>
+
+        <div class="relative grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          {PORQUE.map((p) => (
+            <div class="group p-2.5 text-center">
+              <div
+                class="mx-auto mb-4.5 grid h-15 w-15 place-items-center rounded-full border
+                       border-white/16 bg-white/8 text-green-500 transition-[transform,background-color,color]
+                       duration-500 ease-spring group-hover:-translate-y-1 group-hover:scale-108
+                       group-hover:bg-green-500 group-hover:text-blue-900
+                       [&_svg]:h-[26px] [&_svg]:w-[26px]"
+              >
+                <Icono nombre={p.icono} />
+              </div>
+              <h4 class="mb-2 text-[16.5px] text-white">{p.titulo}</h4>
+              <p class="text-[13.5px] text-white/60">{p.texto}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion>
+    <Contenedor>
+      <div class="reveal mb-11 flex flex-wrap items-end justify-between gap-5">
+        <div>
+          <span class="eyebrow">Soluciones</span>
+          <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)]">Ingeniería para cada necesidad</h2>
+        </div>
+        <a
+          href={ruta("soluciones")}
+          class="group inline-flex items-center gap-1.5 font-bold text-blue-600
+                 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform
+                 hover:[&_svg]:translate-x-1"
+        >
+          Ver todas las soluciones
+          <Icono nombre="flecha" />
+        </a>
+      </div>
+
+      <div class="reveal-stagger grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        {VISTAZO.map((v, i) => (
+          <a href={ruta("soluciones", v.ancla)} class="contents">
+            <TarjetaPilar icono={v.icono} tono={v.tono} titulo={v.titulo} indice={i}>
+              {v.texto}
+            </TarjetaPilar>
+          </a>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta>
+    <Contenedor>
+      <BannerCta
+        titulo="¿Tienes un proyecto de ingeniería en mente?"
+        texto="Cuéntanos qué necesitas y trabajemos juntos en la solución. Respondemos rápido por WhatsApp."
+      >
+        <Boton href={ruta("nosotros", "contacto")} variante="primary">Cotizar ahora</Boton>
+        <Boton
+          href="https://wa.me/c/573197754909"
+          variante="outline-light"
+          target="_blank"
+          rel="noopener">Ver catálogo</Boton
+        >
+      </BannerCta>
+    </Contenedor>
+  </Seccion>
+</Base>

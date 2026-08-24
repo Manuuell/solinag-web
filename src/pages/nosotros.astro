@@ -1,0 +1,219 @@
+---
+import Base from "../layouts/Base.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Seccion from "../components/Seccion.astro";
+import HeroPagina from "../components/HeroPagina.astro";
+import CabeceraSeccion from "../components/CabeceraSeccion.astro";
+import TarjetaPilar from "../components/TarjetaPilar.astro";
+import Campo from "../components/Campo.astro";
+import Boton from "../components/Boton.astro";
+import Chip from "../components/Chip.astro";
+import Icono from "../components/Icono.astro";
+import { EMPRESA, ruta, whatsapp } from "../data/sitio.js";
+
+const PILARES = [
+  { icono: "llave", tono: "blue", titulo: "Ingeniería", texto: "Diseño y desarrollo de soluciones a la medida de cada operación." },
+  { icono: "fabrica", tono: "navy", titulo: "Fabricación", texto: "Capacidad instalada y talento humano para producir con calidad." },
+  { icono: "bombilla", tono: "green", titulo: "Innovación", texto: "Tecnología y mejora continua aplicadas a cada proceso." },
+  { icono: "hoja", tono: "blue", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente y el futuro del territorio." },
+];
+
+const CONTACTO = [
+  { icono: "ubicacion", titulo: "Dirección", texto: EMPRESA.direccion.completa },
+  { icono: "telefono", titulo: "Teléfono / WhatsApp", texto: `${EMPRESA.telefono} · toca para copiar`, copiar: EMPRESA.telefono },
+  { icono: "correo", titulo: "Correo", texto: `${EMPRESA.correo} · toca para copiar`, copiar: EMPRESA.correo },
+  { icono: "diana", titulo: "Web", texto: "www.solinag.com.co" },
+];
+
+const NECESIDADES = [
+  "Maquinaria y equipos",
+  "Estructuras industriales",
+  "Movilidad y reciclaje",
+  "Ingeniería a medida",
+  "Otro",
+];
+---
+
+<Base
+  titulo="Nosotros y contacto · SOLINAG SAS"
+  descripcion="Conoce a SOLINAG SAS, empresa de ingeniería, diseño y fabricación en Turbaco, Bolívar. Escríbenos y cuéntanos tu proyecto."
+  actual="nosotros"
+>
+  <HeroPagina
+    migas={[{ texto: "Inicio", href: ruta("inicio") }, { texto: "Nosotros" }]}
+    antetitulo="Quiénes somos"
+    titulo="Un equipo de ingeniería comprometido con transformar"
+    entradilla="Somos una empresa de ingeniería, diseño y fabricación orientada al desarrollo de soluciones para el agro, la industria y la sostenibilidad."
+  />
+
+  <Seccion>
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="Nosotros"
+        titulo="Lo que nos define"
+        entradilla="Cuatro pilares guían cada proyecto que desarrollamos, desde el primer boceto hasta la puesta en marcha."
+      />
+      <div class="reveal-stagger grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        {PILARES.map((p, i) => (
+          <TarjetaPilar icono={p.icono} tono={p.tono} titulo={p.titulo} indice={i}>
+            {p.texto}
+          </TarjetaPilar>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta class="bg-surface-2">
+    <Contenedor class="reveal-stagger grid items-center gap-12 xl:grid-cols-2">
+      <div class="reveal" style="--i:0">
+        <span class="eyebrow">Nuestra identidad</span>
+        <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)]">Ingeniería con propósito</h2>
+        <p class="mt-3.5 max-w-[62ch] text-[clamp(16px,1.6vw,18px)] text-ink-soft">
+          El engranaje representa ingeniería, fabricación y precisión; las hojas representan
+          vida, crecimiento y sostenibilidad; el arco integra ambos conceptos y comunica
+          transformación.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2.5">
+          <Chip>{EMPRESA.marca}</Chip>
+          <Chip>Turbaco, Bolívar</Chip>
+          <Chip>{EMPRESA.slogan}</Chip>
+        </div>
+      </div>
+
+      <div class="reveal flex justify-center" style="--i:1">
+        <img
+          src="/assets/img/logo-full.png"
+          alt="Logotipo SOLINAG SAS"
+          width="1208"
+          height="1174"
+          class="max-w-[340px] [filter:drop-shadow(0_24px_50px_rgb(15_23_42/0.16))]"
+        />
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta>
+    <Contenedor class="reveal-stagger grid items-center gap-12 xl:grid-cols-2">
+      <div class="reveal relative" style="--i:0">
+        <img
+          src="/assets/img/team-solinag.jpg"
+          alt="Equipo SOLINAG SAS frente a la planta en Turbaco, Bolívar"
+          loading="lazy"
+          width="399"
+          height="212"
+          class="block w-full rounded-xl shadow-lg"
+        />
+        <div
+          class="absolute -bottom-4 -left-4 z-2 flex items-center gap-2.5 rounded-md bg-white
+                 px-4 py-3 text-[13.5px] font-bold text-ink shadow-lg"
+        >
+          <Icono nombre="ubicacion" class="h-4 w-4 text-green-700" />
+          Turbaco, Bolívar
+        </div>
+      </div>
+
+      <div class="reveal" style="--i:1">
+        <span class="eyebrow">Nuestro equipo</span>
+        <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)]">La gente detrás de cada proyecto</h2>
+        <p class="mt-3.5 max-w-[62ch] text-[clamp(16px,1.6vw,18px)] text-ink-soft">
+          Un equipo propio de ingeniería, fabricación y campo trabaja cada solución de principio
+          a fin, desde el primer plano hasta la puesta en marcha en tu operación.
+        </p>
+        <img
+          src="/assets/img/prod-ingeniero.jpg"
+          alt="Ingeniero de SOLINAG en planta de reciclaje"
+          loading="lazy"
+          width="575"
+          height="650"
+          class="mt-6 w-[70%] rounded-lg shadow-md"
+        />
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion id="contacto" class="scroll-mt-25">
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="Contáctanos"
+        titulo="¿Tienes una necesidad de ingeniería?"
+        entradilla="Cuéntanos qué necesitas y trabajemos juntos en la solución. Te respondemos por WhatsApp o correo en poco tiempo."
+      />
+
+      <div class="grid items-start gap-7 xl:grid-cols-[0.9fr_1.1fr]">
+        <div class="reveal relative overflow-hidden rounded-xl bg-blue-900 p-10 text-white">
+          <h3 class="mb-2.5 text-2xl text-white">Hablemos de tu proyecto</h3>
+          <p class="mb-7 text-white/70">
+            Estamos en Turbaco, Bolívar, listos para atender proyectos en toda Colombia.
+          </p>
+
+          <ul class="mb-7.5 flex flex-col gap-4.5">
+            {CONTACTO.map((c) => (
+              <li class="flex items-start gap-3.5" data-copiar={c.copiar} title={c.copiar ? "Copiar" : undefined}>
+                <span
+                  class="grid h-10.5 w-10.5 flex-none place-items-center rounded-sm bg-white/10
+                         text-green-500 [&_svg]:h-[19px] [&_svg]:w-[19px]"
+                >
+                  <Icono nombre={c.icono} />
+                </span>
+                <div>
+                  <b class="block text-[14.5px]">{c.titulo}</b>
+                  <span class="text-[13.5px] text-white/62">{c.texto}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <Boton href={whatsapp()} variante="primary" bloque target="_blank" rel="noopener">
+            <Icono nombre="whatsapp" />
+            Escríbenos por WhatsApp
+          </Boton>
+        </div>
+
+        <div class="reveal rounded-xl border border-line bg-surface p-10 shadow-sm" style="--i:1">
+          <h3 class="mb-1.5 text-[22px]">Formulario de solicitud</h3>
+          <p class="mb-6.5 text-[14.5px] text-muted">
+            Completa tus datos y te contactaremos lo antes posible.
+          </p>
+
+          {/* No hay backend: el envío arma un mensaje y abre WhatsApp. */}
+          <form id="form-contacto" novalidate>
+            <div class="mb-4 grid gap-4 md:grid-cols-2">
+              <Campo id="nombre" etiqueta="Nombre" requerido placeholder="Tu nombre" />
+              <Campo id="empresa" etiqueta="Empresa" placeholder="Nombre de tu empresa" />
+            </div>
+            <div class="mb-4 grid gap-4 md:grid-cols-2">
+              <Campo id="telefono" etiqueta="WhatsApp" tipo="tel" requerido placeholder="+57 300 000 0000" />
+              <Campo id="correo" etiqueta="Correo electrónico" tipo="email" placeholder="tucorreo@empresa.com" />
+            </div>
+            <div class="mb-4">
+              <Campo id="necesidad" etiqueta="¿Qué necesita?" tipo="select" opciones={NECESIDADES} />
+            </div>
+            <div class="mb-2">
+              <Campo
+                id="mensaje"
+                etiqueta="Cuéntanos sobre tu proyecto"
+                tipo="textarea"
+                requerido
+                placeholder="Describe brevemente tu necesidad"
+              />
+            </div>
+            <Boton variante="dark" bloque type="submit" class="mt-3.5">Enviar solicitud</Boton>
+          </form>
+        </div>
+      </div>
+
+      <div class="reveal mt-6 overflow-hidden rounded-lg border border-line shadow-sm">
+        <iframe
+          title="Ubicación de SOLINAG SAS en Turbaco, Bolívar"
+          src="https://www.google.com/maps?q=Los+Laureles,+Turbaco,+Bol%C3%ADvar,+Colombia&output=embed"
+          width="100%"
+          height="360"
+          style="border:0; display:block"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </Contenedor>
+  </Seccion>
+</Base>

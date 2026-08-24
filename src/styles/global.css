@@ -1,0 +1,434 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   SOLINAG SAS — Sistema de diseño
+   Los tokens de marca viven aquí y Tailwind los expone como utilidades:
+   --color-blue-600 -> bg-blue-600 / text-blue-600 / border-blue-600
+   --radius-xl      -> rounded-xl
+   --ease-spring    -> ease-spring
+   ========================================================================== */
+
+@theme {
+  /* Marca — azul */
+  --color-blue-900: #0f1f4d;
+  --color-blue-800: #16316f;
+  --color-blue-700: #1c3a8c;
+  --color-blue-600: #2144a1; /* azul corporativo */
+  --color-blue-500: #3459c4;
+  --color-blue-400: #5b7bdb;
+  --color-blue-100: #e7ecfb;
+
+  /* Marca — verde. Ojo: green-500 (#89f336) da 1.41:1 sobre blanco y NO debe
+     usarse para texto en fondo claro. Para eso está green-700. */
+  --color-green-700: #4f9c17;
+  --color-green-600: #6bcf22;
+  --color-green-500: #89f336; /* verde corporativo */
+  --color-green-400: #a4f562;
+  --color-green-100: #eafedc;
+
+  /* Neutros */
+  --color-ink: #0b1220;
+  --color-ink-soft: #3a4356;
+  --color-muted: #6b7385;
+  --color-line: rgb(15 23 42 / 0.08);
+  --color-paper: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef1f8;
+
+  /* WhatsApp (color de marca ajeno, fijo) */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-ink: #04310f;
+
+  /* Radios */
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06), 0 1px 1px rgb(15 23 42 / 0.04);
+  --shadow-md: 0 10px 30px -12px rgb(15 23 42 / 0.22);
+  --shadow-lg: 0 24px 60px -20px rgb(15 23 42 / 0.32);
+  --shadow-blue: 0 16px 40px -14px rgb(33 68 161 / 0.45);
+  --shadow-green: 0 16px 34px -14px rgb(107 207 34 / 0.5);
+
+  /* Movimiento */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Tipografía */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Breakpoints.
+     El sitio original usaba media queries max-width (480/720/960/1080) y
+     Tailwind trabaja con min-width. Se registran los valores complementarios
+     para que los cortes caigan exactamente donde caían antes. */
+  --breakpoint-sm: 481px;
+  --breakpoint-md: 721px;
+  --breakpoint-lg: 961px;
+  --breakpoint-xl: 1081px;
+
+  /* Animaciones propias */
+  --animate-floaty: floaty 6s ease-in-out infinite;
+  --animate-float: float 18s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(26px); }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue-600);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Respetar a quien pide menos movimiento: las animaciones decorativas se
+     apagan, pero el contenido sigue siendo visible (ver .reveal más abajo). */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Aparición al hacer scroll. El JS agrega .in cuando el elemento entra en
+     viewport; --i escalona a los hijos. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-stagger > * { transition-delay: calc(var(--i, 0) * 90ms); }
+
+  /* Sin JS (o si falla), el contenido tiene que verse igual. */
+  .no-js .reveal { opacity: 1; transform: none; }
+
+  /* Rotador de textos de la franja superior y del hero. */
+  .widget-stack { position: relative; }
+  .widget-stack .w-item {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s var(--ease-out-soft), transform 0.5s var(--ease-out-soft);
+  }
+  .widget-stack .w-item.show { opacity: 1; transform: translateY(0); }
+
+  /* Superficie traslúcida reutilizable (header, tab bar, tarjetas del hero). */
+  .glass {
+    background: rgb(255 255 255 / 0.82);
+    border: 1px solid rgb(255 255 255 / 0.6);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  /* Manchas de color desenfocadas del fondo del hero. */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  /* En móvil la barra inferior flota sobre el contenido: el body reserva su
+     alto para que el pie no quede tapado. */
+  @media (max-width: 720px) {
+    body { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  }
+
+  .scroll-progress {
+    position: fixed;
+    inset: 0 auto auto 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-green-500), var(--color-blue-500));
+    z-index: 300;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px rgb(137 243 54 / 0.6);
+  }
+}
+
+@layer components {
+  /* --------------------------------- Tarjetas -------------------------------- */
+  .card {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.45s var(--ease-spring),
+      box-shadow 0.45s var(--ease-out-soft),
+      border-color 0.45s;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
+  }
+
+  /* Halo que sigue al cursor. El JS escribe --mx / --my. */
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      280px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(33 68 161 / 0.08),
+      transparent 70%
+    );
+    transition: opacity 0.22s var(--ease-out-soft);
+  }
+  .card:hover::before { opacity: 1; }
+  .card > * { position: relative; z-index: 1; }
+
+  /* --------------------------------- Avisos ---------------------------------- */
+  .toast-stack {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: min(92vw, 420px);
+  }
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: var(--radius-lg);
+    background: var(--color-blue-900);
+    color: #fff;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    transition:
+      opacity 0.45s var(--ease-spring),
+      transform 0.45s var(--ease-spring);
+  }
+  .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+  .toast .ic {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    color: var(--color-blue-900);
+  }
+  .toast .ic svg { width: 16px; height: 16px; }
+  .toast b { display: block; font-size: 14px; }
+  .toast div span { font-size: 12.5px; color: rgb(255 255 255 / 0.65); }
+
+  /* ------------------------------ Ficha técnica ------------------------------ */
+  /* <dialog> nativo: el navegador se encarga del foco, de Esc y del fondo.
+     Antes esto eran ~110 líneas de JS armando el modal a mano. */
+  dialog[data-ficha] {
+    width: 100%;
+    max-width: 620px;
+    max-height: 88vh;
+    padding: 28px 28px 34px;
+    border: 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-lg);
+    margin: auto auto 0;
+  }
+  dialog[data-ficha]::backdrop {
+    background: rgb(11 18 32 / 0.6);
+    backdrop-filter: blur(8px);
+  }
+  @media (min-width: 721px) {
+    dialog[data-ficha] {
+      margin: auto;
+      border-radius: var(--radius-xl);
+    }
+    /* El "asa" de arrastre solo tiene sentido en la hoja inferior de móvil. */
+    dialog[data-ficha] .asa { display: none; }
+  }
+
+  .asa {
+    width: 40px;
+    height: 5px;
+    margin: 0 auto 18px;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+
+  /* Tabla comparativa de modelos */
+  .tabla-modelos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .tabla-modelos th,
+  .tabla-modelos td { padding: 10px 14px; text-align: left; }
+  .tabla-modelos thead th {
+    background: var(--color-blue-600);
+    color: #fff;
+    font-weight: 700;
+  }
+  .tabla-modelos tbody tr:nth-child(even) { background: var(--color-surface-2); }
+  .tabla-modelos tbody td:first-child {
+    font-weight: 700;
+    color: var(--color-blue-700);
+  }
+}
+
+@layer components {
+  /* Antetítulo con punto verde delante. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-blue-600);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-green-500);
+    box-shadow: 0 0 0 4px var(--color-green-100);
+  }
+  /* Sobre fondo oscuro se invierte: punto blanco, texto verde. */
+  .sobre-oscuro .eyebrow { color: var(--color-green-500); }
+  .sobre-oscuro .eyebrow::before {
+    background: #fff;
+    box-shadow: 0 0 0 4px rgb(255 255 255 / 0.25);
+  }
+
+  /* Fondo degradado del hero, con dos manchas que flotan. */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(900px 520px at 15% -10%, rgb(137 243 54 / 0.35), transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, rgb(33 68 161 / 0.9), transparent 55%),
+      linear-gradient(160deg, var(--color-blue-900) 0%, var(--color-blue-700) 46%, var(--color-blue-600) 100%);
+  }
+  .hero-bg .blob { filter: blur(70px); opacity: 0.55; }
+  .hero-bg .blob-1 {
+    width: 420px;
+    height: 420px;
+    top: -140px;
+    right: 8%;
+    background: var(--color-green-500);
+    animation: float 9s ease-in-out infinite;
+  }
+  .hero-bg .blob-2 {
+    width: 260px;
+    height: 260px;
+    bottom: -100px;
+    left: 6%;
+    background: var(--color-blue-400);
+    animation: float 11s ease-in-out infinite reverse;
+  }
+
+  /* Sub-navegación tipo segmented control, con scroll-spy. */
+  .subnav {
+    display: inline-flex;
+    gap: 4px;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 5px;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.75);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--shadow-sm);
+  }
+  .subnav a {
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--color-ink-soft);
+    transition: background-color 0.22s, color 0.22s;
+  }
+  .subnav a:hover { background: var(--color-surface-2); }
+  .subnav a.activo { background: var(--color-blue-600); color: #fff; }
+}
+
+@layer components {
+  /* Línea punteada que une los cuatro pasos del proceso. Solo en escritorio:
+     apilados en móvil no tendría sentido. */
+  .proceso { position: relative; }
+  @media (min-width: 961px) {
+    .proceso::before {
+      content: "";
+      position: absolute;
+      top: 34px;
+      left: 60px;
+      right: 60px;
+      height: 2px;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--color-line) 0 10px,
+        transparent 10px 18px
+      );
+    }
+  }
+}

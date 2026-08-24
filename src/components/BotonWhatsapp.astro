@@ -1,0 +1,24 @@
+---
+/** Botón flotante de WhatsApp. Se expande al pasar el cursor. */
+import { whatsapp } from "../data/sitio.js";
+import Icono from "./Icono.astro";
+---
+
+<a
+  href={whatsapp()}
+  target="_blank"
+  rel="noopener"
+  aria-label="Escríbenos por WhatsApp"
+  class="group fixed right-[22px] bottom-[22px] z-150 flex items-center gap-2.5 rounded-full
+         bg-whatsapp p-3.5 text-[14px] font-bold text-whatsapp-ink
+         shadow-[0_16px_40px_-10px_rgb(37_211_102/0.6)]
+         transition-[transform,box-shadow] duration-200 ease-spring
+         hover:-translate-y-[3px] hover:shadow-[0_20px_46px_-10px_rgb(37_211_102/0.75)]"
+>
+  <Icono nombre="whatsapp" class="h-6 w-6 flex-none" />
+  <span
+    class="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-[max-width,opacity]
+           duration-[450ms] group-hover:max-w-40 group-hover:opacity-100"
+    >Escríbenos</span
+  >
+</a>

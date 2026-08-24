@@ -1,0 +1,86 @@
+---
+/**
+ * Ficha técnica de un producto, como <dialog> nativo.
+ *
+ * El contenido se renderiza en el build, así que existe en el HTML aunque el
+ * visitante no abra la ficha: es indexable y funciona sin depender de que un
+ * objeto de JavaScript esté sincronizado con la tarjeta.
+ */
+import { ruta, whatsapp } from "../data/sitio.js";
+import Icono from "./Icono.astro";
+import Boton from "./Boton.astro";
+
+const { producto: p } = Astro.props;
+---
+
+<dialog id={`ficha-${p.clave}`} data-ficha aria-labelledby={`ficha-${p.clave}-titulo`}>
+  <div class="asa" aria-hidden="true"></div>
+
+  <div class="mb-[18px] flex items-start justify-between gap-4">
+    <div>
+      <span
+        class="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1.5
+               text-[12.5px] font-bold text-green-700"
+      >
+        {p.tag}
+      </span>
+      <h3 id={`ficha-${p.clave}-titulo`} class="text-2xl">{p.tituloFicha}</h3>
+    </div>
+    <button
+      class="grid h-9 w-9 flex-none place-items-center rounded-full bg-surface-2 text-ink-soft
+             transition-[background-color,transform] duration-200 hover:rotate-90 hover:bg-line
+             [&_svg]:h-4 [&_svg]:w-4"
+      aria-label="Cerrar ficha técnica"
+      data-cerrar-ficha
+    >
+      <Icono nombre="cerrar" />
+    </button>
+  </div>
+
+  <div class="mb-5 grid h-[220px] place-items-center overflow-hidden rounded-md bg-surface-2">
+    <img src={p.img} alt={p.alt} class="h-full w-full object-contain" loading="lazy" />
+  </div>
+
+  <p class="text-[15px] text-ink-soft">{p.intro}</p>
+
+  <div class="my-[22px] grid grid-cols-2 gap-3">
+    {p.stats.map((s) => (
+      <div class="rounded-sm border border-line bg-surface-2 px-3.5 py-3">
+        <b class="block text-[17px] text-blue-700">{s.v}</b>
+        <span class="text-[12.5px] text-muted">{s.u}</span>
+      </div>
+    ))}
+  </div>
+
+  {p.tabla && (
+    <div class="mb-5 overflow-x-auto rounded-sm border border-line">
+      <table class="tabla-modelos">
+        <thead>
+          <tr>{p.tabla.headers.map((h) => <th>{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {p.tabla.rows.map((fila) => (
+            <tr>{fila.map((celda) => <td>{celda}</td>)}</tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+
+  <ul class="my-[18px] flex flex-col gap-2.5">
+    {p.lista.map((item) => (
+      <li class="flex items-start gap-2.5 text-[14.5px] text-ink-soft">
+        <Icono nombre="check" class="mt-0.5 h-[17px] w-[17px] flex-none text-green-700" />
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="flex flex-wrap gap-2.5">
+    <Boton href={whatsapp(p.mensaje)} variante="whatsapp" target="_blank" rel="noopener">
+      <Icono nombre="whatsapp" />
+      Cotizar por WhatsApp
+    </Boton>
+    <Boton href={ruta("nosotros", "contacto")} variante="ghost">Solicitar asesoría</Boton>
+  </div>
+</dialog>

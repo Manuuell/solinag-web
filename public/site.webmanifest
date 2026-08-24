@@ -1,0 +1,12 @@
+{
+  "name": "SOLINAG SAS",
+  "short_name": "SOLINAG",
+  "description": "Innovación que transforma: ingeniería para el agro, la industria y la sostenibilidad.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#2144a1",
+  "icons": [
+    { "src": "assets/img/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

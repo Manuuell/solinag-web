@@ -1,0 +1,6 @@
+---
+/** Bloque de sección con el ritmo vertical del sitio. */
+const { compacta = false, class: clase = "", ...resto } = Astro.props;
+const alto = compacta ? "py-16" : "py-18 md:py-25";
+---
+<section class={`relative ${alto} ${clase}`} {...resto}><slot /></section>

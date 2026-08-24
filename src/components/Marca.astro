@@ -1,0 +1,20 @@
+---
+/** Logotipo + palabra "SOLINAG SAS". Va en el header y en el menú móvil. */
+const { alturaLogo = 34, mostrarSas = true, class: clase = "" } = Astro.props;
+---
+
+<a href="/" class={`flex items-center gap-2.5 ${clase}`} aria-label="SOLINAG SAS — ir al inicio">
+  <img
+    src="/assets/img/logo-icon.png"
+    alt=""
+    width="34"
+    height="33"
+    style={`height:${alturaLogo}px`}
+    class="w-auto"
+  />
+  <span class="font-extrabold text-[16.5px] tracking-[-0.01em] text-blue-600">
+    SOLIN<span class="text-green-600">AG</span>{mostrarSas && (
+      <small class="text-[11px] font-bold text-muted"> SAS</small>
+    )}
+  </span>
+</a>

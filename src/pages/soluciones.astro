@@ -1,0 +1,94 @@
+---
+import Base from "../layouts/Base.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Seccion from "../components/Seccion.astro";
+import HeroPagina from "../components/HeroPagina.astro";
+import CabeceraSeccion from "../components/CabeceraSeccion.astro";
+import TarjetaProducto from "../components/TarjetaProducto.astro";
+import FichaTecnica from "../components/FichaTecnica.astro";
+import BannerCta from "../components/BannerCta.astro";
+import Boton from "../components/Boton.astro";
+import Chip from "../components/Chip.astro";
+import Icono from "../components/Icono.astro";
+import { PRODUCTOS } from "../data/productos.js";
+import { ruta } from "../data/sitio.js";
+
+// El menú de categorías sale del catálogo: un producto nuevo con ancla
+// aparece aquí sin tocar esta página.
+const categorias = PRODUCTOS.filter((p) => p.ancla).map((p) => ({
+  href: `#${p.ancla}`,
+  texto: p.categoriaCorta,
+}));
+
+const VENTAJAS = [
+  "Diseñamos soluciones a medida",
+  "Transformamos el diseño en equipos reales",
+  "Aplicamos tecnología y mejoramos procesos",
+  "Comprometidos con el medio ambiente",
+];
+---
+
+<Base
+  titulo="Soluciones · SOLINAG SAS"
+  descripcion="Maquinaria y equipos, estructuras industriales, movilidad y reciclaje, e ingeniería a medida: conoce las soluciones de ingeniería de SOLINAG SAS."
+  actual="soluciones"
+>
+  <HeroPagina
+    migas={[{ texto: "Inicio", href: "/" }, { texto: "Soluciones" }]}
+    antetitulo="Nuestras soluciones"
+    titulo="Ingeniería para cada necesidad de tu operación"
+    entradilla="Diseñamos y fabricamos soluciones de ingeniería para resolver necesidades reales de nuestros clientes, integrando diseño, fabricación y tecnología."
+  />
+
+  <div class="sticky top-[70px] z-40 py-3.5 lg:top-[82px]">
+    <Contenedor>
+      <nav class="subnav" aria-label="Categorías de soluciones" data-subnav>
+        {categorias.map((c) => <a href={c.href}>{c.texto}</a>)}
+      </nav>
+    </Contenedor>
+  </div>
+
+  <Seccion compacta>
+    <Contenedor>
+      <div class="reveal-stagger grid gap-[22px] xl:grid-cols-2">
+        {PRODUCTOS.map((p, i) => <TarjetaProducto producto={p} indice={i} />)}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta>
+    <Contenedor>
+      <BannerCta
+        titulo="¿Si la solución no existe, la diseñamos?"
+        texto="Sí. Nuestro equipo de ingeniería desarrolla soluciones a la medida cuando lo que necesitas no está en el catálogo estándar."
+      >
+        <Boton href={ruta("nosotros", "contacto")} variante="primary">Cuéntanos tu proyecto</Boton>
+        <Boton
+          href="https://wa.me/c/573197754909"
+          variante="outline-light"
+          target="_blank"
+          rel="noopener"
+        >
+          <Icono nombre="whatsapp" />
+          Ver catálogo en WhatsApp
+        </Boton>
+      </BannerCta>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion>
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="¿Por qué SOLINAG?"
+        titulo="Ingeniería, fabricación e innovación en un solo equipo"
+      />
+      <div class="reveal flex flex-wrap justify-center gap-2.5">
+        {VENTAJAS.map((v) => <Chip>{v}</Chip>)}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  {/* Las fichas técnicas viven fuera del flujo: son <dialog> nativos. */}
+  {PRODUCTOS.map((p) => <FichaTecnica producto={p} />)}
+</Base>

@@ -1,7 +1,8 @@
 # SOLINAG SAS — Sitio web corporativo
 
-Sitio web estático (HTML + CSS + JS, sin frameworks ni build step) para
-**SOLINAG SAS** — Soluciones de Ingeniería para la Industria y el Agro.
+Sitio web de **SOLINAG SAS** — Soluciones de Ingeniería para la Industria y el
+Agro. Construido con [Astro](https://astro.build) y [Tailwind CSS](https://tailwindcss.com);
+el resultado del build son archivos HTML estáticos, sin backend ni base de datos.
 
 | Entorno | URL |
 |---|---|
@@ -10,52 +11,55 @@ Sitio web estático (HTML + CSS + JS, sin frameworks ni build step) para
 
 ## Stack
 
-Archivos estáticos servidos por nginx. **No hay backend, ni base de datos, ni
-variables de entorno, ni build step.** El formulario de contacto no envía datos
-a ningún servidor: arma un mensaje y abre WhatsApp con el texto prellenado.
+- **Astro** genera las páginas al compilar. No se envía JavaScript de framework
+  al navegador: el poco JS que hay es propio (modal, animaciones, formulario).
+- **Tailwind CSS v4**. Los colores, radios, sombras y breakpoints de la marca
+  están declarados como tokens en `src/styles/global.css`, dentro de `@theme`.
+- El formulario de contacto **no envía datos a ningún servidor**: arma un
+  mensaje y abre WhatsApp con el texto prellenado.
 
 ## Estructura
 
 ```
-index.html            Inicio
-soluciones.html       Catálogo de soluciones (6 fichas de producto)
-proyectos.html        Proyectos destacados y proceso de trabajo
-nosotros.html         Quiénes somos + formulario de contacto
-404.html              Página de error
+src/
+  pages/            Una página por archivo -> index.html, soluciones.html…
+  layouts/Base.astro  <head>, header, menú móvil, pie, barra inferior
+  components/       Piezas reutilizables (Header, Footer, Icono, Boton…)
+  data/
+    sitio.js        Datos de la empresa, WhatsApp, menú, redes
+    productos.js    Catálogo: tarjeta y ficha técnica de cada producto
+  styles/global.css Tokens de marca y estilos de componente
+  scripts/sitio.js  Interacciones del cliente
 
-css/styles.css        Sistema de diseño: variables, componentes, layout
-js/main.js            Navegación, animaciones, fichas técnicas, formulario
-assets/img/           Logotipos, íconos y fotos de producto (lo que se publica)
-
-brand/                Material fuente interno: manual de identidad, catálogo
-scripts/              Utilidades de Python para procesar imágenes
-.github/workflows/    Despliegue automático al VPS
+public/             Se copia tal cual a la raíz del sitio (imágenes, robots…)
+brand/              Material fuente interno: manual de identidad, catálogo
+scripts/            Utilidades de Python para procesar imágenes
 ```
 
-`brand/` y `scripts/` son material de trabajo: quedan versionados en el repo
-pero **no se publican** en el sitio.
+`brand/` y `scripts/` quedan versionados pero **no entran al build**, así que no
+se publican.
 
 ## Desarrollo local
 
-No requiere instalación ni dependencias. Abre `index.html` en el navegador, o
-sirve la carpeta con cualquier servidor estático:
-
 ```bash
-npx serve . -l 4173
+npm install
+npm run dev
 ```
 
+Abre http://localhost:4321. Los comandos disponibles son `dev`, `build` y
+`preview`.
+
 Antes de tocar el código, lee **[CONTRIBUTING.md](CONTRIBUTING.md)**: explica
-cómo agregar un producto y advierte sobre los bloques que están duplicados en
-las cuatro páginas.
+cómo agregar un producto y dónde vive cada cosa.
 
 ## Despliegue
 
-Automático: cada push a `main` dispara el workflow
-[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), que sincroniza
-los archivos al VPS por rsync y verifica que el sitio responda.
+Automático: cada push a `main` dispara
+[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), que instala
+dependencias, compila y sincroniza **`dist/`** al VPS por rsync.
 
-No hay que reiniciar nada — al ser estático, los archivos nuevos se sirven de
-inmediato.
+El sitio sigue siendo estático, así que nginx no necesita configuración nueva y
+no hay ningún proceso que reiniciar.
 
 ### Al pasar a producción
 
@@ -69,14 +73,15 @@ viaja con el despliegue. Al montar el vhost de `www.solinag.com.co`:
   que nada parezca roto.
 - El paso *Verificar el despliegue* del workflow apunta a `solinag.duckdns.org`
   por URL fija: hay que decidir si sigue validando staging o pasa a producción.
-- Lo que ya está listo en el repo y no hay que tocar: los `canonical`, `og:url`
-  y `og:image` de las cuatro páginas, `robots.txt` y `sitemap.xml` apuntan todos
-  a `https://www.solinag.com.co/`.
+- Lo que ya está listo y no hay que tocar: los `canonical`, `og:url` y
+  `og:image` se generan desde `site` en `astro.config.mjs`, y `robots.txt` y
+  `sitemap.xml` (en `public/`) apuntan a `https://www.solinag.com.co/`.
 
 ## Marca
 
-- Azul corporativo `#2144A1` · Verde corporativo `#89F336`
+- Azul corporativo `#2144a1` · Verde corporativo `#89f336`
 - Slogan: *Innovación que transforma* · Agro · Industria · Sostenibilidad
-- Dos versiones de logo: `logo-full.png` (fondo claro) y `logo-dark-bg.png`
-  (fondo oscuro).
+- **Ojo con el verde:** `#89f336` da 1.41:1 sobre blanco y no es usable para
+  texto en fondo claro. Para eso está `green-700` (`#4f9c17`). Los tokens lo
+  documentan en `src/styles/global.css`.
 - Manual completo en `brand/MANUAL DE IDENTIDAD CORPORATIVA.pdf`.

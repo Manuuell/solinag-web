@@ -1,0 +1,28 @@
+---
+/** Tarjeta con icono en degradado, título y descripción. */
+import Icono from "./Icono.astro";
+
+const { icono, titulo, tono = "blue", indice = 0 } = Astro.props;
+
+// Cada tono es un degradado distinto con su sombra a juego.
+const TONOS = {
+  blue: "bg-linear-140 from-blue-500 to-blue-700 shadow-blue",
+  green: "bg-linear-140 from-green-400 to-green-700 shadow-green",
+  navy: "bg-linear-140 from-[#263866] to-blue-900 shadow-[0_16px_34px_-14px_rgb(15_31_77/0.55)]",
+};
+---
+
+<article class="card reveal group text-left" style={`--i:${indice}`}>
+  <div
+    class:list={[
+      "mb-5 grid h-14 w-14 place-items-center rounded-md text-white",
+      "transition-transform duration-500 ease-spring group-hover:-rotate-6 group-hover:scale-106",
+      "[&_svg]:h-[26px] [&_svg]:w-[26px]",
+      TONOS[tono],
+    ]}
+  >
+    <Icono nombre={icono} />
+  </div>
+  <h3 class="mb-2 text-[19px]">{titulo}</h3>
+  <p class="text-[14.5px] text-ink-soft"><slot /></p>
+</article>

@@ -1,0 +1,35 @@
+---
+/** Cabecera de las páginas interiores: migas, antetítulo, título y entradilla. */
+import Contenedor from "./Contenedor.astro";
+import Icono from "./Icono.astro";
+
+const { antetitulo, titulo, entradilla, migas = [] } = Astro.props;
+---
+
+<section
+  class="sobre-oscuro relative -mt-27.5 overflow-hidden rounded-b-xl pt-37.5 pb-21 md:pb-21"
+>
+  <div class="hero-bg" data-hero-bg>
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+  </div>
+
+  <Contenedor class="relative">
+    {migas.length > 0 && (
+      <nav class="mb-1 flex items-center gap-2 text-[13.5px] text-white/55" aria-label="Migas de pan">
+        {migas.map((m, i) => (
+          <>
+            {m.href
+              ? <a href={m.href} class="transition-colors hover:text-white">{m.texto}</a>
+              : <span>{m.texto}</span>}
+            {i < migas.length - 1 && <Icono nombre="chevron" class="h-3 w-3" />}
+          </>
+        ))}
+      </nav>
+    )}
+
+    <span class="eyebrow">{antetitulo}</span>
+    <h1 class="mt-3.5 text-[clamp(34px,5vw,52px)] text-white">{titulo}</h1>
+    {entradilla && <p class="mt-3.5 max-w-[60ch] text-[17px] text-white/78">{entradilla}</p>}
+  </Contenedor>
+</section>

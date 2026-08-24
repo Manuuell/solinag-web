@@ -1,0 +1,108 @@
+---
+/**
+ * Estructura común a todas las páginas.
+ *
+ * Aquí vive lo que antes estaba copiado en index, soluciones, proyectos y
+ * nosotros: el <head>, la franja superior, el header, el menú móvil, el pie,
+ * el botón de WhatsApp y la barra inferior. Cambiar cualquiera de esos ahora
+ * es una sola edición.
+ */
+import { EMPRESA, SOCIAL } from "../data/sitio.js";
+import FranjaServicios from "../components/FranjaServicios.astro";
+import Header from "../components/Header.astro";
+import MenuMovil from "../components/MenuMovil.astro";
+import Footer from "../components/Footer.astro";
+import BotonWhatsapp from "../components/BotonWhatsapp.astro";
+import BarraMovil from "../components/BarraMovil.astro";
+import "../styles/global.css";
+
+const {
+  titulo,
+  descripcion,
+  actual,
+  ogTitulo = titulo,
+  ogDescripcion = descripcion,
+  datosEstructurados = false,
+  noindex = false,
+} = Astro.props;
+
+// Astro.site + la ruta actual: los canonical siguen apuntando a producción,
+// como ya lo hacían las cuatro páginas del sitio original.
+//
+// Con build.format "file" la portada se genera como /index.html, pero su
+// canonical debe ser la raíz — es lo que estaba indexado y lo que lista
+// sitemap.xml. Sin esta normalización se declararía una URL distinta.
+const rutaCanonica = Astro.url.pathname.replace(/(^|\/)index\.html$/, "/");
+const canonical = new URL(rutaCanonica, Astro.site).href;
+const ogImagen = new URL("/assets/img/logo-full.png", Astro.site).href;
+
+const LD = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: EMPRESA.marca,
+  legalName: EMPRESA.razonSocial,
+  description:
+    "Ingeniería, diseño y fabricación de maquinaria, estructuras industriales y soluciones de movilidad y reciclaje para el agro, la industria y la sostenibilidad.",
+  url: `${EMPRESA.url}/`,
+  logo: ogImagen,
+  telephone: EMPRESA.telefonoE164,
+  email: EMPRESA.correo,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: EMPRESA.direccion.calle,
+    addressLocality: EMPRESA.direccion.ciudad,
+    addressRegion: EMPRESA.direccion.region,
+    addressCountry: EMPRESA.direccion.pais,
+  },
+  sameAs: SOCIAL.map((r) => r.href),
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={ogTitulo} />
+    <meta property="og:description" content={ogDescripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImagen} />
+
+    <meta name="theme-color" content="#2144a1" />
+    <link rel="icon" href="/assets/img/favicon-512.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    {datosEstructurados && (
+      <script type="application/ld+json" set:html={JSON.stringify(LD, null, 2)} />
+    )}
+  </head>
+
+  <body>
+    <a
+      class="absolute -left-[9999px] top-0 z-999 rounded-br-xl bg-white px-[18px] py-3
+             font-bold text-blue-600 focus:left-0"
+      href="#main">Saltar al contenido</a
+    >
+
+    <div class="scroll-progress" data-progreso aria-hidden="true"></div>
+
+    <FranjaServicios />
+    <Header actual={actual} />
+    <MenuMovil actual={actual} />
+
+    <main id="main"><slot /></main>
+
+    <Footer />
+    <BotonWhatsapp />
+    <BarraMovil actual={actual} />
+
+    <script src="../scripts/sitio.js"></script>
+  </body>
+</html>

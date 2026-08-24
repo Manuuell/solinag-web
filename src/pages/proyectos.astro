@@ -1,0 +1,162 @@
+---
+import Base from "../layouts/Base.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Seccion from "../components/Seccion.astro";
+import HeroPagina from "../components/HeroPagina.astro";
+import CabeceraSeccion from "../components/CabeceraSeccion.astro";
+import FichaTecnica from "../components/FichaTecnica.astro";
+import BannerCta from "../components/BannerCta.astro";
+import Boton from "../components/Boton.astro";
+import Icono from "../components/Icono.astro";
+import { PRODUCTOS } from "../data/productos.js";
+import { ruta } from "../data/sitio.js";
+
+const FRENTES = [
+  {
+    titulo: "Economía circular",
+    texto: "Compactadoras, líneas de reciclaje y sistemas de recolección que cierran el ciclo de los materiales.",
+    img: "/assets/img/prod-linea-pet.jpg",
+    alt: "Línea de reciclaje PET de SOLINAG",
+    ancla: "estructuras",
+    ficha: "linea-pet",
+  },
+  {
+    titulo: "Industria",
+    texto: "Maquinaria, equipos y estructuras industriales diseñadas a la medida de cada planta de producción.",
+    img: "/assets/img/prod-compactadora.jpg",
+    alt: "Compactadora industrial SOLINAG",
+    ancla: "maquinaria",
+    ficha: "molino",
+  },
+  {
+    titulo: "Agro",
+    texto: "Equipos y soluciones agroindustriales que mejoran la productividad en campo y en planta.",
+    img: null, // Sin foto: va sobre un degradado verde con el icono del eje.
+    ancla: "maquinaria",
+    ficha: null,
+  },
+];
+
+const PASOS = [
+  { n: "01", titulo: "Entendemos la necesidad", texto: "Escuchamos tu operación y definimos el reto real a resolver." },
+  { n: "02", titulo: "Diseñamos la solución", texto: "Ingeniería de detalle, modelado 3D y validación técnica." },
+  { n: "03", titulo: "Fabricamos con calidad", texto: "Producción propia con estándares de ingeniería y seguridad." },
+  { n: "04", titulo: "Entregamos y ponemos en servicio", texto: "Instalación, puesta en marcha y acompañamiento post-entrega." },
+];
+
+// Solo se renderizan las fichas que esta página realmente puede abrir.
+const fichasUsadas = PRODUCTOS.filter((p) => FRENTES.some((f) => f.ficha === p.clave));
+
+const ENLACE_FLECHA =
+  "group inline-flex items-center gap-1.5 text-[14px] font-bold text-blue-600 " +
+  "[&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform hover:[&_svg]:translate-x-1";
+---
+
+<Base
+  titulo="Proyectos · SOLINAG SAS"
+  descripcion="Proyectos destacados de SOLINAG SAS en economía circular, industria y agro, y nuestro proceso de trabajo de principio a fin."
+  actual="proyectos"
+>
+  <HeroPagina
+    migas={[{ texto: "Inicio", href: ruta("inicio") }, { texto: "Proyectos" }]}
+    antetitulo="Nuestros proyectos"
+    titulo="Cada proyecto es una alianza para transformar ideas en soluciones reales"
+    entradilla="Trabajamos de la mano con nuestros clientes en tres frentes: economía circular, industria y agro, siempre con ingeniería propia y fabricación local."
+  />
+
+  <Seccion>
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="Proyectos destacados"
+        titulo="Frentes de trabajo"
+        entradilla="Estos son los grandes frentes donde nuestra ingeniería genera resultados medibles para la industria, el agro y el medio ambiente."
+      />
+
+      <div class="reveal-stagger grid gap-6 lg:grid-cols-3">
+        {FRENTES.map((f, i) => (
+          <article class="card reveal group !p-0" style={`--i:${i}`}>
+            <div class="relative grid h-50 place-items-center overflow-hidden">
+              {f.img ? (
+                <img
+                  src={f.img}
+                  alt={f.alt}
+                  loading="lazy"
+                  class="absolute inset-0 h-full w-full bg-blue-900 object-cover
+                         transition-transform duration-600 group-hover:scale-106"
+                />
+              ) : (
+                <div class="absolute inset-0 grid place-items-center bg-linear-140 from-[#2b6f2f] to-[#123a17] text-white/80">
+                  <Icono nombre="agro" class="h-16 w-16" />
+                </div>
+              )}
+            </div>
+
+            <div class="px-7 pt-6.5 pb-7.5">
+              <h3 class="mb-2.5 text-xl">{f.titulo}</h3>
+              <p class="mb-4 text-[14.5px] text-ink-soft">{f.texto}</p>
+
+              <div class="flex flex-wrap items-center justify-between gap-2.5">
+                <a href={ruta("soluciones", f.ancla)} class={ENLACE_FLECHA}>
+                  Ver soluciones relacionadas
+                  <Icono nombre="flecha" />
+                </a>
+                {f.ficha && (
+                  <button
+                    class="py-1.5 text-[13px] font-bold text-blue-600"
+                    data-abrir-ficha={f.ficha}
+                  >
+                    Ficha técnica
+                  </button>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion class="bg-surface-2">
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="Cómo trabajamos"
+        titulo="Nuestro proceso"
+        entradilla="De la idea a la puesta en marcha, un mismo equipo te acompaña en las cuatro etapas del proyecto."
+      />
+
+      <div class="proceso reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {PASOS.map((p, i) => (
+          <div class="reveal group relative z-1 text-center" style={`--i:${i}`}>
+            <div
+              class="mx-auto mb-4.5 grid h-17 w-17 place-items-center rounded-full border-2
+                     border-line bg-white text-[22px] font-extrabold text-blue-600 shadow-sm
+                     transition-[transform,background-color,color,border-color] duration-500
+                     ease-spring group-hover:scale-110 group-hover:border-blue-600
+                     group-hover:bg-blue-600 group-hover:text-white"
+            >
+              {p.n}
+            </div>
+            <h4 class="mb-1.5 text-[15.5px]">{p.titulo}</h4>
+            <p class="text-[13.5px] text-muted">{p.texto}</p>
+          </div>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  <Seccion compacta>
+    <Contenedor>
+      <BannerCta
+        titulo="Cada proyecto es una alianza para transformar ideas en soluciones reales."
+        texto="Cuéntanos en qué etapa está tu proyecto y te ayudamos a definir los siguientes pasos."
+      >
+        <Boton href={ruta("nosotros", "contacto")} variante="primary">Iniciar un proyecto</Boton>
+        <Boton href={ruta("soluciones")} variante="outline-light">Ver soluciones</Boton>
+      </BannerCta>
+    </Contenedor>
+  </Seccion>
+
+  {fichasUsadas.map((p) => <FichaTecnica producto={p} />)}
+</Base>

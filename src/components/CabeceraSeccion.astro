@@ -1,0 +1,13 @@
+---
+/** Antetítulo + título + entradilla, con la variante centrada. */
+const { antetitulo, titulo, entradilla, centrada = false } = Astro.props;
+---
+<div class:list={["mb-11", centrada && "mx-auto text-center"]}>
+  {antetitulo && <span class="eyebrow">{antetitulo}</span>}
+  <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)]">{titulo}</h2>
+  {entradilla && (
+    <p class:list={["mt-3.5 max-w-[62ch] text-[clamp(16px,1.6vw,18px)] text-ink-soft", centrada && "mx-auto"]}>
+      {entradilla}
+    </p>
+  )}
+</div>

@@ -1,4 +1,17 @@
+# Dependencias y artefactos de build
+node_modules/
+dist/
+.astro/
+
+# Restos del truco .nosync de iCloud (no volver a usarlo: rompe la
+# resolución de módulos de Vite)
+node_modules.nosync/
+node_modules*/
+
+# Utilidades de imágenes
 scripts/_*.png
 scripts/_extracted/
+
+# Sistema
 .DS_Store
 Thumbs.db

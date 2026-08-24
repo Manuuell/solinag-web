@@ -1,0 +1,26 @@
+---
+/** Campo de formulario: etiqueta + control, con los estilos del sistema. */
+const { id, etiqueta, tipo = "text", requerido = false, opciones, ...resto } = Astro.props;
+
+const CONTROL =
+  "rounded-md border-[1.5px] border-line bg-surface-2 px-4 py-3.5 text-[15px] text-ink " +
+  "transition-[border-color,background-color,box-shadow] duration-200 " +
+  "focus:border-blue-500 focus:bg-white focus:shadow-[0_0_0_4px_var(--color-blue-100)] focus:outline-none";
+---
+
+<div class="flex flex-col gap-2">
+  <label for={id} class="text-[13px] font-bold text-ink-soft">
+    {etiqueta}{requerido && " *"}
+  </label>
+
+  {tipo === "textarea" ? (
+    <textarea id={id} name={id} required={requerido} class={`${CONTROL} min-h-27.5 resize-y`} {...resto} />
+  ) : tipo === "select" ? (
+    <select id={id} name={id} required={requerido} class={CONTROL} {...resto}>
+      <option value="">Selecciona una opción</option>
+      {opciones.map((o) => <option>{o}</option>)}
+    </select>
+  ) : (
+    <input id={id} name={id} type={tipo} required={requerido} class={CONTROL} {...resto} />
+  )}
+</div>

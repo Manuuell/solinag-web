@@ -1,0 +1,110 @@
+---
+/**
+ * Pie de página. La columna "Soluciones" ya no repite los enlaces a mano: sale
+ * del catálogo, así que un producto nuevo con ancla aparece aquí solo.
+ */
+import { EMPRESA, NAV, SOCIAL, ruta } from "../data/sitio.js";
+import { PRODUCTOS } from "../data/productos.js";
+import Icono from "./Icono.astro";
+
+const categorias = PRODUCTOS.filter((p) => p.ancla).map((p) => ({
+  href: ruta("soluciones", p.ancla),
+  texto: p.tag,
+}));
+
+const CONTACTO = [
+  { icono: "ubicacion", texto: EMPRESA.direccion.completa },
+  { icono: "telefono", texto: EMPRESA.telefono },
+  { icono: "correo", texto: EMPRESA.correo },
+];
+
+const CONTENEDOR = "mx-auto w-full max-w-[1200px] px-6";
+const TITULO_COL =
+  "mb-[18px] text-[13px] uppercase tracking-[0.08em] text-white/50 font-extrabold";
+const ENLACE_COL = "text-[14.5px] text-white/82 transition-colors hover:text-green-500";
+---
+
+<footer class="relative mt-30 overflow-hidden bg-blue-900 pt-18 pb-7 text-white/82">
+  <!-- Halos de color del fondo -->
+  <div
+    class="pointer-events-none absolute inset-0"
+    style="background:
+      radial-gradient(600px 260px at 12% 0%, rgb(137 243 54 / 0.16), transparent 60%),
+      radial-gradient(500px 260px at 88% 0%, rgb(90 130 220 / 0.25), transparent 60%);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class={`${CONTENEDOR} relative grid gap-8 md:gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1.1fr]`}>
+    <div class="col-span-full md:col-auto">
+      <img
+        src="/assets/img/logo-dark-bg.png"
+        alt={EMPRESA.marca}
+        width="89"
+        height="78"
+        class="mb-4 h-[78px] w-auto"
+      />
+      <p class="max-w-[34ch] text-[14.5px] text-white/60">
+        Soluciones de Ingeniería para la Industria y el Agro SAS. Innovación que transforma:
+        agro, industria y sostenibilidad.
+      </p>
+      <div class="mt-5 flex gap-2.5">
+        {SOCIAL.map((red) => (
+          <a
+            href={red.href}
+            target="_blank"
+            rel="noopener"
+            aria-label={red.nombre}
+            class="flex h-[38px] w-[38px] items-center justify-center rounded-full border
+                   border-white/12 bg-white/8 transition-[background-color,transform,color]
+                   duration-200 ease-spring hover:-translate-y-[3px] hover:bg-green-500
+                   hover:text-blue-900 [&_svg]:h-[17px] [&_svg]:w-[17px]"
+          >
+            <Icono nombre={red.id} />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div>
+      <h4 class={TITULO_COL}>Navegación</h4>
+      <ul class="flex flex-col gap-3">
+        {NAV.map((item) => (
+          <li><a href={item.href} class={ENLACE_COL}>{item.texto}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h4 class={TITULO_COL}>Soluciones</h4>
+      <ul class="flex flex-col gap-3">
+        {categorias.map((c) => (
+          <li><a href={c.href} class={ENLACE_COL}>{c.texto}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h4 class={TITULO_COL}>Contacto</h4>
+      <ul class="flex flex-col gap-3">
+        {CONTACTO.map((c) => (
+          <li class="flex items-start gap-2.5 text-[14.5px]">
+            <Icono nombre={c.icono} class="mt-0.5 h-[17px] w-[17px] flex-none text-green-500" />
+            <span>{c.texto}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div
+    class={`${CONTENEDOR} relative mt-14 flex flex-wrap items-center justify-between gap-2.5
+            border-t border-white/12 pt-6 text-[13px] text-white/50`}
+  >
+    <span>
+      © {new Date().getFullYear()} {EMPRESA.marca} — {EMPRESA.razonSocialLegible}. Todos los
+      derechos reservados.
+    </span>
+    <span>{EMPRESA.direccion.corta}</span>
+  </div>
+</footer>
