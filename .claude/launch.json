@@ -6,12 +6,6 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["astro", "dev", "--port", "4321"],
       "port": 4321
-    },
-    {
-      "name": "solinag-original",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", ".", "-l", "4173"],
-      "port": 4173
     }
   ]
 }

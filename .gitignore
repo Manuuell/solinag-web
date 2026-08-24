@@ -15,3 +15,14 @@ scripts/_extracted/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Herramientas de Claude Code instaladas localmente (plugins, skills de
+# terceros): son config de cada máquina, no parte del proyecto. Un `git add`
+# amplio los coló una vez ya (4.8 MB, 175 archivos ajenos a SOLINAG) — no
+# deben volver a versionarse. .claude/launch.json sí se versiona aparte.
+/.claude/skills/
+
+# Carpeta pre-Astro, reemplazada por public/assets/ en la migración a Astro.
+# Si reaparece (p. ej. un merge desde una rama vieja), es una duplicada y hay
+# que borrarla, no re-trackearla.
+/assets/
