@@ -9,22 +9,22 @@ import BannerCta from "../components/BannerCta.astro";
 import Boton from "../components/Boton.astro";
 import Icono from "../components/Icono.astro";
 import { PRODUCTOS } from "../data/productos.js";
-import { ruta } from "../data/sitio.js";
+import { PROCESO, ruta } from "../data/sitio.js";
 
 const FRENTES = [
   {
     titulo: "Economía circular",
     texto: "Compactadoras, líneas de reciclaje y sistemas de recolección que cierran el ciclo de los materiales.",
-    img: "/assets/img/prod-linea-pet.jpg",
-    alt: "Línea de reciclaje PET de SOLINAG",
+    img: "/assets/img/prod-smc-pet4.jpg",
+    alt: "Sistema modular de clasificación PET de SOLINAG con cuatro operarios",
     ancla: "estructuras",
     ficha: "linea-pet",
   },
   {
     titulo: "Industria",
     texto: "Maquinaria, equipos y estructuras industriales diseñadas a la medida de cada planta de producción.",
-    img: "/assets/img/prod-compactadora.jpg",
-    alt: "Compactadora industrial SOLINAG",
+    img: "/assets/img/planta-compactadora.jpg",
+    alt: "Compactadora vertical SOLINAG fabricada en planta",
     ancla: "maquinaria",
     ficha: "molino",
   },
@@ -37,18 +37,11 @@ const FRENTES = [
   },
 ];
 
-const PASOS = [
-  { n: "01", titulo: "Entendemos la necesidad", texto: "Escuchamos tu operación y definimos el reto real a resolver." },
-  { n: "02", titulo: "Diseñamos la solución", texto: "Ingeniería de detalle, modelado 3D y validación técnica." },
-  { n: "03", titulo: "Fabricamos con calidad", texto: "Producción propia con estándares de ingeniería y seguridad." },
-  { n: "04", titulo: "Entregamos y ponemos en servicio", texto: "Instalación, puesta en marcha y acompañamiento post-entrega." },
-];
-
 // Solo se renderizan las fichas que esta página realmente puede abrir.
 const fichasUsadas = PRODUCTOS.filter((p) => FRENTES.some((f) => f.ficha === p.clave));
 
 const ENLACE_FLECHA =
-  "group inline-flex items-center gap-1.5 text-[14px] font-bold text-blue-600 " +
+  "group inline-flex items-center gap-1.5 text-[14px] font-bold text-blue-claro " +
   "[&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform hover:[&_svg]:translate-x-1";
 ---
 
@@ -76,7 +69,7 @@ const ENLACE_FLECHA =
       <div class="reveal-stagger grid gap-6 lg:grid-cols-3">
         {FRENTES.map((f, i) => (
           <article class="card reveal group !p-0" style={`--i:${i}`}>
-            <div class="relative grid h-50 place-items-center overflow-hidden">
+            <div class="relative grid aspect-4/3 place-items-center overflow-hidden">
               {f.img ? (
                 <img
                   src={f.img}
@@ -103,7 +96,7 @@ const ENLACE_FLECHA =
                 </a>
                 {f.ficha && (
                   <button
-                    class="py-1.5 text-[13px] font-bold text-blue-600"
+                    class="py-1.5 text-[13px] font-bold text-blue-claro"
                     data-abrir-ficha={f.ficha}
                   >
                     Ficha técnica
@@ -123,18 +116,18 @@ const ENLACE_FLECHA =
         centrada
         antetitulo="Cómo trabajamos"
         titulo="Nuestro proceso"
-        entradilla="De la idea a la puesta en marcha, un mismo equipo te acompaña en las cuatro etapas del proyecto."
+        entradilla="De la idea al mantenimiento, un mismo equipo te acompaña en las seis etapas del proyecto. No entregamos y desaparecemos: montamos en sitio, capacitamos a tu gente y damos soporte después."
       />
 
-      <div class="proceso reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {PASOS.map((p, i) => (
+      <div class="proceso reveal-stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        {PROCESO.map((p, i) => (
           <div class="reveal group relative z-1 text-center" style={`--i:${i}`}>
             <div
               class="mx-auto mb-4.5 grid h-17 w-17 place-items-center rounded-full border-2
-                     border-line bg-white text-[22px] font-extrabold text-blue-600 shadow-sm
+                     border-line bg-surface text-[22px] font-extrabold text-white
                      transition-[transform,background-color,color,border-color] duration-500
-                     ease-spring group-hover:scale-110 group-hover:border-blue-600
-                     group-hover:bg-blue-600 group-hover:text-white"
+                     ease-spring group-hover:scale-110 group-hover:border-green-500
+                     group-hover:bg-green-500 group-hover:text-blue-900"
             >
               {p.n}
             </div>

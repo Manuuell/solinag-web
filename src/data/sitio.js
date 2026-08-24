@@ -5,6 +5,28 @@
  * teléfono, el correo o el menú, se cambia en este archivo y nada más.
  */
 
+/**
+ * ¿Están confirmados los datos de contacto?
+ *
+ * Hoy NO lo están. Buscando material para el sitio aparecieron valores que se
+ * contradicen entre sí:
+ *
+ *   Correos    ewis.campos@solinag.com.co   (sitio, láminas del catálogo)
+ *              Ewis0118@gmail.com           (Google Sites de la empresa)
+ *              Ewiscampo@gmail.com          (Google Sites de la empresa)
+ *
+ *   Teléfonos  +57 319 775 4909             (sitio, casi todas las láminas)
+ *              +57 323 558 0729             (solo la lámina del SMC-PET 4)
+ *              319775909                    (Google Sites — le falta un dígito
+ *                                            y NO marca; es el que ve quien
+ *                                            llega desde Instagram)
+ *
+ * Mientras esto no se aclare con la empresa, la web muestra datos genéricos y
+ * encamina todo al formulario. Al confirmarlos: corregir los valores de abajo
+ * y poner esta constante en true. No hay que tocar ninguna página.
+ */
+export const CONTACTO_VERIFICADO = false;
+
 export const EMPRESA = {
   marca: "SOLINAG SAS",
   razonSocial: "SOLUCIONES DE INGENIERÍA PARA LA INDUSTRIA Y EL AGRO SAS",
@@ -13,9 +35,18 @@ export const EMPRESA = {
   slogan: "Innovación que transforma",
   descriptor: "Agro · Industria · Sostenibilidad",
   url: "https://www.solinag.com.co",
+
+  // Provisionales: son los valores mejor corroborados, pero sin confirmar.
+  // Solo se muestran en pantalla si CONTACTO_VERIFICADO es true.
   correo: "ewis.campos@solinag.com.co",
   telefono: "+57 319 775 4909",
   telefonoE164: "+573197754909",
+
+  // Marcadores visibles mientras no se confirmen los datos reales.
+  // Son deliberadamente evidentes para que nadie los confunda con los buenos.
+  correoGenerico: "correo@gmail.com",
+  telefonoGenerico: "39000000",
+
   direccion: {
     calle: "Manzana A Lote 4, Los Laureles",
     ciudad: "Turbaco",
@@ -23,8 +54,20 @@ export const EMPRESA = {
     pais: "CO",
     completa: "Manzana A Lote 4, Los Laureles, Turbaco, Bolívar, Colombia",
     corta: "Turbaco, Bolívar · Colombia",
+    // El Google Sites de la empresa declara cobertura en Cartagena además de Turbaco.
+    cobertura: "Cartagena de Indias y Turbaco, Bolívar",
   },
 };
+
+/** Lo que se muestra como teléfono: el real solo si está confirmado. */
+export const TELEFONO_VISIBLE = CONTACTO_VERIFICADO
+  ? EMPRESA.telefono
+  : EMPRESA.telefonoGenerico;
+
+/** Lo que se muestra como correo: el real solo si está confirmado. */
+export const CORREO_VISIBLE = CONTACTO_VERIFICADO
+  ? EMPRESA.correo
+  : EMPRESA.correoGenerico;
 
 /** Número de WhatsApp. Antes estaba escrito a mano en 23 sitios. */
 export const WHATSAPP = "573197754909";
@@ -61,6 +104,19 @@ export function ruta(pagina, ancla) {
   return import.meta.env.DEV ? `/${pagina}${fragmento}` : `/${pagina}.html${fragmento}`;
 }
 
+/**
+ * Enlace al formulario de contacto.
+ *
+ * Si ya estás en Nosotros devuelve solo "#contacto": un enlace a
+ * "/nosotros.html#contacto" desde "/nosotros" es otra URL para el navegador,
+ * así que recarga la página entera en vez de desplazarse dentro de ella.
+ *
+ * @param {string} [actual] Identificador de la página que se está viendo.
+ */
+export function enlaceContacto(actual) {
+  return actual === "nosotros" ? "#contacto" : ruta("nosotros", "contacto");
+}
+
 /** Menú principal. El `id` marca cuál va resaltado en cada página. */
 export const NAV = [
   { id: "inicio", texto: "Inicio", href: ruta("inicio") },
@@ -72,12 +128,13 @@ export const NAV = [
 
 /**
  * Perfiles sociales.
- * OJO: hoy apuntan a la página de inicio de cada plataforma, no a los perfiles
- * de SOLINAG — venían así del sitio original. Falta la URL real de cada uno.
+ * Instagram es el perfil real. Facebook, LinkedIn y YouTube siguen apuntando a
+ * la portada de cada plataforma: venían así del sitio original y faltan las
+ * URLs reales.
  */
 export const SOCIAL = [
   { id: "facebook", nombre: "Facebook", href: "https://facebook.com" },
-  { id: "instagram", nombre: "Instagram", href: "https://instagram.com" },
+  { id: "instagram", nombre: "Instagram", href: "https://www.instagram.com/solinag_sas/" },
   { id: "linkedin", nombre: "LinkedIn", href: "https://linkedin.com" },
   { id: "youtube", nombre: "YouTube", href: "https://youtube.com" },
 ];
@@ -87,4 +144,37 @@ export const FRANJA = [
   "Servicio y soluciones · Ingeniería agroindustrial",
   "Servicio y soluciones · Procesos industriales",
   "Servicio y soluciones · Sostenibilidad",
+];
+
+/**
+ * Especialidades de ingeniería.
+ *
+ * Fuente: el sitio en Google Sites que la empresa mantiene
+ * (sites.google.com/view/solinag). La web anterior solo hablaba de tres ejes
+ * — agro, industria y sostenibilidad — que son los sectores a los que sirve,
+ * no las disciplinas que domina.
+ */
+export const ESPECIALIDADES = [
+  { icono: "engranaje", nombre: "Ingeniería mecánica", texto: "Diseño y fabricación de equipos, estructuras y sistemas mecánicos." },
+  { icono: "proceso", nombre: "Ingeniería de procesos", texto: "Análisis y optimización de líneas productivas completas." },
+  { icono: "rayo", nombre: "Ingeniería eléctrica", texto: "Instalaciones, tableros de control y automatización de equipos." },
+  { icono: "edificio", nombre: "Ingeniería civil", texto: "Obra civil asociada al montaje de plantas y estructuras." },
+  { icono: "grafico", nombre: "Ingeniería industrial", texto: "Productividad, seguridad y organización de la operación." },
+  { icono: "diana", nombre: "Ingeniería mecatrónica", texto: "Integración de mecánica, electrónica y control en un mismo equipo." },
+];
+
+/**
+ * Las etapas del trabajo, de principio a fin.
+ *
+ * La web anterior terminaba en la entrega. El Google Sites de la empresa
+ * describe "diseño, fabricación, montaje y mantenimiento", así que el
+ * acompañamiento posterior — que además es un servicio recurrente — faltaba.
+ */
+export const PROCESO = [
+  { n: "01", titulo: "Entendemos la necesidad", texto: "Escuchamos tu operación y definimos el reto real a resolver." },
+  { n: "02", titulo: "Diseñamos la solución", texto: "Ingeniería de detalle, modelado 3D y validación técnica." },
+  { n: "03", titulo: "Fabricamos con calidad", texto: "Producción propia con estándares de ingeniería y seguridad." },
+  { n: "04", titulo: "Montamos en sitio", texto: "Instalación y puesta en marcha en tu planta, con nuestro equipo." },
+  { n: "05", titulo: "Capacitamos a tu gente", texto: "Entrenamos a los operarios que van a usar el equipo a diario." },
+  { n: "06", titulo: "Mantenemos el equipo", texto: "Mantenimiento post-implementación y soporte técnico continuo." },
 ];

@@ -1,0 +1,43 @@
+---
+/**
+ * Banda de credibilidad, justo después del hero.
+ *
+ * El patrón "Trust & Authority" para B2B industrial ordena las secciones así:
+ * Hero -> Prueba -> Soluciones -> CTA. Al sitio le faltaba el segundo paso: un
+ * comprador industrial busca señales de solvencia antes de mirar catálogo.
+ *
+ * Solo van datos verificables del propio material de la empresa. Sin años de
+ * trayectoria ni número de clientes: no tenemos esa información.
+ */
+import Contenedor from "./Contenedor.astro";
+import Icono from "./Icono.astro";
+
+const PRUEBAS = [
+  { icono: "fabrica", cifra: "100%", texto: "Fabricación nacional, en planta propia en Turbaco" },
+  { icono: "engranaje", cifra: "6", texto: "Especialidades de ingeniería bajo el mismo techo" },
+  { icono: "caja", cifra: "8", texto: "Líneas de producto, del molino a la estructura metálica" },
+  { icono: "check", cifra: "12", texto: "Meses de garantía por defectos de fabricación" },
+];
+---
+
+<section class="border-y border-line bg-surface py-10 md:py-12">
+  <Contenedor>
+    <ul class="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+      {PRUEBAS.map((p) => (
+        <li class="flex items-start gap-4">
+          <span
+            class="grid h-11 w-11 flex-none place-items-center rounded-sm border border-line
+                   bg-white/5 text-green-500 [&_svg]:h-5 [&_svg]:w-5"
+            aria-hidden="true"
+          >
+            <Icono nombre={p.icono} />
+          </span>
+          <div>
+            <b class="block text-[26px] leading-none font-extrabold text-white">{p.cifra}</b>
+            <span class="mt-1.5 block text-[13.5px] text-ink-soft">{p.texto}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </Contenedor>
+</section>

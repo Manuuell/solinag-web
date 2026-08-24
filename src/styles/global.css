@@ -17,6 +17,8 @@
   --color-blue-500: #3459c4;
   --color-blue-400: #5b7bdb;
   --color-blue-100: #e7ecfb;
+  /* Azul legible sobre fondo oscuro: #2144a1 se hunde contra el negro. */
+  --color-blue-claro: #7b9bec;
 
   /* Marca — verde. Ojo: green-500 (#89f336) da 1.41:1 sobre blanco y NO debe
      usarse para texto en fondo claro. Para eso está green-700. */
@@ -26,14 +28,19 @@
   --color-green-400: #a4f562;
   --color-green-100: #eafedc;
 
-  /* Neutros */
-  --color-ink: #0b1220;
-  --color-ink-soft: #3a4356;
-  --color-muted: #6b7385;
-  --color-line: rgb(15 23 42 / 0.08);
-  --color-paper: #f5f7fb;
-  --color-surface: #ffffff;
-  --color-surface-2: #eef1f8;
+  /* Neutros — esquema oscuro.
+     El manual de marca manda "blanco + verde sobre negro, azul oscuro" y define
+     #89f336 como color de modo oscuro: 12.9:1 sobre fondo oscuro frente a
+     1.41:1 sobre blanco. En claro el verde no se podía usar para texto; aquí
+     sí, y pasa a ser el único acento.
+     El negro lleva matiz azul, no es neutro: enlaza con el azul corporativo. */
+  --color-ink: #ffffff;
+  --color-ink-soft: rgb(255 255 255 / 0.72);
+  --color-muted: rgb(255 255 255 / 0.5);
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-paper: #080c14;      /* fondo de página */
+  --color-surface: #0f1520;    /* tarjetas */
+  --color-surface-2: #161e2c;  /* superficie elevada */
 
   /* WhatsApp (color de marca ajeno, fijo) */
   --color-whatsapp: #25d366;
@@ -57,9 +64,11 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Tipografía */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-    "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Tipografía.
+     Archivo con respaldo del sistema: si la fuente no carga, el texto sigue
+     siendo legible en vez de quedar invisible. */
+  --font-sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 
   /* Breakpoints.
      El sitio original usaba media queries max-width (480/720/960/1080) y
@@ -99,23 +108,36 @@
     font-family: var(--font-sans);
     background: var(--color-paper);
     color: var(--color-ink);
+    color-scheme: dark;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+
+    /* clip y no hidden: "hidden" convierte al body en contenedor de scroll y
+       eso rompe la navegación por anclas — los enlaces a #contacto no movían
+       la página. "clip" recorta igual sin crear el contenedor. */
+    overflow-x: clip;
   }
 
   h1, h2, h3, h4 {
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.1;
+    /* El eje de anchura de Archivo: es lo que da la "grotesca ancha" del
+       manual. Solo en titulares — en texto corrido cansa la vista. */
+    font-stretch: 112%;
   }
 
+  /* 3px y no 2px: el anillo tiene que verse sobre fondo claro y sobre las
+     bandas azul oscuro por igual. */
   :focus-visible {
-    outline: 2px solid var(--color-blue-600);
+    outline: 3px solid var(--color-green-500);
     outline-offset: 3px;
     border-radius: 4px;
   }
+
+  /* Sobre fondo oscuro el azul de marca no destaca: se invierte a blanco. */
+
 
   /* Respetar a quien pide menos movimiento: las animaciones decorativas se
      apagan, pero el contenido sigue siendo visible (ver .reveal más abajo). */
@@ -192,23 +214,24 @@
 
 @layer components {
   /* --------------------------------- Tarjetas -------------------------------- */
+  /* Plano: en oscuro la sombra no se ve, así que la jerarquía la marca el
+     borde. Al pasar el cursor se aclara el borde en vez de levantar la caja. */
   .card {
     position: relative;
     overflow: hidden;
     background: var(--color-surface);
     border: 1px solid var(--color-line);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     padding: 32px;
-    box-shadow: var(--shadow-sm);
     transition:
       transform 0.45s var(--ease-spring),
-      box-shadow 0.45s var(--ease-out-soft),
-      border-color 0.45s;
+      border-color 0.3s var(--ease-out-soft),
+      background-color 0.3s var(--ease-out-soft);
   }
   .card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-md);
-    border-color: transparent;
+    transform: translateY(-4px);
+    border-color: rgb(255 255 255 / 0.22);
+    background: var(--color-surface-2);
   }
 
   /* Halo que sigue al cursor. El JS escribe --mx / --my. */
@@ -221,7 +244,7 @@
     pointer-events: none;
     background: radial-gradient(
       280px circle at var(--mx, 50%) var(--my, 50%),
-      rgb(33 68 161 / 0.08),
+      rgb(137 243 54 / 0.06),
       transparent 70%
     );
     transition: opacity 0.22s var(--ease-out-soft);
@@ -415,13 +438,13 @@
   /* Línea punteada que une los cuatro pasos del proceso. Solo en escritorio:
      apilados en móvil no tendría sentido. */
   .proceso { position: relative; }
-  @media (min-width: 961px) {
+  @media (min-width: 1081px) {
     .proceso::before {
       content: "";
       position: absolute;
       top: 34px;
-      left: 60px;
-      right: 60px;
+      left: 90px;
+      right: 90px;
       height: 2px;
       z-index: 0;
       background: repeating-linear-gradient(

@@ -1,84 +1,72 @@
 ---
 /**
- * Cabecera fija. Antes estaba copiada íntegra en las 4 páginas; ahora recibe
- * `actual` para saber qué enlace resaltar.
+ * Cabecera. Plana y transparente: sin píldora de cristal ni sombra.
+ *
+ * Sobre fondo oscuro el glassmorphism no aporta profundidad, solo suciedad.
+ * La jerarquía la marcan el peso tipográfico y el espacio.
  */
-import { NAV, ruta, whatsapp } from "../data/sitio.js";
+import { NAV, SOCIAL, enlaceContacto, whatsapp } from "../data/sitio.js";
 import Marca from "./Marca.astro";
 import Icono from "./Icono.astro";
-import Boton from "./Boton.astro";
 
 const { actual } = Astro.props;
-
-const ENLACE = "px-4 py-2.5 rounded-full font-semibold text-[14.5px] transition-colors duration-200";
-const ICONO_BTN =
-  "inline-flex items-center justify-center w-10 h-10 rounded-full bg-surface-2 text-blue-600 " +
-  "transition-[transform,background-color] duration-200 ease-spring " +
-  "hover:-translate-y-0.5 hover:scale-105 hover:bg-green-100 [&_svg]:w-[19px] [&_svg]:h-[19px]";
 ---
 
 <header
-  class="sticky top-0 z-100 py-3.5 transition-[padding] duration-200"
+  class="sticky top-0 z-100 border-b border-transparent bg-paper/80 backdrop-blur-md
+         transition-[border-color,background-color] duration-300"
   data-header
 >
-  <div class="mx-auto w-full max-w-[1200px] px-6">
-    <div
-      class="flex items-center justify-between gap-4 rounded-full border border-white/60
-             bg-white/72 py-2.5 pl-4 pr-3.5 shadow-sm backdrop-blur-[20px] backdrop-saturate-[180%]
-             transition-[box-shadow,background-color] duration-200"
-      data-barra
-    >
-      <Marca />
+  <div class="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-8 px-6 py-5 md:px-10">
+    <Marca />
 
-      <nav class="hidden lg:flex items-center gap-1" aria-label="Navegación principal">
-        {NAV.map((item) => (
-          <a
-            href={item.href}
-            aria-current={actual === item.id ? "page" : undefined}
-            class:list={[
-              ENLACE,
-              actual === item.id
-                ? "bg-blue-600 text-white"
-                : "text-ink-soft hover:bg-surface-2 hover:text-ink",
-            ]}
-          >
-            {item.texto}
-          </a>
-        ))}
-      </nav>
-
-      <div class="flex items-center gap-2">
+    <nav class="hidden items-center gap-9 lg:flex" aria-label="Navegación principal">
+      {NAV.slice(0, 4).map((item) => (
         <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noopener"
-          aria-label="Síguenos en Instagram"
-          class={`hidden sm:inline-flex ${ICONO_BTN}`}
+          href={item.href}
+          aria-current={actual === item.id ? "page" : undefined}
+          class:list={[
+            "relative text-[15px] font-medium transition-colors duration-200",
+            "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-green-500",
+            "after:transition-all after:duration-300",
+            actual === item.id
+              ? "text-white after:w-full"
+              : "text-white/60 after:w-0 hover:text-white hover:after:w-full",
+          ]}
         >
-          <Icono nombre="instagram" />
+          {item.texto}
         </a>
-        <a
-          href={whatsapp()}
-          target="_blank"
-          rel="noopener"
-          aria-label="Escríbenos por WhatsApp"
-          class={`hidden sm:inline-flex ${ICONO_BTN}`}
-        >
-          <Icono nombre="whatsapp" />
-        </a>
+      ))}
+    </nav>
 
-        <Boton href={ruta("nosotros", "contacto")} variante="primary" tamano="sm">Cotizar</Boton>
+    <div class="flex items-center gap-5">
+      <a
+        href={SOCIAL.find((r) => r.id === "instagram").href}
+        target="_blank"
+        rel="noopener"
+        aria-label="Síguenos en Instagram"
+        class="hidden text-white/50 transition-colors hover:text-white sm:block [&_svg]:h-5 [&_svg]:w-5"
+      >
+        <Icono nombre="instagram" />
+      </a>
 
-        <button
-          class={`lg:hidden ${ICONO_BTN}`}
-          aria-label="Abrir menú"
-          aria-expanded="false"
-          aria-controls="menu-movil"
-          data-abrir-menu
-        >
-          <Icono nombre="menu" />
-        </button>
-      </div>
+      <a
+        href={enlaceContacto(actual)}
+        class="hidden text-[15px] font-semibold text-green-500 underline decoration-green-500/40
+               underline-offset-[6px] transition-colors hover:decoration-green-500 sm:block"
+      >
+        Cotizar
+      </a>
+
+      <button
+        class="text-white lg:hidden [&_svg]:h-6 [&_svg]:w-6"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="menu-movil"
+        data-abrir-menu
+      >
+        <Icono nombre="menu" />
+      </button>
     </div>
   </div>
 </header>

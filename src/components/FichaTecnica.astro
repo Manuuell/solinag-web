@@ -1,26 +1,27 @@
 ---
 /**
- * Ficha técnica de un producto, como <dialog> nativo.
+ * Ficha técnica completa de un producto, como <dialog> nativo.
  *
- * El contenido se renderiza en el build, así que existe en el HTML aunque el
- * visitante no abra la ficha: es indexable y funciona sin depender de que un
- * objeto de JavaScript esté sincronizado con la tarjeta.
+ * Todo el contenido se renderiza en el build, así que existe en el HTML aunque
+ * el visitante no abra la ficha: es indexable y no depende de que un objeto de
+ * JavaScript siga sincronizado con la tarjeta.
  */
 import { ruta, whatsapp } from "../data/sitio.js";
 import Icono from "./Icono.astro";
 import Boton from "./Boton.astro";
 
 const { producto: p } = Astro.props;
+const galeria = p.galeria?.length ? p.galeria : p.img ? [{ src: p.img, alt: p.alt }] : [];
 ---
 
 <dialog id={`ficha-${p.clave}`} data-ficha aria-labelledby={`ficha-${p.clave}-titulo`}>
   <div class="asa" aria-hidden="true"></div>
 
-  <div class="mb-[18px] flex items-start justify-between gap-4">
+  <div class="mb-5 flex items-start justify-between gap-4">
     <div>
       <span
-        class="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1.5
-               text-[12.5px] font-bold text-green-700"
+        class="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-green-500/15 px-3 py-1.5
+               text-[12.5px] font-bold text-green-500"
       >
         {p.tag}
       </span>
@@ -37,46 +38,149 @@ const { producto: p } = Astro.props;
     </button>
   </div>
 
-  <div class="mb-5 grid h-[220px] place-items-center overflow-hidden rounded-md bg-surface-2">
-    <img src={p.img} alt={p.alt} class="h-full w-full object-contain" loading="lazy" />
-  </div>
+  {/* Galería: imagen grande + miniaturas que la intercambian */}
+  {galeria.length > 0 && (
+  <figure class="mb-5">
+    {/* Flex con max-*: con grid + place-items-center, h-full resuelve contra una
+        fila sin altura definida y la imagen se desborda del marco. */}
+    <div
+      class="flex h-[280px] items-center justify-center overflow-hidden rounded-md
+             bg-surface-2 p-4"
+    >
+      <img
+        src={galeria[0].src}
+        alt={galeria[0].alt}
+        class="max-h-full max-w-full object-contain"
+        loading="lazy"
+        data-ficha-principal
+      />
+    </div>
+
+    {galeria.length > 1 && (
+      <div class="mt-2.5 flex gap-2.5 overflow-x-auto pb-1">
+        {galeria.map((g, i) => (
+          <button
+            class:list={[
+              "h-16 w-20 flex-none overflow-hidden rounded-sm border-2 bg-surface-2",
+              "transition-[border-color,opacity] duration-200 hover:opacity-100",
+              i === 0 ? "border-blue-600" : "border-transparent opacity-60",
+            ]}
+            data-ficha-miniatura={g.src}
+            aria-label={`Ver: ${g.pie ?? g.alt}`}
+          >
+            <img src={g.src} alt="" class="h-full w-full object-cover" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    )}
+
+    {galeria[0].pie && (
+      <figcaption class="mt-2 text-[12.5px] text-muted" data-ficha-pie>{galeria[0].pie}</figcaption>
+    )}
+  </figure>
+  )}
 
   <p class="text-[15px] text-ink-soft">{p.intro}</p>
 
   <div class="my-[22px] grid grid-cols-2 gap-3">
     {p.stats.map((s) => (
       <div class="rounded-sm border border-line bg-surface-2 px-3.5 py-3">
-        <b class="block text-[17px] text-blue-700">{s.v}</b>
+        <b class="block text-[17px] text-white">{s.v}</b>
         <span class="text-[12.5px] text-muted">{s.u}</span>
       </div>
     ))}
   </div>
 
-  {p.tabla && (
-    <div class="mb-5 overflow-x-auto rounded-sm border border-line">
-      <table class="tabla-modelos">
-        <thead>
-          <tr>{p.tabla.headers.map((h) => <th>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {p.tabla.rows.map((fila) => (
-            <tr>{fila.map((celda) => <td>{celda}</td>)}</tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+  {p.proceso?.length > 0 && (
+    <section class="mb-6">
+      <h4 class="mb-3 text-[13px] font-extrabold tracking-[0.08em] text-muted uppercase">
+        Flujo del proceso
+      </h4>
+      <ol class="flex flex-wrap gap-2">
+        {p.proceso.map((paso, i) => (
+          <li
+            class="inline-flex items-center gap-2 rounded-full border border-line bg-white/5 px-3 py-1.5
+                   text-[12.5px] font-semibold text-white/80"
+          >
+            <span class="font-extrabold text-green-500">{String(i + 1).padStart(2, "0")}</span>
+            {paso}
+          </li>
+        ))}
+      </ol>
+    </section>
   )}
+
+  {p.materiales?.length > 0 && (
+    <section class="mb-6">
+      <h4 class="mb-3 text-[13px] font-extrabold tracking-[0.08em] text-muted uppercase">
+        Materiales compatibles
+      </h4>
+      <div class="flex flex-wrap gap-2">
+        {p.materiales.map((m) => (
+          <span
+            class="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1.5
+                   text-[12.5px] font-semibold text-green-500"
+          >
+            <Icono nombre="check" class="h-3 w-3" />
+            {m}
+          </span>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {p.tabla && (
+    <section class="mb-6">
+      <h4 class="mb-3 text-[13px] font-extrabold tracking-[0.08em] text-muted uppercase">
+        Modelos disponibles
+      </h4>
+      <div class="overflow-x-auto rounded-sm border border-line">
+        <table class="tabla-modelos">
+          <thead>
+            <tr>{p.tabla.headers.map((h) => <th>{h}</th>)}</tr>
+          </thead>
+          <tbody>
+            {p.tabla.rows.map((fila) => (
+              <tr>{fila.map((celda) => <td>{celda}</td>)}</tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  {p.especificaciones?.map((bloque) => (
+    <section class="mb-6">
+      <h4 class="mb-3 text-[13px] font-extrabold tracking-[0.08em] text-muted uppercase">
+        {bloque.grupo}
+      </h4>
+      <dl class="overflow-hidden rounded-sm border border-line">
+        {bloque.filas.map(([etiqueta, valor], i) => (
+          <div
+            class:list={[
+              "grid gap-1 px-3.5 py-2.5 text-[13.5px] sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] sm:gap-4",
+              i % 2 ? "bg-surface-2" : "bg-surface",
+            ]}
+          >
+            <dt class="font-semibold text-ink">{etiqueta}</dt>
+            {valor !== "—" && <dd class="text-ink-soft">{valor}</dd>}
+          </div>
+        ))}
+      </dl>
+      {bloque.nota && <p class="mt-2 text-[12px] text-muted">{bloque.nota}</p>}
+    </section>
+  ))}
 
   <ul class="my-[18px] flex flex-col gap-2.5">
     {p.lista.map((item) => (
       <li class="flex items-start gap-2.5 text-[14.5px] text-ink-soft">
-        <Icono nombre="check" class="mt-0.5 h-[17px] w-[17px] flex-none text-green-700" />
+        <Icono nombre="check" class="mt-0.5 h-[17px] w-[17px] flex-none text-green-500" />
         <span>{item}</span>
       </li>
     ))}
   </ul>
 
-  <div class="flex flex-wrap gap-2.5">
+  <div class="mt-6 flex flex-wrap gap-2.5 border-t border-line pt-6">
     <Boton href={whatsapp(p.mensaje)} variante="whatsapp" target="_blank" rel="noopener">
       <Icono nombre="whatsapp" />
       Cotizar por WhatsApp

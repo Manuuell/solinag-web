@@ -1,20 +1,12 @@
 ---
 /** Cabecera de las páginas interiores: migas, antetítulo, título y entradilla. */
-import Contenedor from "./Contenedor.astro";
 import Icono from "./Icono.astro";
 
 const { antetitulo, titulo, entradilla, migas = [] } = Astro.props;
 ---
 
-<section
-  class="sobre-oscuro relative -mt-27.5 overflow-hidden rounded-b-xl pt-37.5 pb-21 md:pb-21"
->
-  <div class="hero-bg" data-hero-bg>
-    <span class="blob blob-1"></span>
-    <span class="blob blob-2"></span>
-  </div>
-
-  <Contenedor class="relative">
+<section class="relative border-b border-line px-6 pt-16 pb-20 md:px-10 md:pt-20 md:pb-24">
+  <div class="mx-auto w-full max-w-[1400px]">
     {migas.length > 0 && (
       <nav class="mb-1 flex items-center gap-2 text-[13.5px] text-white/55" aria-label="Migas de pan">
         {migas.map((m, i) => (
@@ -28,8 +20,8 @@ const { antetitulo, titulo, entradilla, migas = [] } = Astro.props;
       </nav>
     )}
 
-    <span class="eyebrow">{antetitulo}</span>
-    <h1 class="mt-3.5 text-[clamp(34px,5vw,52px)] text-white">{titulo}</h1>
-    {entradilla && <p class="mt-3.5 max-w-[60ch] text-[17px] text-white/78">{entradilla}</p>}
-  </Contenedor>
+    <span class="inline-flex items-center gap-2.5 text-[12px] font-semibold tracking-[0.16em] text-green-500 uppercase"><span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>{antetitulo}</span>
+    <h1 class="mt-6 max-w-[18ch] text-[clamp(38px,6vw,80px)] leading-[0.98] tracking-[-0.03em] text-white">{titulo}</h1>
+    {entradilla && <p class="mt-7 max-w-[52ch] text-[clamp(15px,1.4vw,18px)] leading-relaxed text-white/55">{entradilla}</p>}
+  </div>
 </section>

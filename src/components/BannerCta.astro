@@ -4,20 +4,15 @@ const { titulo, texto } = Astro.props;
 ---
 
 <div
-  class="reveal relative flex flex-wrap items-center justify-between gap-7 overflow-hidden
-         rounded-xl bg-linear-120 from-blue-800 from-0% via-blue-600 via-60% to-green-700
-         px-7 py-10 md:px-12 md:py-14"
+  class="reveal relative flex flex-wrap items-center justify-between gap-8 overflow-hidden
+         rounded-md border border-line bg-surface px-7 py-12 md:px-14 md:py-16"
 >
-  <div
-    class="pointer-events-none absolute inset-0"
-    style="background: radial-gradient(420px 220px at 90% 10%, rgb(137 243 54 / 0.35), transparent 60%);"
-    aria-hidden="true"
-  >
-  </div>
+  {/* Una sola veta verde a la izquierda, en vez de un degradado en todo el bloque. */}
+  <span class="absolute inset-y-0 left-0 w-1 bg-green-500" aria-hidden="true"></span>
 
   <div class="relative">
-    <h3 class="max-w-[20ch] text-[clamp(22px,3vw,30px)] text-white">{titulo}</h3>
-    {texto && <p class="mt-2.5 max-w-[46ch] text-white/78">{texto}</p>}
+    <h3 class="max-w-[22ch] text-[clamp(24px,3.4vw,40px)] leading-[1.05] text-white">{titulo}</h3>
+    {texto && <p class="mt-4 max-w-[46ch] text-white/55">{texto}</p>}
   </div>
 
   <div class="relative flex flex-wrap gap-3"><slot /></div>

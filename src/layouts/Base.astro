@@ -7,7 +7,7 @@
  * el botón de WhatsApp y la barra inferior. Cambiar cualquiera de esos ahora
  * es una sola edición.
  */
-import { EMPRESA, SOCIAL } from "../data/sitio.js";
+import { CONTACTO_VERIFICADO, EMPRESA, SOCIAL } from "../data/sitio.js";
 import FranjaServicios from "../components/FranjaServicios.astro";
 import Header from "../components/Header.astro";
 import MenuMovil from "../components/MenuMovil.astro";
@@ -45,8 +45,11 @@ const LD = {
     "Ingeniería, diseño y fabricación de maquinaria, estructuras industriales y soluciones de movilidad y reciclaje para el agro, la industria y la sostenibilidad.",
   url: `${EMPRESA.url}/`,
   logo: ogImagen,
-  telephone: EMPRESA.telefonoE164,
-  email: EMPRESA.correo,
+  // Sin confirmar no se declaran: los datos estructurados los indexa Google y
+  // corregirlos después es lento.
+  ...(CONTACTO_VERIFICADO
+    ? { telephone: EMPRESA.telefonoE164, email: EMPRESA.correo }
+    : {}),
   address: {
     "@type": "PostalAddress",
     streetAddress: EMPRESA.direccion.calle,
@@ -73,6 +76,17 @@ const LD = {
     <meta property="og:description" content={ogDescripcion} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImagen} />
+
+    {/* Archivo variable: el manual de marca pide "grotesca ancha, 700-800,
+        tracking -0.02em", y su eje wdth (62-125) es justo lo que da ese ancho.
+        preconnect a los dos hosts porque el CSS y los .woff2 salen de dominios
+        distintos; sin el segundo se paga un handshake extra. */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap"
+    />
 
     <meta name="theme-color" content="#2144a1" />
     <link rel="icon" href="/assets/img/favicon-512.png" type="image/png" />

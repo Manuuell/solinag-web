@@ -1,6 +1,6 @@
 ---
 /** Menú desplegable en móvil. El JS alterna la clase .open en el contenedor. */
-import { NAV, ruta, whatsapp } from "../data/sitio.js";
+import { NAV, enlaceContacto, whatsapp } from "../data/sitio.js";
 import Marca from "./Marca.astro";
 import Icono from "./Icono.astro";
 import Boton from "./Boton.astro";
@@ -16,7 +16,7 @@ const { actual } = Astro.props;
   data-menu-movil
 >
   <div
-    class="absolute inset-x-3 top-3 rounded-lg bg-white p-5 shadow-lg opacity-0
+    class="absolute inset-x-3 top-3 rounded-lg border border-line bg-surface p-5 shadow-lg opacity-0
            -translate-y-4 scale-[0.97] transition-[transform,opacity] duration-[450ms] ease-spring
            [.open_&]:translate-y-0 [.open_&]:scale-100 [.open_&]:opacity-100"
   >
@@ -24,7 +24,7 @@ const { actual } = Astro.props;
       <Marca alturaLogo={30} mostrarSas={false} />
       <button
         class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-2
-               text-blue-600 [&_svg]:h-[19px] [&_svg]:w-[19px]"
+               text-white [&_svg]:h-[19px] [&_svg]:w-[19px]"
         aria-label="Cerrar menú"
         data-cerrar-menu
       >
@@ -39,7 +39,7 @@ const { actual } = Astro.props;
           aria-current={actual === item.id ? "page" : undefined}
           class:list={[
             "flex items-center justify-between rounded-md px-3.5 py-[15px] text-[17px] font-bold",
-            actual === item.id ? "bg-blue-100 text-blue-600" : "text-ink",
+            actual === item.id ? "bg-green-500/15 text-green-500" : "text-white/75",
           ]}
         >
           {item.texto}
@@ -49,7 +49,7 @@ const { actual } = Astro.props;
     </nav>
 
     <div class="mt-3.5 flex gap-2.5">
-      <Boton href={ruta("nosotros", "contacto")} variante="primary" bloque>Cotizar</Boton>
+      <Boton href={enlaceContacto(actual)} variante="primary" bloque>Cotizar</Boton>
       <Boton
         href={whatsapp()}
         variante="whatsapp"

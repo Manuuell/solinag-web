@@ -9,7 +9,15 @@ import Campo from "../components/Campo.astro";
 import Boton from "../components/Boton.astro";
 import Chip from "../components/Chip.astro";
 import Icono from "../components/Icono.astro";
-import { EMPRESA, ruta, whatsapp } from "../data/sitio.js";
+import {
+  CONTACTO_VERIFICADO,
+  CORREO_VISIBLE,
+  EMPRESA,
+  ESPECIALIDADES,
+  TELEFONO_VISIBLE,
+  ruta,
+  whatsapp,
+} from "../data/sitio.js";
 
 const PILARES = [
   { icono: "llave", tono: "blue", titulo: "Ingeniería", texto: "Diseño y desarrollo de soluciones a la medida de cada operación." },
@@ -18,10 +26,22 @@ const PILARES = [
   { icono: "hoja", tono: "blue", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente y el futuro del territorio." },
 ];
 
+// Sin datos confirmados no se ofrece "toca para copiar": no tiene sentido
+// copiar un número que puede estar mal.
 const CONTACTO = [
   { icono: "ubicacion", titulo: "Dirección", texto: EMPRESA.direccion.completa },
-  { icono: "telefono", titulo: "Teléfono / WhatsApp", texto: `${EMPRESA.telefono} · toca para copiar`, copiar: EMPRESA.telefono },
-  { icono: "correo", titulo: "Correo", texto: `${EMPRESA.correo} · toca para copiar`, copiar: EMPRESA.correo },
+  {
+    icono: "telefono",
+    titulo: "Teléfono / WhatsApp",
+    texto: CONTACTO_VERIFICADO ? `${TELEFONO_VISIBLE} · toca para copiar` : TELEFONO_VISIBLE,
+    copiar: CONTACTO_VERIFICADO ? EMPRESA.telefono : null,
+  },
+  {
+    icono: "correo",
+    titulo: "Correo",
+    texto: CONTACTO_VERIFICADO ? `${CORREO_VISIBLE} · toca para copiar` : CORREO_VISIBLE,
+    copiar: CONTACTO_VERIFICADO ? EMPRESA.correo : null,
+  },
   { icono: "diana", titulo: "Web", texto: "www.solinag.com.co" },
 ];
 
@@ -59,6 +79,40 @@ const NECESIDADES = [
           <TarjetaPilar icono={p.icono} tono={p.tono} titulo={p.titulo} indice={i}>
             {p.texto}
           </TarjetaPilar>
+        ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  {/* Las disciplinas que la empresa cubre. Los "tres ejes" del inicio son los
+      sectores a los que sirve; esto es lo que sabe hacer. */}
+  <Seccion compacta>
+    <Contenedor>
+      <CabeceraSeccion
+        centrada
+        antetitulo="Nuestras especialidades"
+        titulo="Seis disciplinas bajo el mismo techo"
+        entradilla="Prestamos servicios integrales de diseño, fabricación, montaje y mantenimiento. Al tener las seis especialidades en casa, un solo equipo responde por el proyecto completo."
+      />
+      <div class="reveal-stagger grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {ESPECIALIDADES.map((e, i) => (
+          <div
+            class="card reveal group flex items-start gap-4 !p-6"
+            style={`--i:${i}`}
+          >
+            <div
+              class="grid h-11 w-11 flex-none place-items-center rounded-sm border border-line
+                     bg-white/5 text-green-500 transition-[transform,background-color,color]
+                     duration-500 ease-spring group-hover:scale-110 group-hover:bg-green-500
+                     group-hover:text-blue-900 [&_svg]:h-5 [&_svg]:w-5"
+            >
+              <Icono nombre={e.icono} />
+            </div>
+            <div>
+              <h3 class="text-[16px]">{e.nombre}</h3>
+              <p class="mt-1 text-[13.5px] text-ink-soft">{e.texto}</p>
+            </div>
+          </div>
         ))}
       </div>
     </Contenedor>
@@ -108,7 +162,7 @@ const NECESIDADES = [
           class="absolute -bottom-4 -left-4 z-2 flex items-center gap-2.5 rounded-md bg-white
                  px-4 py-3 text-[13.5px] font-bold text-ink shadow-lg"
         >
-          <Icono nombre="ubicacion" class="h-4 w-4 text-green-700" />
+          <Icono nombre="ubicacion" class="h-4 w-4 text-green-500" />
           Turbaco, Bolívar
         </div>
       </div>

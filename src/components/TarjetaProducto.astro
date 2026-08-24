@@ -1,66 +1,104 @@
 ---
-/** Tarjeta de producto del catálogo. Se genera desde src/data/productos.js. */
+/**
+ * Tarjeta de producto del catálogo.
+ *
+ * La imagen ocupa la mitad superior y manda: el texto es un pie corto. Antes
+ * la foto era una miniatura de 132 px al lado del texto.
+ */
 import { whatsapp } from "../data/sitio.js";
 import Icono from "./Icono.astro";
 
 const { producto: p, indice } = Astro.props;
+
+// Los renders de catálogo vienen recortados sobre blanco: si se recortan otra
+// vez para llenar el marco, se les corta media máquina. La foto real sí llena.
+const contener = p.encuadre === "contener";
+
+// Las dos primeras cifras bastan como gancho; el resto vive en la ficha.
+const destacadas = p.stats.slice(0, 2);
 ---
 
 <article
   id={p.ancla ?? undefined}
-  class="card reveal grid items-start gap-5 lg:grid-cols-[132px_1fr_auto]"
+  class="card reveal group flex flex-col !p-0"
   style={`--i:${indice}; scroll-margin-top:150px`}
 >
   <div
-    class="h-[168px] w-full flex-none overflow-hidden rounded-md bg-surface-2 shadow-sm
-           lg:h-[132px] lg:w-[132px]"
+    class:list={[
+      "relative aspect-4/3 overflow-hidden",
+      !p.img ? "bg-linear-140 from-blue-700 to-blue-900" : contener ? "bg-white p-6" : "bg-surface-2",
+    ]}
   >
-    <img
-      src={p.img}
-      alt={p.alt}
-      loading="lazy"
-      class="h-full w-full object-cover transition-transform duration-500
-             group-hover:scale-108"
-    />
+    {p.img ? (
+      <img
+        src={p.img}
+        alt={p.alt}
+        loading="lazy"
+        class:list={[
+          "h-full w-full transition-transform duration-700 ease-out-soft group-hover:scale-105",
+          contener ? "object-contain" : "object-cover",
+        ]}
+      />
+    ) : (
+      <div class="grid h-full w-full place-items-center text-white/85" aria-hidden="true">
+        <Icono nombre={p.icono ?? "edificio"} class="h-20 w-20" />
+      </div>
+    )}
+
+    <span
+      class="absolute top-4 left-4 rounded-full bg-white/90 px-3 py-1.5 text-[11px]
+             font-bold tracking-[0.08em] text-blue-700 uppercase backdrop-blur-sm"
+    >
+      {p.tag}
+    </span>
+
+    {p.galeria?.length > 1 && (
+      <span
+        class="absolute right-4 bottom-4 rounded-full bg-ink/70 px-2.5 py-1 text-[11px]
+               font-bold text-white backdrop-blur-sm"
+      >
+        {p.galeria.length} imágenes
+      </span>
+    )}
   </div>
 
-  <div>
-    <h3 class="text-[19px]">{p.titulo}</h3>
+  <div class="flex flex-1 flex-col p-7">
+    <h3 class="text-[21px]">{p.titulo}</h3>
     <p class="mt-2 text-[14.5px] text-ink-soft">{p.resumen}</p>
 
-    <div class="mt-3.5 flex flex-wrap gap-2.5">
-      {p.etiquetas.map((e) => (
-        <span
-          class="inline-flex items-center gap-2 rounded-full bg-surface-2 px-3.5 py-[9px]
-                 text-[13.5px] font-semibold text-ink-soft"
-        >
-          {e}
-        </span>
+    <div class="mt-5 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-5">
+      {destacadas.map((s) => (
+        <div>
+          <b class="block text-[17px] leading-tight text-white">{s.v}</b>
+          <span class="text-[12px] text-muted">{s.u}</span>
+        </div>
       ))}
     </div>
 
-    <button
-      class="mt-3.5 inline-flex items-center gap-1.5 rounded-sm px-1 py-2 text-[13px]
-             font-bold text-blue-600 [&_svg]:h-4 [&_svg]:w-4
-             [&_svg]:transition-transform hover:[&_svg]:translate-x-1"
-      data-abrir-ficha={p.clave}
-    >
-      {p.textoBoton}
-      <Icono nombre="flecha" />
-    </button>
-  </div>
+    <div class="mt-6 flex flex-wrap items-center gap-3 pt-1">
+      <button
+        class="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-[18px] py-2.5
+               text-[13.5px] font-bold whitespace-nowrap text-white shadow-blue
+               transition-[transform,background-color] duration-200 ease-spring
+               hover:-translate-y-0.5 hover:bg-blue-700
+               [&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform
+               hover:[&_svg]:translate-x-1"
+        data-abrir-ficha={p.clave}
+      >
+        Ficha técnica
+        <Icono nombre="flecha" />
+      </button>
 
-  <div class="flex flex-row items-center justify-between gap-2.5 lg:flex-col lg:items-stretch">
-    <a
-      class="inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 px-[18px]
-             py-2.5 text-[13.5px] font-bold whitespace-nowrap text-white shadow-blue
-             transition-[transform,background-color] duration-200 ease-spring
-             hover:-translate-y-0.5 hover:bg-blue-700"
-      href={whatsapp(p.mensaje)}
-      target="_blank"
-      rel="noopener"
-    >
-      Cotizar
-    </a>
+      <a
+        class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-ink-soft
+               transition-colors hover:text-green-500 [&_svg]:h-4 [&_svg]:w-4"
+        href={whatsapp(p.mensaje)}
+        target="_blank"
+        rel="noopener"
+      >
+        <Icono nombre="whatsapp" />
+        Cotizar
+      </a>
+    </div>
   </div>
 </article>

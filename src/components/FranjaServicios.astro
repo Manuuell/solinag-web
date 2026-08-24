@@ -3,14 +3,11 @@
 import { FRANJA } from "../data/sitio.js";
 ---
 
-<div
-  class="bg-linear-90 from-blue-700 via-blue-600 to-blue-700 text-white"
-  aria-hidden="true"
->
-  <div class="mx-auto w-full max-w-[1200px] flex justify-center px-3.5 py-[7px]">
+<div class="border-b border-line text-white/45" aria-hidden="true">
+  <div class="mx-auto flex w-full max-w-[1400px] justify-center px-6 py-2.5 md:px-10">
     <div class="widget-stack h-5 w-[min(360px,90vw)]" data-rotador>
       {FRANJA.map((texto) => (
-        <span class="w-item justify-center text-center text-[12.5px] font-semibold tracking-[0.02em]">
+        <span class="w-item justify-center text-center text-[12px] font-medium tracking-[0.14em] uppercase">
           {texto}
         </span>
       ))}

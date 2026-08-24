@@ -14,14 +14,12 @@ const hayHover = window.matchMedia("(hover: hover)").matches;
 
 /* Header: sombra y fondo más marcados al hacer scroll */
 {
-  const barra = document.querySelector("[data-barra]");
+  const barra = document.querySelector("[data-header]");
   if (barra) {
     const alScroll = () => {
-      const activo = window.scrollY > 8;
-      barra.classList.toggle("shadow-md", activo);
-      barra.classList.toggle("shadow-sm", !activo);
-      barra.classList.toggle("bg-white/86", activo);
-      barra.classList.toggle("bg-white/72", !activo);
+      // Solo se revela el borde inferior: nada de cambiar fondo ni sombra.
+      barra.classList.toggle("border-line", window.scrollY > 8);
+      barra.classList.toggle("border-transparent", window.scrollY <= 8);
     };
     alScroll();
     window.addEventListener("scroll", alScroll, { passive: true });
@@ -59,6 +57,30 @@ const hayHover = window.matchMedia("(hover: hover)").matches;
       if (e.key === "Escape") cerrarMenu();
     });
   }
+}
+
+/* Respaldo del desplazamiento a anclas.
+ *
+ * Al llegar con #ancla en la URL, el navegador salta antes de que terminen de
+ * cargar las imágenes de arriba; cuando cargan, empujan el contenido y el
+ * destino queda fuera de sitio. Safari además falla a veces con
+ * scroll-behavior:smooth durante la carga inicial.
+ *
+ * Esto reposiciona una vez que la página se ha asentado. */
+{
+  const irAlAncla = () => {
+    if (!location.hash || location.hash.length < 2) return;
+    const destino = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!destino) return;
+    // "auto" y no "smooth": es una corrección de posición, no una animación.
+    destino.scrollIntoView({ behavior: "auto", block: "start" });
+  };
+
+  window.addEventListener("load", () => {
+    irAlAncla();
+    // Segunda pasada por si alguna imagen tardona movió el layout.
+    setTimeout(irAlAncla, 350);
+  });
 }
 
 /* Aparición al hacer scroll */
@@ -208,6 +230,30 @@ document.querySelectorAll("[data-abrir-ficha]").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
     document.getElementById(`ficha-${btn.dataset.abrirFicha}`)?.showModal();
+  });
+});
+
+/* Galería de la ficha: las miniaturas intercambian la imagen grande */
+document.querySelectorAll("dialog[data-ficha]").forEach((dialogo) => {
+  const principal = dialogo.querySelector("[data-ficha-principal]");
+  const pie = dialogo.querySelector("[data-ficha-pie]");
+  const miniaturas = [...dialogo.querySelectorAll("[data-ficha-miniatura]")];
+
+  miniaturas.forEach((boton) => {
+    boton.addEventListener("click", () => {
+      if (!principal) return;
+      principal.src = boton.dataset.fichaMiniatura;
+      const img = boton.querySelector("img");
+      principal.alt = img?.alt || principal.alt;
+      if (pie) pie.textContent = boton.getAttribute("aria-label")?.replace(/^Ver: /, "") ?? "";
+
+      miniaturas.forEach((otra) => {
+        const activa = otra === boton;
+        otra.classList.toggle("border-blue-600", activa);
+        otra.classList.toggle("border-transparent", !activa);
+        otra.classList.toggle("opacity-60", !activa);
+      });
+    });
   });
 });
 

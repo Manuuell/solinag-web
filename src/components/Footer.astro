@@ -3,7 +3,7 @@
  * Pie de página. La columna "Soluciones" ya no repite los enlaces a mano: sale
  * del catálogo, así que un producto nuevo con ancla aparece aquí solo.
  */
-import { EMPRESA, NAV, SOCIAL, ruta } from "../data/sitio.js";
+import { CORREO_VISIBLE, EMPRESA, NAV, SOCIAL, TELEFONO_VISIBLE, ruta } from "../data/sitio.js";
 import { PRODUCTOS } from "../data/productos.js";
 import Icono from "./Icono.astro";
 
@@ -14,8 +14,8 @@ const categorias = PRODUCTOS.filter((p) => p.ancla).map((p) => ({
 
 const CONTACTO = [
   { icono: "ubicacion", texto: EMPRESA.direccion.completa },
-  { icono: "telefono", texto: EMPRESA.telefono },
-  { icono: "correo", texto: EMPRESA.correo },
+  { icono: "telefono", texto: TELEFONO_VISIBLE },
+  { icono: "correo", texto: CORREO_VISIBLE },
 ];
 
 const CONTENEDOR = "mx-auto w-full max-w-[1200px] px-6";
