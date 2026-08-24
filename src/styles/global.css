@@ -17,30 +17,30 @@
   --color-blue-500: #3459c4;
   --color-blue-400: #5b7bdb;
   --color-blue-100: #e7ecfb;
-  /* Azul legible sobre fondo oscuro: #2144a1 se hunde contra el negro. */
+  /* Azul legible sobre las bandas oscuras puntuales (hero, footer, feature-band):
+     #2144a1 se hunde contra ese fondo. Sobre fondo claro no hace falta. */
   --color-blue-claro: #7b9bec;
 
   /* Marca — verde. Ojo: green-500 (#89f336) da 1.41:1 sobre blanco y NO debe
-     usarse para texto en fondo claro. Para eso está green-700. */
+     usarse para texto en fondo claro — ahí va green-700. Sobre las bandas
+     oscuras sí es legible (12.9:1) y es el acento que se usa ahí. */
   --color-green-700: #4f9c17;
   --color-green-600: #6bcf22;
   --color-green-500: #89f336; /* verde corporativo */
   --color-green-400: #a4f562;
   --color-green-100: #eafedc;
 
-  /* Neutros — esquema oscuro.
-     El manual de marca manda "blanco + verde sobre negro, azul oscuro" y define
-     #89f336 como color de modo oscuro: 12.9:1 sobre fondo oscuro frente a
-     1.41:1 sobre blanco. En claro el verde no se podía usar para texto; aquí
-     sí, y pasa a ser el único acento.
-     El negro lleva matiz azul, no es neutro: enlaza con el azul corporativo. */
-  --color-ink: #ffffff;
-  --color-ink-soft: rgb(255 255 255 / 0.72);
-  --color-muted: rgb(255 255 255 / 0.5);
-  --color-line: rgb(255 255 255 / 0.1);
-  --color-paper: #080c14;      /* fondo de página */
-  --color-surface: #0f1520;    /* tarjetas */
-  --color-surface-2: #161e2c;  /* superficie elevada */
+  /* Neutros — esquema claro, el uso preferente del manual ("azul + verde
+     sobre blanco o fondos muy claros"). Las bandas oscuras (hero, footer,
+     feature-band) siguen existiendo como excepción puntual vía .sobre-oscuro,
+     no como default del sitio. */
+  --color-ink: #0b1220;
+  --color-ink-soft: #3a4356;
+  --color-muted: #6b7385;
+  --color-line: rgb(15 23 42 / 0.08);
+  --color-paper: #f5f7fb;   /* fondo de página */
+  --color-surface: #ffffff; /* tarjetas */
+  --color-surface-2: #eef1f8; /* superficie elevada */
 
   /* WhatsApp (color de marca ajeno, fijo) */
   --color-whatsapp: #25d366;
@@ -108,7 +108,7 @@
     font-family: var(--font-sans);
     background: var(--color-paper);
     color: var(--color-ink);
-    color-scheme: dark;
+    color-scheme: light;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -135,9 +135,6 @@
     outline-offset: 3px;
     border-radius: 4px;
   }
-
-  /* Sobre fondo oscuro el azul de marca no destaca: se invierte a blanco. */
-
 
   /* Respetar a quien pide menos movimiento: las animaciones decorativas se
      apagan, pero el contenido sigue siendo visible (ver .reveal más abajo). */
@@ -214,8 +211,7 @@
 
 @layer components {
   /* --------------------------------- Tarjetas -------------------------------- */
-  /* Plano: en oscuro la sombra no se ve, así que la jerarquía la marca el
-     borde. Al pasar el cursor se aclara el borde en vez de levantar la caja. */
+  /* Blanca con sombra sutil; al pasar el cursor se levanta y la sombra crece. */
   .card {
     position: relative;
     overflow: hidden;
@@ -223,15 +219,16 @@
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
     padding: 32px;
+    box-shadow: var(--shadow-sm);
     transition:
       transform 0.45s var(--ease-spring),
-      border-color 0.3s var(--ease-out-soft),
-      background-color 0.3s var(--ease-out-soft);
+      box-shadow 0.3s var(--ease-out-soft),
+      border-color 0.3s var(--ease-out-soft);
   }
   .card:hover {
-    transform: translateY(-4px);
-    border-color: rgb(255 255 255 / 0.22);
-    background: var(--color-surface-2);
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
   }
 
   /* Halo que sigue al cursor. El JS escribe --mx / --my. */
