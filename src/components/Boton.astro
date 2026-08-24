@@ -20,10 +20,14 @@ const BASE =
 const VARIANTES = {
   primary: "bg-green-500 text-blue-900 shadow-green hover:-translate-y-0.5 hover:scale-[1.015]",
   dark: "bg-blue-600 text-white shadow-blue hover:-translate-y-0.5 hover:scale-[1.015] hover:bg-blue-700",
+  // ghost y outline-light: los 5 usos del sitio caen sobre fondo claro (BannerCta
+  // ×3, 404, diálogo de ficha técnica) — ninguno queda sobre una banda oscura,
+  // así que las dos variantes se definen para fondo claro. Si algún día hace
+  // falta un botón secundario dentro de una banda oscura, se agrega aparte.
   ghost:
-    "bg-white/5 text-white border border-line hover:bg-white/10 hover:border-white/25",
+    "bg-ink/4 text-ink border border-line hover:bg-ink/8 hover:border-ink/20",
   "outline-light":
-    "bg-transparent text-white border border-white/30 hover:bg-white/10 hover:border-white/50",
+    "bg-transparent text-ink border border-ink/20 hover:bg-ink/5 hover:border-ink/35",
   whatsapp:
     "bg-whatsapp text-whatsapp-ink shadow-[0_16px_34px_-14px_rgb(37_211_102/0.55)] hover:-translate-y-0.5 hover:scale-[1.015]",
 };
