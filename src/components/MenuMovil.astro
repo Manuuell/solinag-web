@@ -24,7 +24,7 @@ const { actual } = Astro.props;
       <Marca alturaLogo={30} mostrarSas={false} />
       <button
         class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-2
-               text-white [&_svg]:h-[19px] [&_svg]:w-[19px]"
+               text-ink [&_svg]:h-[19px] [&_svg]:w-[19px]"
         aria-label="Cerrar menú"
         data-cerrar-menu
       >
@@ -39,7 +39,7 @@ const { actual } = Astro.props;
           aria-current={actual === item.id ? "page" : undefined}
           class:list={[
             "flex items-center justify-between rounded-md px-3.5 py-[15px] text-[17px] font-bold",
-            actual === item.id ? "bg-green-500/15 text-green-500" : "text-white/75",
+            actual === item.id ? "bg-green-500/15 text-green-800" : "text-ink-soft",
           ]}
         >
           {item.texto}

@@ -22,8 +22,14 @@
   --color-blue-claro: #7b9bec;
 
   /* Marca — verde. Ojo: green-500 (#89f336) da 1.41:1 sobre blanco y NO debe
-     usarse para texto en fondo claro — ahí va green-700. Sobre las bandas
-     oscuras sí es legible (12.9:1) y es el acento que se usa ahí. */
+     usarse para texto en fondo claro. green-700 tampoco alcanza para texto:
+     medido, da ~3.2:1 sobre --color-paper (falla AA, que pide 4.5:1) — sirve
+     para íconos/bordes (WCAG solo les pide 3:1), no para texto.
+     Para texto verde en claro está green-800, medido en ~4.9:1. Manuel ya
+     había calculado este mismo tono en MARCA.md (ahí sin cablear al tema).
+     Sobre las bandas oscuras (hero, footer) sí es legible directo: green-500
+     da 12.9:1 y es el acento que se usa ahí. */
+  --color-green-800: #3e7a12; /* único verde apto para TEXTO en fondo claro */
   --color-green-700: #4f9c17;
   --color-green-600: #6bcf22;
   --color-green-500: #89f336; /* verde corporativo */

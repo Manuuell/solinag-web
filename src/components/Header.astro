@@ -1,9 +1,7 @@
 ---
 /**
- * Cabecera. Plana y transparente: sin píldora de cristal ni sombra.
- *
- * Sobre fondo oscuro el glassmorphism no aporta profundidad, solo suciedad.
- * La jerarquía la marcan el peso tipográfico y el espacio.
+ * Cabecera. Cristal claro traslúcido sobre el fondo de la página, igual que
+ * el sitio original — .glass ya estaba definido en global.css sin usarse.
  */
 import { NAV, SOCIAL, enlaceContacto, whatsapp } from "../data/sitio.js";
 import Marca from "./Marca.astro";
@@ -13,7 +11,7 @@ const { actual } = Astro.props;
 ---
 
 <header
-  class="sticky top-0 z-100 border-b border-transparent bg-paper/80 backdrop-blur-md
+  class="glass sticky top-0 z-100 border-b border-transparent
          transition-[border-color,background-color] duration-300"
   data-header
 >
@@ -30,8 +28,8 @@ const { actual } = Astro.props;
             "after:absolute after:-bottom-1.5 after:left-0 after:h-px after:bg-green-500",
             "after:transition-all after:duration-300",
             actual === item.id
-              ? "text-white after:w-full"
-              : "text-white/60 after:w-0 hover:text-white hover:after:w-full",
+              ? "text-ink after:w-full"
+              : "text-ink-soft after:w-0 hover:text-ink hover:after:w-full",
           ]}
         >
           {item.texto}
@@ -45,21 +43,21 @@ const { actual } = Astro.props;
         target="_blank"
         rel="noopener"
         aria-label="Síguenos en Instagram"
-        class="hidden text-white/50 transition-colors hover:text-white sm:block [&_svg]:h-5 [&_svg]:w-5"
+        class="hidden text-muted transition-colors hover:text-ink sm:block [&_svg]:h-5 [&_svg]:w-5"
       >
         <Icono nombre="instagram" />
       </a>
 
       <a
         href={enlaceContacto(actual)}
-        class="hidden text-[15px] font-semibold text-green-500 underline decoration-green-500/40
-               underline-offset-[6px] transition-colors hover:decoration-green-500 sm:block"
+        class="hidden text-[15px] font-semibold text-green-800 underline decoration-green-800/40
+               underline-offset-[6px] transition-colors hover:decoration-green-800 sm:block"
       >
         Cotizar
       </a>
 
       <button
-        class="text-white lg:hidden [&_svg]:h-6 [&_svg]:w-6"
+        class="text-ink lg:hidden [&_svg]:h-6 [&_svg]:w-6"
         aria-label="Abrir menú"
         aria-expanded="false"
         aria-controls="menu-movil"
