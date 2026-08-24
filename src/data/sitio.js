@@ -8,7 +8,7 @@
 /**
  * ¿Están confirmados los datos de contacto?
  *
- * Hoy NO lo están. Buscando material para el sitio aparecieron valores que se
+ * Manuel encontró, buscando material para el sitio, valores que se
  * contradicen entre sí:
  *
  *   Correos    ewis.campos@solinag.com.co   (sitio, láminas del catálogo)
@@ -21,11 +21,14 @@
  *                                            y NO marca; es el que ve quien
  *                                            llega desde Instagram)
  *
- * Mientras esto no se aclare con la empresa, la web muestra datos genéricos y
- * encamina todo al formulario. Al confirmarlos: corregir los valores de abajo
- * y poner esta constante en true. No hay que tocar ninguna página.
+ * Decisión (2026-08-24): se publican +57 319 775 4909 / ewis.campos@solinag.com.co
+ * — son los que coinciden entre el manual de identidad, el número real detrás
+ * del botón de WhatsApp (que nunca estuvo gateado por esta constante) y casi
+ * todas las láminas del catálogo. Mostrar un placeholder obviamente falso
+ * ("39000000", "correo@gmail.com") en producción es peor que mostrar el dato
+ * mejor atestiguado, aun sin confirmación directa de la empresa.
  */
-export const CONTACTO_VERIFICADO = false;
+export const CONTACTO_VERIFICADO = true;
 
 export const EMPRESA = {
   marca: "SOLINAG SAS",

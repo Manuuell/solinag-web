@@ -1,7 +1,6 @@
 # SOLINAG SAS — Tokens de marca para web
 
 Fuente: *Manual de Identidad Corporativa*, SOLINAG SAS, v2026 (8 pp.).
-Brief completo: https://claude.ai/code/artifact/5ce32a07-96ae-43e5-a820-e9b52a1764d4
 
 ## Identidad
 
@@ -16,62 +15,83 @@ Brief completo: https://claude.ai/code/artifact/5ce32a07-96ae-43e5-a820-e9b52a17
 | Tel. | +57 319 775 4909 |
 | Correo | ewis.campos@solinag.com.co |
 
-## Color
+## Decisiones de marca (2026-08-24)
 
-⚠️ **Pendiente de confirmar con el diseñador de la identidad.** Los HEX de la sección 4
-del manual no coinciden con el arte del logo (muestreado del PDF):
+Manuel migró el sitio de HTML plano a Astro y, en el proceso, propuso varios
+cambios de identidad sin coordinarlos primero. Quedaron resueltos así:
 
-| | Manual | Arte real |
-|---|---|---|
-| Azul | `#2144A1` | ~`#00408F` |
-| Verde | `#89F336` | ~`#7DC623` |
+**Modo claro, no oscuro.** El sitio vuelve al fondo claro que ya estaba
+validado contra el wireframe del cliente — es además el "uso preferente" que
+marca el manual ("azul + verde sobre blanco o fondos muy claros"). El fondo
+oscuro se mantiene como excepción puntual en tres secciones: el hero de cada
+página, el footer y la banda "¿Por qué SOLINAG?" — ahí sí aplica la otra regla
+del manual ("blanco + verde sobre negro, azul oscuro").
 
-Además `#89F336` sobre blanco da **1.41:1** — inusable para texto (WCAG AA pide 4.5).
-Sobre `#0C1626` da 12.9:1. Es un color de modo oscuro.
+**HEX oficiales: los del manual, no los del arte.** Al revisar el logo
+original sin procesar (`brand/logo.jpeg`) se confirmó, muestreando píxeles en
+zonas sólidas, que el arte real usa `#024395` (azul) / `#88CD22` (verde) — no
+`#2144A1` / `#89F336` como dice la tabla de la sección 4 del manual. Es una
+discrepancia real entre el documento formal y el archivo que lo acompaña, no
+un error de muestreo. Se decidió mantener oficiales los HEX del manual, que
+además eran los que ya usaba el CSS desde antes de esta migración. El logotipo
+en sí (los archivos `logo-*.png`) se usa tal cual, sin recolorearlo — el
+manual también prohíbe "cambiar los colores corporativos" del arte.
 
-Tokens propuestos mientras se resuelve:
+**Verde para texto: ni green-500 ni green-700.** Verificando contraste real
+(no solo por regla general) salió que `green-700` (`#4f9c17`), que el CSS ya
+señalaba como "el verde legible en claro", en realidad da ~3.2:1 sobre el
+fondo — no alcanza las 4.5:1 que pide WCAG AA. El tono que sí alcanza
+(`#3E7A12`, ~4.9-5.3:1 según el fondo exacto) está cableado como
+`--color-green-800` en `global.css` y es el que hay que usar para *texto e
+íconos pequeños* verdes sobre fondo claro. `green-500` sigue siendo el
+correcto sobre las bandas oscuras (12.9:1 ahí).
 
-```css
-:root {
-  --blue:       #2144A1; /* 8.7:1 en blanco — titulares, enlaces, botón primario */
-  --blue-deep:  #0E2A5C; /* 14:1 con blanco — footer, secciones oscuras, overlays */
-  --green-sig:  #89F336; /* SOLO sobre fondo oscuro — acentos, cifras, estados */
-  --green-mark: #7DC623; /* 2.1:1 — reglas, iconos, bordes. NUNCA texto */
-  --green-text: #3E7A12; /* 5.3:1 en blanco — única variante verde legible en claro */
-  --paper:      #F4F6F2; /* fondo alterno */
-}
-```
+**Contacto: se publican los datos mejor atestiguados.** `CONTACTO_VERIFICADO`
+en `src/data/sitio.js` pasó a `true`: se muestran `+57 319 775 4909` /
+`ewis.campos@solinag.com.co`, que coinciden entre el manual, el número real
+detrás del botón de WhatsApp y casi todas las láminas del catálogo. La
+investigación de Manuel sobre los datos contradictorios (Google Sites de la
+empresa vs. catálogo) sigue documentada en ese archivo — si la empresa
+confirma otro dato, se corrige ahí.
 
-Proporción: ~70% blanco/papel · ~25% azul · ~5% verde.
+**Contenido nuevo, conservado.** Las seis especialidades de ingeniería, el
+proceso de seis pasos y la cobertura en Cartagena que Manuel agregó (sacados
+del Google Sites de la empresa) se mantienen — es contenido razonable que no
+contradice nada del manual, solo lo amplía.
 
 ## Tipografía
 
 El manual no fija familia: pide sans serif limpia con jerarquía clara.
+`global.css` usa Archivo (grotesca ancha, `font-stretch` en titulares), con
+la pila de sistema como respaldo si no carga.
 
-- Titulares: grotesca ancha (Archivo / Barlow), 700–800, tracking −0.02em
-- Texto: misma familia 400/500, 16–18px, medida 65–70 caracteres
+- Titulares: 700–800, tracking −0.02em
 - Slogan: mayúsculas, tracking +0.08em
-- Descriptor: mayúsculas, tracking +0.16em (sirve de eyebrow en toda la web)
-- Datos técnicos: monoespaciada
+- Descriptor: mayúsculas, tracking +0.16em (es el "eyebrow" en toda la web)
 
 ## Reglas del manual
 
 **Hacer**
-- Azul + verde sobre blanco / fondos muy claros
-- Blanco + verde sobre negro, azul oscuro, jean
+- Azul + verde sobre blanco / fondos muy claros (uso preferente)
+- Blanco + verde sobre negro, azul oscuro, jean (hero, footer, feature-band)
 - Fotografía real de fabricación, equipos y proyectos
 - Área libre generosa alrededor del logo
 
 **Evitar**
-- Deformar el logo, cambiar colores, añadir sombras/degradados/contornos
-- Separar los elementos del logotipo
-- Reducirlo hasta perder legibilidad; fondos cargados
-- Reconstruir el logotipo escribiendo el nombre — usar siempre el arte original
+- Deformar el logo, cambiar sus colores, añadir sombras/degradados/contornos
+- Separar los elementos del logotipo; reducirlo hasta perder legibilidad
+- Fondos cargados detrás del logo
+- Reconstruir el logotipo escribiendo el nombre — usar siempre el arte original.
+  `Marca.astro` (header/menú móvil) sí escribe "SOLINAG SAS" junto al ícono en
+  vez de usar el lockup completo — evaluado y aceptado a propósito: el lockup
+  vertical (`logo-full.png`) no cabe legible en una barra horizontal, y
+  ícono+texto del sistema es práctica estándar de navbar, no una
+  reconstrucción del arte del logotipo.
 
-## Assets pendientes
+## Pendientes reales (sin resolver, no bloquean el sitio)
 
-- [ ] SVG maestros de las dos versiones (azul+verde, blanco+verde)
-- [ ] Isotipo suelto (engranaje + hoja) para favicon, avatar y header móvil
-- [ ] Confirmación de HEX corporativos
-- [ ] Banco de fotografía propia: planta, equipos, proyectos
-- [ ] Decisión: rediseño sobre solinag.com.co o sitio nuevo
+- Confirmar con la empresa el teléfono/correo definitivos (ver nota en
+  `src/data/sitio.js`) — lo publicado hoy es el dato mejor atestiguado, no una
+  confirmación directa.
+- SVG maestros de las dos versiones del logo (hoy solo hay PNG).
+- Banco de fotografía propia más amplio: planta, equipos, proyectos.
