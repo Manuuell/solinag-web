@@ -1,11 +1,15 @@
 ---
-/** Cabecera de las páginas interiores: migas, antetítulo, título y entradilla. */
+/**
+ * Cabecera de las páginas interiores: migas, antetítulo, título y entradilla.
+ * Oscura a propósito, igual que el hero de inicio — necesita fondo explícito
+ * porque el resto del sitio es claro y ya no se puede heredar del body.
+ */
 import Icono from "./Icono.astro";
 
 const { antetitulo, titulo, entradilla, migas = [] } = Astro.props;
 ---
 
-<section class="relative border-b border-line px-6 pt-16 pb-20 md:px-10 md:pt-20 md:pb-24">
+<section class="sobre-oscuro relative border-b border-white/12 bg-blue-900 px-6 pt-16 pb-20 md:px-10 md:pt-20 md:pb-24">
   <div class="mx-auto w-full max-w-[1400px]">
     {migas.length > 0 && (
       <nav class="mb-1 flex items-center gap-2 text-[13.5px] text-white/55" aria-label="Migas de pan">

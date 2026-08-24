@@ -41,7 +41,7 @@ const FRENTES = [
 const fichasUsadas = PRODUCTOS.filter((p) => FRENTES.some((f) => f.ficha === p.clave));
 
 const ENLACE_FLECHA =
-  "group inline-flex items-center gap-1.5 text-[14px] font-bold text-blue-claro " +
+  "group inline-flex items-center gap-1.5 text-[14px] font-bold text-blue-600 " +
   "[&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform hover:[&_svg]:translate-x-1";
 ---
 
@@ -96,7 +96,7 @@ const ENLACE_FLECHA =
                 </a>
                 {f.ficha && (
                   <button
-                    class="py-1.5 text-[13px] font-bold text-blue-claro"
+                    class="py-1.5 text-[13px] font-bold text-blue-600"
                     data-abrir-ficha={f.ficha}
                   >
                     Ficha técnica
@@ -124,7 +124,7 @@ const ENLACE_FLECHA =
           <div class="reveal group relative z-1 text-center" style={`--i:${i}`}>
             <div
               class="mx-auto mb-4.5 grid h-17 w-17 place-items-center rounded-full border-2
-                     border-line bg-surface text-[22px] font-extrabold text-white
+                     border-line bg-surface text-[22px] font-extrabold text-ink
                      transition-[transform,background-color,color,border-color] duration-500
                      ease-spring group-hover:scale-110 group-hover:border-green-500
                      group-hover:bg-green-500 group-hover:text-blue-900"

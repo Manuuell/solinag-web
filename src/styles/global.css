@@ -17,9 +17,6 @@
   --color-blue-500: #3459c4;
   --color-blue-400: #5b7bdb;
   --color-blue-100: #e7ecfb;
-  /* Azul legible sobre las bandas oscuras puntuales (hero, footer, feature-band):
-     #2144a1 se hunde contra ese fondo. Sobre fondo claro no hace falta. */
-  --color-blue-claro: #7b9bec;
 
   /* Marca — verde. Ojo: green-500 (#89f336) da 1.41:1 sobre blanco y NO debe
      usarse para texto en fondo claro. green-700 tampoco alcanza para texto:
