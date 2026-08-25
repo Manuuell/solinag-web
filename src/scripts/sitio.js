@@ -196,7 +196,7 @@ if (hayHover) {
   });
 }
 
-/* Fotos de la tarjeta de producto: si tiene más de una, rotan cada 2,5 s
+/* Fotos de la tarjeta de producto: si tiene más de una, rotan cada 2 s
  * mientras el cursor está encima. Gateado por hayHover (sin sentido en
  * mobile, que no tiene :hover) y por prefers-reduced-motion, igual que el
  * video del hero. Al salir el cursor, vuelve a la foto inicial en vez de
@@ -220,7 +220,7 @@ if (hayHover) {
 
     pila.addEventListener("mouseenter", () => {
       if (menosMovimiento.matches || intervalo) return;
-      intervalo = setInterval(() => mostrar((i + 1) % fotos.length), 2500);
+      intervalo = setInterval(() => mostrar((i + 1) % fotos.length), 2000);
     });
     pila.addEventListener("mouseleave", () => {
       clearInterval(intervalo);

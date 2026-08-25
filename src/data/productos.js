@@ -459,13 +459,13 @@ export const PRODUCTOS = [
     tag: "Movilidad y reciclaje",
     titulo: "Bicitriciclos de carga",
     tituloFicha: "Bicitriciclo de carga SOL-BT",
+    // Sin galería: en el material fuente las tres variantes (manual, GEL,
+    // litio) comparten el mismo render de bicitriciclo -- no hay diferencia
+    // visual real entre ellas, solo cambia el tren motriz, que no se ve desde
+    // afuera. Se probaron las tres fotos recortadas y esta es la más nítida
+    // (mayor varianza de bordes y menos compresión que las otras dos).
     img: "/assets/img/prod-bt-me01l.jpg",
-    alt: "Bicitriciclo de carga eléctrico SOL-BT-ME01L de SOLINAG",
-    galeria: [
-      { src: "/assets/img/prod-bt-m01.jpg", alt: "Bicitriciclo manual SOL-BT-M01", pie: "SOL-BT-M01 · manual" },
-      { src: "/assets/img/prod-bt-me01g.jpg", alt: "Bicitriciclo eléctrico SOL-BT-ME01G", pie: "SOL-BT-ME01G · batería GEL" },
-      { src: "/assets/img/prod-bt-me01l.jpg", alt: "Bicitriciclo eléctrico SOL-BT-ME01L", pie: "SOL-BT-ME01L · batería litio" },
-    ],
+    alt: "Bicitriciclo de carga SOL-BT de SOLINAG",
     resumen:
       "Vehículos de tracción manual o eléctrica para recolección y logística urbana o rural, de bajas emisiones.",
     etiquetas: ["Bicitriciclos", "Sistemas de recolección", "Soluciones de economía circular"],

@@ -49,6 +49,12 @@ crop_save(mtc, (605, 395, 838, 645), out + "prod-mtc-30.jpg")
 # Bicitriciclos SOL-BT (lámina 1024x1536). El techo va bajo para saltar el
 # encabezado del modelo y el suelo alto para dejar fuera "CAPACIDAD DE CARGA";
 # los eléctricos se cierran antes en X para soltar el borde de la tarjeta.
+#
+# Las tres columnas de la lámina usan el mismo render de bicitriciclo: no hay
+# diferencia visual entre manual/GEL/litio, el tren motriz no se ve desde
+# afuera. Se recortan las tres para poder compararlas, pero productos.js solo
+# usa prod-bt-me01l.jpg (la más nítida de las tres, medido con varianza de
+# bordes) -- las otras dos no se referencian en el sitio.
 bt = cat + "Bicitriciclos de Carga - Serie SOL-BT.jpeg"
 crop_save(bt, (52, 450, 332, 676), out + "prod-bt-m01.jpg")
 crop_save(bt, (372, 450, 644, 676), out + "prod-bt-me01g.jpg")
