@@ -3,14 +3,67 @@
  * Cabecera de las páginas interiores: migas, antetítulo, título y entradilla.
  * Oscura a propósito, igual que el hero de inicio — necesita fondo explícito
  * porque el resto del sitio es claro y ya no se puede heredar del body.
+ *
+ * `imagen` es opcional y se pasa como NOMBRE BASE, sin ruta ni extensión
+ * (p. ej. "hero-soluciones"). El componente arma con él los tres anchos que
+ * hay generados de cada banner. Sin `imagen` la banda se queda en azul plano,
+ * que es como estaban todas hasta ahora.
  */
 import Icono from "./Icono.astro";
 
-const { antetitulo, titulo, entradilla, migas = [] } = Astro.props;
+const { antetitulo, titulo, entradilla, migas = [], imagen } = Astro.props;
+
+// Tres anchos por banner y que el navegador elija. En un móvil son ~60 KB en
+// vez de los ~300 KB del archivo grande, y aquí eso pesa: buena parte de las
+// visitas llegan por datos móviles desde Instagram.
+const RUTA = "/assets/img";
+const juego = imagen
+  ? [
+      `${RUTA}/${imagen}-1280.jpg 1280w`,
+      `${RUTA}/${imagen}-2000.jpg 2000w`,
+      `${RUTA}/${imagen}.jpg 3168w`,
+    ].join(", ")
+  : null;
 ---
 
-<section class="sobre-oscuro relative border-b border-white/12 bg-blue-900 px-6 pt-16 pb-20 md:px-10 md:pt-20 md:pb-24">
-  <div class="mx-auto w-full max-w-[1400px]">
+<section
+  class="sobre-oscuro relative isolate overflow-hidden border-b border-white/12 bg-blue-900
+         px-6 pt-16 pb-20 md:px-10 md:pt-20 md:pb-24"
+>
+  {imagen && (
+    <>
+      {/* `object-position` está calculado, no puesto a ojo.
+
+          Vertical (40%): en pantallas anchas la banda es más apaisada que la
+          imagen, así que el recorte se lo lleva arriba y abajo. Anclar por
+          encima del centro conserva la tolva y el tablero, que es lo que se lee.
+
+          Horizontal (70%): solo tiene efecto en móvil. De 1280px para arriba
+          `cover` escala por el ancho y no sobra nada a los lados, así que ahí
+          es inocuo. En un móvil de 375px sí recorta, y centrado enseñaba el
+          33-67% de la imagen — pared vacía, con el sujeto fuera de cuadro.
+          Al 70% entra el 46-80%, que es donde está la máquina. */}
+      <img
+        src={`${RUTA}/${imagen}.jpg`}
+        srcset={juego}
+        sizes="100vw"
+        alt=""
+        width="3168"
+        height="1344"
+        class="absolute inset-0 z-0 h-full w-full object-cover object-[70%_40%]"
+        aria-hidden="true"
+      />
+
+      {/* El mismo velo que la portada, y por el mismo motivo: es lo único que
+          garantiza el contraste del texto blanco. Está calculado contra el
+          peor caso posible —blanco puro debajo—, así que la garantía sigue
+          valiendo con cualquier banner que se ponga después sin rehacer las
+          cuentas. Ver el comentario largo en global.css. */}
+      <div class="hero-veil absolute inset-0 z-1" aria-hidden="true"></div>
+    </>
+  )}
+
+  <div class="relative z-2 mx-auto w-full max-w-[1400px]">
     {migas.length > 0 && (
       <nav class="mb-1 flex items-center gap-2 text-[13.5px] text-white/55" aria-label="Migas de pan">
         {migas.map((m, i) => (
