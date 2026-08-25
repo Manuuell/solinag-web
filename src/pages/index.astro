@@ -130,6 +130,39 @@ const CHIPS_HERO = [
 
     <div class="hero-veil absolute inset-0 z-1" aria-hidden="true"></div>
 
+    {/* Cierre de marca, solo al terminar el clip.
+
+        El logotipo con el que cierra el video ocupa 395x385 px del propio
+        archivo (medido sobre el último fotograma), así que a pantalla completa
+        se amplía entre 2,4x y 4,7x según el monitor y llega blando. Encima, el
+        velo le resta un 28% de opacidad. Esta capa arregla las dos cosas: es
+        el arte original a 1806 px —la versión blanco+verde, que es la que el
+        manual manda usar sobre fondo oscuro— y va POR ENCIMA del velo, así que
+        se ve a opacidad plena.
+
+        Comparte `z-2` con el contenido y va antes que él en el DOM: si alguna
+        vez se cruzaran, el texto pinta por encima.
+
+        El corte en 1280px está medido, no elegido a ojo: midiendo la tinta
+        real del titular (no su caja, que es el contenedor de 48rem), a 1024px
+        el texto llega 139px MÁS a la derecha de donde arrancaría el logotipo,
+        y a 768px lo pisa por 114px. A 1280px ya sobran 66px de aire y a partir
+        de ahí solo crece. Por debajo se deja el cierre del propio video, que
+        es el comportamiento de siempre. */}
+    <div
+      class="pointer-events-none absolute inset-y-0 right-[5.5%] z-2 hidden items-center
+             justify-end min-[1280px]:flex"
+      aria-hidden="true"
+    >
+      <img
+        src="/assets/img/logo-dark-bg.png"
+        alt=""
+        width="1806"
+        height="1582"
+        class="hero-cierre h-auto w-[clamp(13rem,32vw,30rem)]"
+      />
+    </div>
+
     <div class="relative z-2 mx-auto w-full max-w-[1400px]">
       <div class="reveal-stagger max-w-[48rem]">
         {/* Sin logotipo aquí a propósito: el video ya cierra sobre él, y la

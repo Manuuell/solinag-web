@@ -160,12 +160,30 @@ document.querySelectorAll("img").forEach((img) => {
     // convertiría la intro en un tic molesto.
     const terminado = () => video.ended;
 
+    /* Cierre de marca. Al acabar el clip, su logotipo —que ocupa 395x385 px
+     * del archivo y a pantalla completa se amplía entre 2,4x y 4,7x— se releva
+     * por el arte original, que además va por encima del velo y por tanto no
+     * pierde el 28% de opacidad que este le restaba. Si el video nunca llega a
+     * reproducirse (autoplay bloqueado, o prefers-reduced-motion) esto no se
+     * dispara y queda el póster, que es el comportamiento de siempre. */
+    const escena = video.closest("section");
+    const cerrar = () => escena && escena.classList.add("hero-cierre-visible");
+
     // Manda el observer. Arranca en true porque el hero ocupa la primera
     // pantalla y su primer callback todavía no ha llegado.
     let enPantalla = true;
 
     const reproducir = () => {
-      if (menosMovimiento.matches || terminado() || !enPantalla) return;
+      /* `ended` puede ponerse a true SIN que se emita el evento `ended`:
+       * pasa al llegar al final buscando en vez de reproduciendo, y al
+       * restaurar una página con el video ya terminado. Comprobarlo aquí lo
+       * cubre, porque `reproducir` es el embudo por el que pasan todos los
+       * reintentos — así ninguno se queda sin poner el cierre. */
+      if (terminado()) {
+        cerrar();
+        return;
+      }
+      if (menosMovimiento.matches || !enPantalla) return;
       const intento = video.play();
       if (intento) intento.catch(() => {});
     };
@@ -193,6 +211,17 @@ document.querySelectorAll("img").forEach((img) => {
       if (document.visibilityState === "visible") reproducir();
     });
     window.addEventListener("pageshow", reproducir);
+
+    // El camino normal: el clip llega al final reproduciéndose.
+    video.addEventListener("ended", cerrar);
+    // Y la red para el caso sin evento descrito arriba: al pausarse, si resulta
+    // que ya está terminado, el cierre entra igual.
+    video.addEventListener("pause", () => {
+      if (terminado()) cerrar();
+    });
+    // Al volver de otra página el video puede llegar ya terminado: entonces el
+    // cierre tiene que estar puesto desde el primer fotograma.
+    if (terminado()) cerrar();
 
     new IntersectionObserver(([entrada]) => {
       enPantalla = entrada.isIntersecting;

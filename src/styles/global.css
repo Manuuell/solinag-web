@@ -202,6 +202,26 @@
     body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   }
 
+  /* Cierre de marca del hero (ver el comentario del markup en index.astro).
+     El video se desvanece para que su propio logotipo, borroso por la
+     ampliación, no quede fantasmeando detrás del arte nítido. Lo que queda
+     debajo es --color-blue-900, el mismo azul sobre el que cierra el clip
+     —el video lo trae en rgb(15,27,72) y el token es rgb(15,31,77)—, así que
+     el relevo no se nota como un cambio de fondo. */
+  [data-hero-video],
+  .hero-cierre {
+    transition: opacity 0.9s var(--ease-out-soft);
+  }
+  .hero-cierre { opacity: 0; }
+  .hero-cierre-visible .hero-cierre { opacity: 1; }
+
+  /* El video solo se retira donde hay relevo que lo sustituya. El mismo corte
+     de 1280px que la capa del markup: por debajo, el arte pisaría el titular,
+     así que no entra y el video tiene que seguir mostrando su propio cierre. */
+  @media (min-width: 1280px) {
+    .hero-cierre-visible [data-hero-video] { opacity: 0; }
+  }
+
   .scroll-progress {
     position: fixed;
     inset: 0 auto auto 0;
