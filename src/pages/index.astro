@@ -48,11 +48,16 @@ const EJES = [
   },
 ];
 
+// Los cuatro porqués. Igual que en los EJES, `color` es la clase del icono:
+// azul para lo que se diseña y se fabrica, verde para lo que innova y sostiene.
+// El verde es green-700 y no el corporativo green-500 porque estos iconos van
+// sobre fondo claro, donde green-500 da 1.4:1 y desaparece; a un icono WCAG le
+// pide 3:1, que es justo lo que cubre green-700.
 const PORQUE = [
-  { icono: "llave", titulo: "Ingeniería", texto: "Diseñamos soluciones a medida para tu necesidad." },
-  { icono: "fabrica", titulo: "Fabricación", texto: "Transformamos el diseño en equipos reales." },
-  { icono: "bombilla", titulo: "Innovación", texto: "Aplicamos tecnología y mejoramos procesos." },
-  { icono: "hoja", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente." },
+  { icono: "llave", color: "text-blue-600", titulo: "Ingeniería", texto: "Diseñamos soluciones a medida para tu necesidad." },
+  { icono: "fabrica", color: "text-blue-600", titulo: "Fabricación", texto: "Transformamos el diseño en equipos reales." },
+  { icono: "bombilla", color: "text-green-700", titulo: "Innovación", texto: "Aplicamos tecnología y mejoramos procesos." },
+  { icono: "hoja", color: "text-green-700", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente." },
 ];
 
 const INSIGNIAS = [
@@ -246,37 +251,57 @@ const CHIPS_HERO = [
     </Contenedor>
   </Seccion>
 
-  <Seccion compacta>
+  {/* "¿Por qué SOLINAG?" sigue el mismo material de marca que los EJES de
+      arriba: columnas separadas por línea, sin tarjetas y con el icono
+      desnudo — fuera la cápsula redonda que llevaba antes.
+
+      Estaba sobre una banda azul oscuro; pasa a fondo claro, que es el uso
+      preferente del manual. Para que no se funda con las dos secciones claras
+      que la rodean, el bloque va en una tarjeta blanca sobre el gris de
+      página: separa sin recurrir otra vez al oscuro. */}
+  <Seccion>
     <Contenedor>
-      <div class="reveal relative overflow-hidden rounded-xl bg-blue-900 px-7 py-16 md:px-10">
-        <div
-          class="pointer-events-none absolute inset-0"
-          style="background: radial-gradient(500px 260px at 90% 100%, rgb(137 243 54 / 0.14), transparent 60%);"
-          aria-hidden="true"
-        >
-        </div>
-
-        <div class="sobre-oscuro relative mb-11 text-center">
-          <span class="eyebrow">¿Por qué SOLINAG?</span>
-          <h2 class="mt-2.5 text-[clamp(28px,4vw,44px)] text-white">
-            Un equipo de ingeniería a tu lado
+      <div class="reveal rounded-lg border border-line bg-surface px-6 py-14 md:px-10 md:py-16">
+        <div class="mb-12 text-center">
+          <h2 class="text-[clamp(22px,3vw,32px)] font-extrabold tracking-[0.06em] text-blue-600 uppercase">
+            ¿Por qué SOLINAG?
           </h2>
+          {/* La regla corta bajo el título, del material de marca. Es
+              decorativa, pero green-500 sobre blanco no se ve: green-600 la
+              deja visible sin salirse de la escala del verde corporativo. */}
+          <span
+            class="mx-auto mt-5 block h-[3px] w-14 rounded-full bg-green-600"
+            aria-hidden="true"
+          ></span>
+          <p class="mx-auto mt-5 max-w-[46ch] text-[15.5px] text-ink-soft">
+            Un equipo de ingeniería a tu lado
+          </p>
         </div>
 
-        <div class="relative grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {PORQUE.map((p) => (
-            <div class="group p-2.5 text-center">
+        {/* Los separadores solo entran en la fila de cuatro: con dos columnas
+            el `divide-x` le pintaría un borde suelto al primero de la segunda
+            fila, y apilado no significaría nada. */}
+        <div
+          class="reveal-stagger grid gap-12 sm:grid-cols-2 sm:gap-y-14
+                 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-line"
+        >
+          {PORQUE.map((p, i) => (
+            <div class="reveal px-6 text-center" style={`--i:${i}`}>
               <div
-                class="mx-auto mb-4.5 grid h-15 w-15 place-items-center rounded-full border
-                       border-white/16 bg-white/8 text-green-500 transition-[transform,background-color,color]
-                       duration-500 ease-spring group-hover:-translate-y-1 group-hover:scale-108
-                       group-hover:bg-green-500 group-hover:text-blue-900
-                       [&_svg]:h-[26px] [&_svg]:w-[26px]"
+                class:list={[
+                  "mb-6 transition-transform duration-500 ease-spring hover:scale-105",
+                  // El trazo de 1.5 adelgaza el icono: los SVG traen
+                  // stroke-width 2 como atributo y el CSS lo gana.
+                  "[&_svg]:mx-auto [&_svg]:h-12 [&_svg]:w-12 [&_svg]:[stroke-width:1.5]",
+                  p.color,
+                ]}
               >
                 <Icono nombre={p.icono} />
               </div>
-              <h4 class="mb-2 text-[16.5px] text-white">{p.titulo}</h4>
-              <p class="text-[13.5px] text-white/60">{p.texto}</p>
+              <h3 class="mb-2.5 text-[15px] font-extrabold tracking-[0.08em] text-blue-900 uppercase">
+                {p.titulo}
+              </h3>
+              <p class="mx-auto max-w-[24ch] text-[14px] text-ink-soft">{p.texto}</p>
             </div>
           ))}
         </div>
