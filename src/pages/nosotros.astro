@@ -187,7 +187,19 @@ const NECESIDADES = [
     </Contenedor>
   </Seccion>
 
-  <Seccion id="contacto" class="scroll-mt-25">
+  {/* El `scroll-mt` es pequeño a propósito, y no es un descuido.
+      Al llegar desde el enlace "Contacto" se sumaban dos reservas que nadie
+      había cruzado: los 100px del scroll-margin MÁS los 100px de padding-top
+      que la propia Seccion ya trae. Resultado: 117px de hueco muerto bajo la
+      cabecera en escritorio y 96px en móvil, con el formulario empujado fuera
+      de la pantalla.
+
+      El padding de la sección ya separa de sobra, así que aquí solo hace falta
+      lo justo para que no se meta bajo la cabecera pegajosa. Las cuentas, con
+      hueco = scroll-mt + padding − cabecera:
+        móvil      32 + 72 − 76 = 28px
+        escritorio 16 + 100 − 83 = 33px */}
+  <Seccion id="contacto" class="scroll-mt-8 md:scroll-mt-4">
     <Contenedor>
       <CabeceraSeccion
         centrada
