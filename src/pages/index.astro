@@ -3,7 +3,6 @@ import Base from "../layouts/Base.astro";
 import Contenedor from "../components/Contenedor.astro";
 import Seccion from "../components/Seccion.astro";
 import CabeceraSeccion from "../components/CabeceraSeccion.astro";
-import TarjetaPilar from "../components/TarjetaPilar.astro";
 import BannerCta from "../components/BannerCta.astro";
 import Boton from "../components/Boton.astro";
 import Icono from "../components/Icono.astro";
@@ -25,22 +24,25 @@ const PLANTA = [
   { src: "/assets/img/planta-compactadora-frontal.jpg", alt: "Vista frontal de una compactadora SOLINAG terminada", pie: "Equipo terminado, listo para entrega" },
 ];
 
+// Los tres ejes. El `color` es la clase del icono, no un degradado: el verde
+// va con green-700 y no con green-500 porque estos iconos se dibujan sobre
+// blanco, donde el verde de marca se vuelve ilegible (1.4:1).
 const EJES = [
   {
-    icono: "agro",
-    tono: "green",
+    icono: "hojas",
+    color: "text-green-700",
     titulo: "Agro",
     texto: "Soluciones para procesos y operaciones agroindustriales, pensadas para aumentar la productividad en campo y planta.",
   },
   {
     icono: "engranaje",
-    tono: "blue",
+    color: "text-blue-600",
     titulo: "Industria",
     texto: "Maquinaria, equipos y estructuras industriales diseñadas y fabricadas para exigencias reales de operación.",
   },
   {
-    icono: "proceso",
-    tono: "navy",
+    icono: "reciclaje",
+    color: "text-green-700",
     titulo: "Sostenibilidad",
     texto: "Tecnología para reciclaje, aprovechamiento de recursos y economía circular con impacto ambiental positivo.",
   },
@@ -74,55 +76,121 @@ const CHIPS_HERO = [
   datosEstructurados
 >
   {/* Hero oscuro a propósito (excepción puntual, como permite el manual de
-      marca) — plano, sin degradado de malla ni cristal: sobre fondo oscuro
-      esos efectos ensucian en vez de dar profundidad. La jerarquía la llevan
-      el tamaño del titular y el aire alrededor. El resto de la página es
-      clara, así que este fondo va explícito y no heredado del body. */}
-  <section class="sobre-oscuro relative bg-blue-900 px-6 pt-20 pb-24 md:px-10 md:pt-28 md:pb-32">
-    <div class="mx-auto grid w-full max-w-[1400px] items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-      <div>
+      marca). El fondo es un video que arranca en el taller y termina
+      resolviéndose en el logotipo; el velo que va encima es lo que sostiene
+      el contraste del texto blanco sobre cualquier fotograma, así que no se
+      puede quitar aunque el video se vea oscuro.
+
+      NO lleva `loop` a propósito: como cierra sobre el logo, volver de golpe
+      al taller cada 8 segundos se ve como un corte. Reproduce una vez y se
+      queda congelado en el logotipo — el JS impide que se reinicie al volver
+      a entrar en pantalla.
+
+      Si el video falta o el navegador no lo puede reproducir queda el
+      `poster`, que es su primer fotograma, y la portada funciona igual. */}
+  <section
+    class="sobre-oscuro relative isolate flex min-h-[90svh] items-center overflow-hidden
+           bg-blue-900 px-6 py-20 md:px-10 md:py-24 lg:min-h-dvh"
+  >
+    {/* `object-right` no es decorativo: el logotipo del cierre llega casi al
+        borde derecho del video, y con el encuadre centrado por defecto
+        `object-cover` se comía el final de "SOSTENIBILIDAD". Anclado a la
+        derecha, el recorte se lo lleva el lado izquierdo, que va bajo la
+        parte densa del velo y no aporta nada que se pueda perder.
+
+        En móvil se ancla al centro porque ahí no hay video (ver el `media`
+        del <source>): lo que se encuadra es el póster. */}
+    <video
+      class="absolute inset-0 z-0 h-full w-full object-cover object-center md:object-right"
+      autoplay
+      muted
+      playsinline
+      preload="metadata"
+      poster="/assets/img/hero-poster.jpg"
+      aria-hidden="true"
+      data-hero-video
+    >
+      {/* El `media` deja el video FUERA del móvil, y es deliberado por dos
+          razones. La de forma: el clip es 3:2 y en un hero vertical
+          `object-cover` lo amplía tanto que del cierre de marca solo se ven
+          trozos de letra ("LINAG SAS", "…SFORMA") pisando el texto — se lee
+          como un fallo. La de coste: son 2,5 MB que nadie pidió, y buena
+          parte de estas visitas llegan por datos móviles desde Instagram.
+
+          Sin `source` que case, el <video> se queda en su `poster`, que es el
+          primer fotograma. Si algún día se genera una versión 9:16, se añade
+          aquí como otro <source> con su propio `media` y el móvil la usa. */}
+      <source src="/assets/video/hero.mp4" type="video/mp4" media="(min-width: 768px)" />
+    </video>
+
+    <div class="hero-veil absolute inset-0 z-1" aria-hidden="true"></div>
+
+    <div class="relative z-2 mx-auto w-full max-w-[1400px]">
+      <div class="reveal-stagger max-w-[48rem]">
+        {/* Sin logotipo aquí a propósito: el video ya cierra sobre él, y la
+            cabecera lo lleva arriba. Repetirlo una tercera vez lo abarata. */}
         <span
-          class="inline-flex items-center gap-2.5 text-[12px] font-semibold tracking-[0.16em]
-                 text-green-500 uppercase"
+          class="reveal inline-flex items-center gap-2.5 text-[12px] font-semibold
+                 tracking-[0.16em] text-green-500 uppercase"
+          style="--i:1"
         >
           <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
           Agro · Industria · Sostenibilidad
         </span>
 
+        {/* La caja alta se hace con `uppercase`, no escribiendo el texto en
+            mayúsculas: así el contenido real sigue siendo "Innovación que
+            transforma" para Google y para los lectores de pantalla, que
+            deletrean letra a letra lo que encuentran escrito en versales. */}
         <h1
-          class="mt-7 text-[clamp(44px,7.5vw,96px)] leading-[0.95] tracking-[-0.03em] text-white"
+          class="reveal mt-7 text-[clamp(36px,6.6vw,86px)] leading-[0.98] tracking-[-0.02em]
+                 text-white uppercase"
+          style="--i:2"
         >
-          Innovación<br /><span class="text-green-500">que transforma</span>
+          Innovación <br /><span class="text-green-500">que transforma</span>
         </h1>
 
-        <p class="mt-8 max-w-[46ch] text-[clamp(16px,1.5vw,19px)] leading-relaxed text-white/60">
-          Diseñamos y fabricamos soluciones de ingeniería a la medida de nuestros clientes,
-          integrando diseño, fabricación y tecnología para el agro, la industria y la
-          sostenibilidad.
+        <p
+          class="reveal mt-8 max-w-[40ch] text-[clamp(16px,1.5vw,19px)] leading-relaxed
+                 text-white/70"
+          style="--i:3"
+        >
+          Soluciones de ingeniería para el agro, la industria y la sostenibilidad.
         </p>
 
-        <div class="mt-11 flex flex-wrap items-center gap-x-8 gap-y-4">
+        {/* Los dos botones del hero se escriben aquí y no con <Boton> porque
+            aquel es una píldora pensada para fondo claro; estos son
+            rectangulares y viven sobre la banda oscura. El secundario va con
+            borde en vez de subrayado, como el resto de la marca. */}
+        <div class="reveal mt-11 flex flex-wrap items-center gap-4" style="--i:4">
           <a
             href={ruta("soluciones")}
-            class="group inline-flex items-center gap-3 bg-green-500 px-8 py-4 text-[15px]
-                   font-bold text-blue-900 transition-colors duration-200 hover:bg-green-400
-                   [&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform
-                   hover:[&_svg]:translate-x-1"
+            class="group inline-flex items-center gap-3 bg-green-500 px-8 py-4 text-[14px]
+                   font-bold tracking-[0.06em] text-blue-900 uppercase transition-colors
+                   duration-200 hover:bg-green-400 [&_svg]:h-4 [&_svg]:w-4
+                   [&_svg]:transition-transform hover:[&_svg]:translate-x-1"
           >
             Ver soluciones
             <Icono nombre="flecha" />
           </a>
           <a
             href={ruta("nosotros", "contacto")}
-            class="text-[15px] font-semibold text-white/70 underline decoration-white/25
-                   underline-offset-[6px] transition-colors hover:text-white
-                   hover:decoration-white"
+            class="inline-flex items-center border border-white/35 px-8 py-4 text-[14px]
+                   font-bold tracking-[0.06em] text-white uppercase transition-colors
+                   duration-200 hover:border-white hover:bg-white/10"
           >
-            Cotizar ahora
+            Cotizar
           </a>
         </div>
 
-        <dl class="mt-16 grid max-w-lg grid-cols-3 gap-8 border-t border-white/12 pt-8">
+        {/* En móvil van apilados: a 375px, tres columnas dejan ~98px cada una
+            y "Sostenibilidad" no cabe — se salía de su celda y el
+            overflow-hidden de la sección la recortaba a media palabra. */}
+        <dl
+          class="reveal mt-12 grid max-w-lg grid-cols-1 gap-5 border-t border-white/12 pt-7
+                 sm:mt-16 sm:grid-cols-3 sm:gap-8 sm:pt-8"
+          style="--i:5"
+        >
           {INSIGNIAS.map((i) => (
             <div>
               <dt class="text-[17px] font-bold text-white">{i.valor}</dt>
@@ -131,37 +199,6 @@ const CHIPS_HERO = [
           ))}
         </dl>
       </div>
-
-      {/* Mosaico de equipo real, sin marcos ni insignias flotantes. */}
-      <div class="grid grid-cols-2 gap-3" data-hero-visual>
-        <figure class="col-span-2 overflow-hidden bg-surface-2">
-          <img
-            src="/assets/img/planta-compactadora.jpg"
-            alt="Compactadora hidráulica vertical SOLINAG fabricada en la planta de Turbaco"
-            width="540"
-            height="720"
-            class="aspect-16/10 w-full object-cover"
-          />
-        </figure>
-        <figure class="overflow-hidden bg-white p-5">
-          <img
-            src="/assets/img/prod-mtc-15.jpg"
-            alt="Molino triturador industrial SOL-MTC-15"
-            width="233"
-            height="250"
-            class="aspect-4/3 w-full object-contain"
-          />
-        </figure>
-        <figure class="overflow-hidden bg-white p-5">
-          <img
-            src="/assets/img/prod-bt-me01l.jpg"
-            alt="Bicitriciclo de carga eléctrico SOL-BT"
-            width="272"
-            height="226"
-            class="aspect-4/3 w-full object-contain"
-          />
-        </figure>
-      </div>
     </div>
   </section>
 
@@ -169,17 +206,41 @@ const CHIPS_HERO = [
 
   <Seccion>
     <Contenedor>
-      <CabeceraSeccion
-        centrada
-        antetitulo="¿Qué hacemos?"
-        titulo="Tres ejes, una misma transformación"
-        entradilla="Resolvemos necesidades reales de nuestros clientes integrando diseño, fabricación y tecnología, con un enfoque responsable con el medio ambiente."
-      />
-      <div class="reveal-stagger grid gap-6 lg:grid-cols-3">
+      {/* "¿Qué hacemos?" es el titular de la sección, no un antetítulo: como
+          eyebrow salía a 12 px y se perdía. Por eso este bloque no usa
+          <CabeceraSeccion>, que impone la jerarquía antetítulo + título. */}
+      <div class="reveal mb-14 text-center">
+        <h2 class="text-[clamp(30px,4.4vw,50px)] tracking-[-0.01em] uppercase">
+          ¿Qué <span class="text-green-700">hacemos?</span>
+        </h2>
+        <p class="mx-auto mt-4 max-w-[58ch] text-[clamp(16px,1.6vw,18px)] text-ink-soft">
+          Diseñamos y fabricamos soluciones de ingeniería para resolver necesidades reales
+          de nuestros clientes, integrando diseño, fabricación y tecnología.
+        </p>
+      </div>
+
+      {/* Columnas separadas por línea, sin tarjetas: así lo pide el material
+          de marca de la empresa. El separador se dibuja con `divide-x`, que
+          solo entra a partir de md — apilado no tendría sentido. */}
+      <div class="reveal-stagger grid gap-12 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
         {EJES.map((e, i) => (
-          <TarjetaPilar icono={e.icono} tono={e.tono} titulo={e.titulo} indice={i}>
-            {e.texto}
-          </TarjetaPilar>
+          <div class="reveal px-6 text-center" style={`--i:${i}`}>
+            <div
+              class:list={[
+                "mx-auto mb-6 grid h-24 w-24 place-items-center rounded-full bg-surface",
+                "border border-line shadow-[0_10px_30px_-18px_rgb(15_31_77/0.5)]",
+                "transition-transform duration-500 ease-spring hover:scale-105",
+                "[&_svg]:h-11 [&_svg]:w-11",
+                e.color,
+              ]}
+            >
+              <Icono nombre={e.icono} />
+            </div>
+            <h3 class="mb-2.5 text-[17px] font-extrabold tracking-[0.08em] uppercase">
+              {e.titulo}
+            </h3>
+            <p class="mx-auto max-w-[34ch] text-[14.5px] text-ink-soft">{e.texto}</p>
+          </div>
         ))}
       </div>
     </Contenedor>

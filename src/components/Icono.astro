@@ -40,7 +40,10 @@ const ICONOS = {
 
   // Ejes y categorías
   agro: [TRAZO, '<path d="M12 22c4-2 7-6 7-11a7 7 0 1 0-14 0c0 5 3 9 7 11Z"/><path d="M12 12v6"/>'],
-  engranaje: [TRAZO, '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>'],
+  // Corona de dientes por fuera del círculo, no radios que lo atraviesen: el
+  // engranaje anterior (estilo Feather) se empastaba a 26 px, que es el
+  // tamaño al que se usa en las tarjetas.
+  engranaje: [TRAZO, '<circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r="7.2"/><path d="M12 2.4v2.1M12 21.6v-2.1M21.6 12h-2.1M2.4 12h2.1"/><path d="M18.79 5.21 17.3 6.7M5.21 18.79 6.7 17.3M18.79 18.79 17.3 17.3M5.21 5.21 6.7 6.7"/>'],
   edificio: [TRAZO, '<path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/>'],
   bici: [TRAZO, '<circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 18h4l3-9h3M9 18l3-9"/>'],
   diana: [TRAZO, '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>'],
@@ -52,6 +55,14 @@ const ICONOS = {
   fabrica: [TRAZO, '<path d="M2 20h20M4 20V10l4-4 4 4v10M12 20v-6l4-4 4 4v6"/>'],
   bombilla: [TRAZO, '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.5.4.8 1 .8 1.7V17h6.4v-.6c0-.7.3-1.3.8-1.7A7 7 0 0 0 12 2Z"/>'],
   hoja: [TRAZO, '<path d="M12 21s-7-4.35-9.5-9C.5 7.5 3 3 7 3c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4.5 4.5 9-2.5 4.65-9.5 9-9.5 9Z"/>'],
+
+  // Brote de dos hojas: es el gesto del isotipo de la marca, y el que la
+  // empresa usa para "agro". `hoja` (arriba) tiene forma de corazón y no
+  // sirve para eso.
+  hojas: [TRAZO, '<path d="M12 21c0-4.2 1-7.2 3-9.4"/><path d="M20.4 4.8c.6 5.6-2.2 9.3-7.6 9.5-.6-5.6 2.2-9.3 7.6-9.5Z"/><path d="M3.9 9.6c4 .6 6.3 3 6.8 7-4-.6-6.3-3-6.8-7Z"/>'],
+
+  // Triángulo de flechas de reciclaje, para el eje de sostenibilidad.
+  reciclaje: [TRAZO, '<path d="M9.6 4.9 11 2.6a1.5 1.5 0 0 1 2.5 0l2.6 4.3"/><path d="m13.4 5.6 2.7 1.3-1.3 2.7"/><path d="m17.9 10.6 2.4 4a1.5 1.5 0 0 1-1.3 2.3h-4.6"/><path d="m14.4 14.5 0 2.4 2.6.5"/><path d="M9.5 16.9H5a1.5 1.5 0 0 1-1.3-2.3l2.4-4"/><path d="m8.4 19.4-2.2-2.5 2.2-1.8"/>'],
 
   // Chips del hero
   grafico: [{ ...TRAZO, "stroke-width": "2.2" }, '<path d="M12 20V10M18 20V4M6 20v-6"/>'],

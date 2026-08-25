@@ -128,6 +128,48 @@ document.querySelectorAll("img").forEach((img) => {
   }
 }
 
+/* Video de fondo del hero.
+ *
+ * Dos motivos para tocarlo desde JS y no dejarlo solo con el `autoplay` del
+ * HTML:
+ *   · quien pide "menos movimiento" en el sistema no debería recibir un video
+ *     en bucle a pantalla completa; se queda en el `poster`.
+ *   · fuera de pantalla no hay razón para seguir decodificando fotogramas —
+ *     en móvil eso es batería.
+ *
+ * `play()` devuelve una promesa que el navegador rechaza si bloquea la
+ * reproducción automática; el catch evita el error en consola. Cuando pasa,
+ * el `poster` sigue visible, que es justo lo que queremos.
+ */
+{
+  const video = document.querySelector("[data-hero-video]");
+  if (video) {
+    const menosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Se reproduce una sola vez. Una vez terminado se queda en el logotipo:
+    // volver a reproducir desde el taller cada vez que alguien sube el scroll
+    // convertiría la intro en un tic molesto.
+    const terminado = () => video.ended;
+    const reproducir = () => {
+      if (menosMovimiento.matches || terminado()) return;
+      video.play().catch(() => {});
+    };
+
+    const aplicarPreferencia = () => {
+      if (menosMovimiento.matches) video.pause();
+      else reproducir();
+    };
+
+    aplicarPreferencia();
+    menosMovimiento.addEventListener("change", aplicarPreferencia);
+
+    new IntersectionObserver(([entrada]) => {
+      if (entrada.isIntersecting) reproducir();
+      else if (!terminado()) video.pause();
+    }).observe(video);
+  }
+}
+
 /* Barra de progreso de scroll */
 {
   const barra = document.querySelector("[data-progreso]");
@@ -152,24 +194,6 @@ if (hayHover) {
       card.style.setProperty("--my", `${e.clientY - r.top}px`);
     });
   });
-}
-
-/* Inclinación 3D de la tarjeta del hero */
-{
-  const zona = document.querySelector("[data-hero-visual]");
-  const tarjeta = document.querySelector("[data-hero-card]");
-  if (zona && tarjeta && hayHover) {
-    zona.addEventListener("mousemove", (e) => {
-      const r = zona.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      tarjeta.style.transform =
-        `rotateY(${px * 14}deg) rotateX(${py * -14}deg) translateZ(10px)`;
-    });
-    zona.addEventListener("mouseleave", () => {
-      tarjeta.style.transform = "rotateY(0deg) rotateX(0deg)";
-    });
-  }
 }
 
 /* Textos que rotan (franja superior y chips del hero) */

@@ -408,6 +408,46 @@
     animation: float 11s ease-in-out infinite reverse;
   }
 
+  /* Velo sobre el video del hero.
+     Es lo único que garantiza el contraste del texto blanco: el video cambia
+     de fotograma y no se puede confiar en que siempre sea oscuro.
+
+     Son dos capas con trabajos distintos:
+       · la diagonal tapa la IZQUIERDA, que es donde vive todo el texto, y se
+         abre en el último tercio para que el cierre de marca del video se
+         vea nítido en vez de gris;
+       · la vertical solo entra en el pie, bajo botones e insignias, donde el
+         video suele tener las zonas más claras.
+
+     Alfa efectivo por zona y contraste medido contra el peor caso posible
+     — un fotograma BLANCO PURO debajo del velo — para que la garantía valga
+     con cualquier video que se ponga después:
+       titular   izq/medio  0.95   blanco 13.9:1 · verde-500  9.9:1
+       párrafo   izq/medio  0.93   blanco 13.1:1
+       botones   izq/bajo   0.94   blanco 13.6:1
+       insignias izq/pie    0.96   blanco 14.1:1
+       logo      der/medio  0.28   el blanco del logotipo da 8.8:1 y el verde
+                                   6.4:1 contra su propia tarjeta azul
+
+     OJO: el tercio derecho está a 0.28 a propósito, y ahí el texto blanco
+     solo daría 1.8:1. Es zona para imagen, NO para texto: si algún día se
+     mete contenido a la derecha hay que rehacer estas cuentas, no ajustar
+     las opacidades a ojo.
+
+     El azul es var(--color-blue-900) = #0f1f4d en rgb, escrito literal
+     porque las funciones de color no aceptan una variable con /alpha. */
+  .hero-veil {
+    background:
+      linear-gradient(to bottom, transparent 62%, rgb(15 31 77 / 0.45) 100%),
+      linear-gradient(
+        100deg,
+        rgb(15 31 77 / 0.95) 0%,
+        rgb(15 31 77 / 0.93) 46%,
+        rgb(15 31 77 / 0.42) 72%,
+        rgb(15 31 77 / 0.24) 100%
+      );
+  }
+
   /* Sub-navegación tipo segmented control, con scroll-spy. */
   .subnav {
     display: inline-flex;

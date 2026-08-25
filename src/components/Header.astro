@@ -6,6 +6,7 @@
 import { NAV, SOCIAL, enlaceContacto, whatsapp } from "../data/sitio.js";
 import Marca from "./Marca.astro";
 import Icono from "./Icono.astro";
+import Boton from "./Boton.astro";
 
 const { actual } = Astro.props;
 ---
@@ -18,10 +19,14 @@ const { actual } = Astro.props;
   <div class="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-8 px-6 py-5 md:px-10">
     <Marca />
 
-    <nav class="hidden items-center gap-9 lg:flex" aria-label="Navegación principal">
-      {NAV.slice(0, 4).map((item) => (
+    {/* Los cinco elementos del menú, "Contacto" incluido. Ese último apunta a
+        un ancla dentro de Nosotros, así que se resuelve con enlaceContacto():
+        estando ya en esa página devuelve solo "#contacto" y el navegador se
+        desplaza en vez de recargar la página entera. */}
+    <nav class="hidden items-center gap-7 lg:flex xl:gap-9" aria-label="Navegación principal">
+      {NAV.map((item) => (
         <a
-          href={item.href}
+          href={item.id === "contacto" ? enlaceContacto(actual) : item.href}
           aria-current={actual === item.id ? "page" : undefined}
           class:list={[
             "relative text-[15px] font-medium transition-colors duration-200",
@@ -48,13 +53,20 @@ const { actual } = Astro.props;
         <Icono nombre="instagram" />
       </a>
 
-      <a
-        href={enlaceContacto(actual)}
-        class="hidden text-[15px] font-semibold text-green-800 underline decoration-green-800/40
-               underline-offset-[6px] transition-colors hover:decoration-green-800 sm:block"
-      >
-        Cotizar
-      </a>
+      {/* Verde sólido con texto navy, no blanco. El blanco sobre green-500
+          da 1.41:1 y es ilegible; el navy de la variante `primary` da
+          11.29:1 y se ve igual de contundente.
+
+          El `hidden` va en este envoltorio y no en el propio botón: <Boton>
+          ya trae `inline-flex` en sus clases base, y como las dos utilidades
+          tienen la misma especificidad gana la que Tailwind emita más tarde
+          — no la que se escriba después en el atributo. En móvil sobra,
+          porque Cotizar ya está dentro del menú desplegable. */}
+      <span class="hidden sm:block">
+        <Boton href={enlaceContacto(actual)} variante="primary" tamano="sm">
+          Cotizar
+        </Boton>
+      </span>
 
       <button
         class="text-ink lg:hidden [&_svg]:h-6 [&_svg]:w-6"

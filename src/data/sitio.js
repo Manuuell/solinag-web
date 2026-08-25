@@ -142,13 +142,6 @@ export const SOCIAL = [
   { id: "youtube", nombre: "YouTube", href: "https://youtube.com" },
 ];
 
-/** Textos que rotan en la franja azul superior. */
-export const FRANJA = [
-  "Servicio y soluciones · Ingeniería agroindustrial",
-  "Servicio y soluciones · Procesos industriales",
-  "Servicio y soluciones · Sostenibilidad",
-];
-
 /**
  * Especialidades de ingeniería.
  *
