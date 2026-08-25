@@ -194,10 +194,12 @@
     pointer-events: none;
   }
 
-  /* En móvil la barra inferior flota sobre el contenido: el body reserva su
-     alto para que el pie no quede tapado. */
+  /* En móvil el botón de WhatsApp flota sobre el contenido: el body reserva su
+     alto (22px de separación + 52px de botón) para que el pie no quede tapado.
+     Antes aquí se reservaban 84px para una barra de navegación inferior que se
+     retiró — el menú hamburguesa ya cubre esos mismos destinos. */
   @media (max-width: 720px) {
-    body { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+    body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   }
 
   .scroll-progress {

@@ -4,15 +4,14 @@
  *
  * Aquí vive lo que antes estaba copiado en index, soluciones, proyectos y
  * nosotros: el <head>, la franja superior, el header, el menú móvil, el pie,
- * el botón de WhatsApp y la barra inferior. Cambiar cualquiera de esos ahora
- * es una sola edición.
+ * y el botón de WhatsApp. Cambiar cualquiera de esos ahora es una sola
+ * edición.
  */
 import { CONTACTO_VERIFICADO, EMPRESA, SOCIAL } from "../data/sitio.js";
 import Header from "../components/Header.astro";
 import MenuMovil from "../components/MenuMovil.astro";
 import Footer from "../components/Footer.astro";
 import BotonWhatsapp from "../components/BotonWhatsapp.astro";
-import BarraMovil from "../components/BarraMovil.astro";
 import "../styles/global.css";
 
 const {
@@ -113,7 +112,6 @@ const LD = {
 
     <Footer />
     <BotonWhatsapp />
-    <BarraMovil actual={actual} />
 
     <script src="../scripts/sitio.js"></script>
   </body>
