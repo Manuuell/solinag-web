@@ -16,6 +16,13 @@ const contener = p.encuadre === "contener";
 
 // Las dos primeras cifras bastan como gancho; el resto vive en la ficha.
 const destacadas = p.stats.slice(0, 2);
+
+// Con más de una foto, la tarjeta las rota al pasar el cursor (ver sitio.js).
+// `img` no siempre es la primera de la galería (es la variante más
+// representativa, no la primera cargada), así que se busca su posición para
+// que la tarjeta arranque mostrando esa misma foto y no otra distinta.
+const rotarGaleria = (p.galeria?.length ?? 0) > 1;
+const indiceInicial = rotarGaleria ? Math.max(p.galeria.findIndex((g) => g.src === p.img), 0) : 0;
 ---
 
 <article
@@ -29,7 +36,28 @@ const destacadas = p.stats.slice(0, 2);
       !p.img ? "bg-linear-140 from-blue-700 to-blue-900" : contener ? "bg-white p-6" : "bg-surface-2",
     ]}
   >
-    {p.img ? (
+    {rotarGaleria ? (
+      // Las fotos van todas montadas, apiladas por opacidad: sitio.js alterna
+      // cuál se ve mientras el cursor está encima. Sin JS o sin hover (mobile)
+      // queda fija la de indiceInicial, que es exactamente el mismo resultado
+      // que antes de este cambio.
+      <div class="absolute inset-0" data-galeria-tarjeta aria-hidden="true">
+        {p.galeria.map((g, i) => (
+          <img
+            src={g.src}
+            alt=""
+            loading="lazy"
+            data-galeria-img
+            class:list={[
+              "absolute inset-0 h-full w-full transition-[opacity,transform] duration-700",
+              "ease-out-soft group-hover:scale-105",
+              contener ? "object-contain" : "object-cover",
+              i === indiceInicial ? "opacity-100" : "opacity-0",
+            ]}
+          />
+        ))}
+      </div>
+    ) : p.img ? (
       <img
         src={p.img}
         alt={p.alt}

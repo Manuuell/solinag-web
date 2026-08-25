@@ -196,6 +196,40 @@ if (hayHover) {
   });
 }
 
+/* Fotos de la tarjeta de producto: si tiene más de una, rotan cada 2,5 s
+ * mientras el cursor está encima. Gateado por hayHover (sin sentido en
+ * mobile, que no tiene :hover) y por prefers-reduced-motion, igual que el
+ * video del hero. Al salir el cursor, vuelve a la foto inicial en vez de
+ * quedarse en la que tocó: cada visita a la tarjeta empieza igual. */
+if (hayHover) {
+  const menosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  document.querySelectorAll("[data-galeria-tarjeta]").forEach((pila) => {
+    const fotos = [...pila.querySelectorAll("[data-galeria-img]")];
+    if (fotos.length < 2) return;
+
+    const inicio = Math.max(fotos.findIndex((f) => f.classList.contains("opacity-100")), 0);
+    let i = inicio;
+    let intervalo = null;
+
+    const mostrar = (siguiente) => {
+      fotos[i].classList.replace("opacity-100", "opacity-0");
+      i = siguiente;
+      fotos[i].classList.replace("opacity-0", "opacity-100");
+    };
+
+    pila.addEventListener("mouseenter", () => {
+      if (menosMovimiento.matches || intervalo) return;
+      intervalo = setInterval(() => mostrar((i + 1) % fotos.length), 2500);
+    });
+    pila.addEventListener("mouseleave", () => {
+      clearInterval(intervalo);
+      intervalo = null;
+      if (i !== inicio) mostrar(inicio);
+    });
+  });
+}
+
 /* Textos que rotan (franja superior y chips del hero) */
 document.querySelectorAll(".widget-stack").forEach((pila) => {
   const items = pila.querySelectorAll(".w-item");
