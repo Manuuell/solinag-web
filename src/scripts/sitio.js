@@ -140,6 +140,15 @@ document.querySelectorAll("img").forEach((img) => {
  * `play()` devuelve una promesa que el navegador rechaza si bloquea la
  * reproducción automática; el catch evita el error en consola. Cuando pasa,
  * el `poster` sigue visible, que es justo lo que queremos.
+ *
+ * Un solo intento NO basta, y esto fue un bug real: al volver a la portada
+ * desde otra página, este script corre cuando el video aún está en
+ * readyState 0 (sin un solo fotograma), el navegador rechaza ese `play()`
+ * con AbortError y nadie lo reintenta — el IntersectionObserver no sirve de
+ * red porque el hero ya está en pantalla y no vuelve a cruzar el umbral. La
+ * portada se quedaba congelada en el póster en todas las visitas menos la
+ * primera. De ahí los reintentos de abajo: el navegador puede cambiar de
+ * opinión y hay que volver a pedírselo cuando lo hace.
  */
 {
   const video = document.querySelector("[data-hero-video]");
@@ -150,9 +159,15 @@ document.querySelectorAll("img").forEach((img) => {
     // volver a reproducir desde el taller cada vez que alguien sube el scroll
     // convertiría la intro en un tic molesto.
     const terminado = () => video.ended;
+
+    // Manda el observer. Arranca en true porque el hero ocupa la primera
+    // pantalla y su primer callback todavía no ha llegado.
+    let enPantalla = true;
+
     const reproducir = () => {
-      if (menosMovimiento.matches || terminado()) return;
-      video.play().catch(() => {});
+      if (menosMovimiento.matches || terminado() || !enPantalla) return;
+      const intento = video.play();
+      if (intento) intento.catch(() => {});
     };
 
     const aplicarPreferencia = () => {
@@ -163,8 +178,25 @@ document.querySelectorAll("img").forEach((img) => {
     aplicarPreferencia();
     menosMovimiento.addEventListener("change", aplicarPreferencia);
 
+    /* Los reintentos. Ninguno reinicia nada: `reproducir()` respeta `ended`,
+     * así que sobre un video ya terminado todos son no-ops, y sobre uno a
+     * medias reanuda donde estaba en vez de volver al taller.
+     *   · loadeddata — el caso que rompía la portada: el primer `play()` salió
+     *     sin datos, así que hay que repetirlo en cuanto llega el primer
+     *     fotograma.
+     *   · visibilitychange — el navegador pausa el video de una pestaña en
+     *     segundo plano para ahorrar batería, y al volver no lo reanuda solo.
+     *   · pageshow — Safari restaura la página desde el bfcache con el video
+     *     pausado y SIN volver a ejecutar este script. */
+    video.addEventListener("loadeddata", reproducir);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") reproducir();
+    });
+    window.addEventListener("pageshow", reproducir);
+
     new IntersectionObserver(([entrada]) => {
-      if (entrada.isIntersecting) reproducir();
+      enPantalla = entrada.isIntersecting;
+      if (enPantalla) reproducir();
       else if (!terminado()) video.pause();
     }).observe(video);
   }
