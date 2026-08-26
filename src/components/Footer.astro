@@ -17,6 +17,12 @@
 import { CORREO_VISIBLE, EMPRESA, SOCIAL, TELEFONO_VISIBLE } from "../data/sitio.js";
 import Icono from "./Icono.astro";
 import logoFooter from "../assets/logo-footer.svg?raw";
+import { escoparClasesSvg } from "../utils/svg.js";
+
+// Del mismo paquete de marca que banner-solinag.svg (la franja superior):
+// comparte sus nombres de clase cls-N y sin escopar le pisaba el font-size.
+// Ver utils/svg.js.
+const logoFooterEscopado = escoparClasesSvg(logoFooter, "logo-footer");
 
 const CONTACTO = [
   { icono: "ubicacion", texto: EMPRESA.direccion.completa },
@@ -61,7 +67,7 @@ const TITULO_COL =
           Va incrustado y no como <img> porque lleva <text> con Montserrat:
           como imagen se renderiza aislado, sin las fuentes de la página. */}
       <div class="md:flex-[1.1] md:pr-8 [&_svg]:block [&_svg]:h-auto [&_svg]:w-[300px] [&_svg]:max-w-full">
-        <Fragment set:html={logoFooter} />
+        <Fragment set:html={logoFooterEscopado} />
       </div>
 
       <div class="md:flex-[1.3] md:px-8">
