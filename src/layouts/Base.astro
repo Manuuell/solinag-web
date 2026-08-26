@@ -75,15 +75,22 @@ const LD = {
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImagen} />
 
-    {/* Archivo variable: el manual de marca pide "grotesca ancha, 700-800,
-        tracking -0.02em", y su eje wdth (62-125) es justo lo que da ese ancho.
+    {/* Montserrat variable, pedida por Manuel el 2026-08-25 en sustitución de
+        Archivo. El manual NO fija familia — solo pide "sans serif limpia y
+        consistente" con jerarquía clara (§5) —, así que la elección es libre
+        mientras se cumpla ese perfil.
+
+        El rango 400..800 no es arbitrario: son los pesos que el sitio usa de
+        verdad (400 de texto corrido, 500, 600, 700 y 800 en titulares y
+        rótulos). Pedir el eje completo 100..900 traería peso que nadie gasta.
+
         preconnect a los dos hosts porque el CSS y los .woff2 salen de dominios
         distintos; sin el segundo se paga un handshake extra. */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400..800&display=swap"
     />
 
     <meta name="theme-color" content="#2144a1" />

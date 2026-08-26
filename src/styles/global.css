@@ -68,9 +68,9 @@
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Tipografía.
-     Archivo con respaldo del sistema: si la fuente no carga, el texto sigue
+     Montserrat con respaldo del sistema: si la fuente no carga, el texto sigue
      siendo legible en vez de quedar invisible. */
-  --font-sans: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  --font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
 
   /* Breakpoints.
@@ -126,9 +126,10 @@
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    /* El eje de anchura de Archivo: es lo que da la "grotesca ancha" del
-       manual. Solo en titulares — en texto corrido cansa la vista. */
-    font-stretch: 112%;
+    /* Sin `font-stretch`: Archivo tenía eje de anchura (wdth 62-125) y aquí
+       se ensanchaban los titulares al 112%. Montserrat no lo tiene, así que
+       la declaración no haría nada — o peor, en algún motor dispararía un
+       ensanchado sintético. Montserrat ya es de por sí más ancha. */
   }
 
   /* 3px y no 2px: el anillo tiene que verse sobre fondo claro y sobre las

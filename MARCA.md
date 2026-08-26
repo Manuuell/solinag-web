@@ -62,8 +62,12 @@ contradice nada del manual, solo lo amplía.
 ## Tipografía
 
 El manual no fija familia: pide sans serif limpia con jerarquía clara.
-`global.css` usa Archivo (grotesca ancha, `font-stretch` en titulares), con
-la pila de sistema como respaldo si no carga.
+`global.css` usa **Montserrat** (geométrica), con la pila de sistema como
+respaldo si no carga. Manuel la pidió el 2026-08-25 en sustitución de Archivo.
+
+Ojo si alguna vez se vuelve a cambiar: Archivo tenía eje de anchura (wdth) y
+los titulares iban con `font-stretch: 112%`. Montserrat no lo tiene, así que
+esa declaración se retiró — con una familia sin eje wdth no hace nada.
 
 - Titulares: 700–800, tracking −0.02em
 - Slogan: mayúsculas, tracking +0.08em
