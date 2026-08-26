@@ -61,9 +61,19 @@ const LD = {
 ---
 
 <!doctype html>
-<html lang="es">
+{/* `no-js` de partida, y el propio JS la quita en cuanto corre. Es la red
+    que hace efectiva la regla `.no-js .reveal` de global.css: sin ella, si
+    el script no llega a ejecutarse (error, bloqueador, red caída) TODO el
+    contenido con `.reveal` se queda en opacity:0 — invisible para siempre.
+    La regla existía desde antes, pero nadie ponía la clase, así que nunca
+    llegaba a aplicarse. */}
+<html lang="es" class="no-js">
   <head>
     <meta charset="UTF-8" />
+    {/* Inline y lo primero del <head>: se ejecuta antes de que el navegador
+        pinte nada, así no hay parpadeo entre el estado "sin JS" (todo
+        visible) y el de las animaciones (todo oculto esperando su turno). */}
+    <script is:inline>document.documentElement.classList.remove("no-js");</script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{titulo}</title>
     <meta name="description" content={descripcion} />

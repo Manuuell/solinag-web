@@ -63,9 +63,12 @@ const juego = imagen
     </>
   )}
 
-  <div class="relative z-2 mx-auto w-full max-w-[1400px]">
+  {/* `reveal-stagger` escalona la entrada igual que el hero de la portada:
+      migas, antetítulo, titular y entradilla aparecen en cascada en vez de
+      todos de golpe. El `--i` de cada hijo marca su turno. */}
+  <div class="reveal-stagger relative z-2 mx-auto w-full max-w-[1400px]">
     {migas.length > 0 && (
-      <nav class="mb-1 flex items-center gap-2 text-[13.5px] text-white/55" aria-label="Migas de pan">
+      <nav class="reveal mb-1 flex items-center gap-2 text-[13.5px] text-white/55" style="--i:0" aria-label="Migas de pan">
         {migas.map((m, i) => (
           <>
             {m.href
@@ -77,8 +80,8 @@ const juego = imagen
       </nav>
     )}
 
-    <span class="inline-flex items-center gap-2.5 text-[12px] font-semibold tracking-[0.16em] text-green-500 uppercase"><span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>{antetitulo}</span>
-    <h1 class="mt-6 max-w-[18ch] text-[clamp(38px,6vw,80px)] leading-[0.98] tracking-[-0.03em] text-white">{titulo}</h1>
-    {entradilla && <p class="mt-7 max-w-[52ch] text-[clamp(15px,1.4vw,18px)] leading-relaxed text-white/55">{entradilla}</p>}
+    <span class="reveal inline-flex items-center gap-2.5 text-[12px] font-semibold tracking-[0.16em] text-green-500 uppercase" style="--i:1"><span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>{antetitulo}</span>
+    <h1 class="reveal mt-6 max-w-[18ch] text-[clamp(38px,6vw,80px)] leading-[0.98] tracking-[-0.03em] text-white" style="--i:2">{titulo}</h1>
+    {entradilla && <p class="reveal mt-7 max-w-[52ch] text-[clamp(15px,1.4vw,18px)] leading-relaxed text-white/55" style="--i:3">{entradilla}</p>}
   </div>
 </section>

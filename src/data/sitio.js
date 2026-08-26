@@ -33,7 +33,11 @@ export const CONTACTO_VERIFICADO = true;
 export const EMPRESA = {
   marca: "SOLINAG SAS",
   razonSocial: "SOLUCIONES DE INGENIERÍA PARA LA INDUSTRIA Y EL AGRO SAS",
-  // Misma razón social en caja normal, para el pie de página.
+  // Misma razón social en caja normal. El pie la mostraba hasta que Manuel
+  // pidió acortar el copyright (2026-08-26); se conserva porque es un dato
+  // legal de la empresa y es el formato listo para volver a mostrarla sin
+  // reescribirlo. La versión en mayúsculas (`razonSocial`) sigue en uso en
+  // los datos estructurados que lee Google.
   razonSocialLegible: "Soluciones de Ingeniería para la Industria y el Agro SAS",
   slogan: "Innovación que transforma",
   descriptor: "Agro · Industria · Sostenibilidad",

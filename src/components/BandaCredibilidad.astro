@@ -22,9 +22,9 @@ const PRUEBAS = [
 
 <section class="border-y border-line bg-surface py-10 md:py-12">
   <Contenedor>
-    <ul class="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
-      {PRUEBAS.map((p) => (
-        <li class="flex items-start gap-4">
+    <ul class="reveal-stagger grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+      {PRUEBAS.map((p, i) => (
+        <li class="reveal flex items-start gap-4" style={`--i:${i}`}>
           <span
             class="grid h-11 w-11 flex-none place-items-center rounded-sm border border-line
                    bg-green-100 text-green-800 [&_svg]:h-5 [&_svg]:w-5"

@@ -101,6 +101,25 @@
   50%      { transform: translateY(26px); }
 }
 
+/* Vaivén suave, ±6px: el mismo del `FloatingCard` de radar-digital. El
+   `float` de arriba (26px) es para las manchas grandes del fondo, demasiado
+   amplio para una tarjeta. */
+@keyframes flotar-suave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* Barrido de brillo, del `ShineOverlay` de radar-digital. Allí es motion/react
+   con `repeat: Infinity, repeatDelay: 4`; aquí no hace falta JS, pero CSS no
+   tiene `repeatDelay`, así que la pausa se mete DENTRO del keyframe: el
+   barrido ocupa el primer 14% del ciclo (0.65s de 4.65s) y el resto el
+   elemento se queda fuera de cuadro, quieto. */
+@keyframes brillo {
+  0%        { transform: translateX(-150%) skewX(-12deg); }
+  14%       { transform: translateX(150%)  skewX(-12deg); }
+  100%      { transform: translateX(150%)  skewX(-12deg); }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -162,6 +181,38 @@
   }
   .reveal.in { opacity: 1; transform: translateY(0); }
   .reveal-stagger > * { transition-delay: calc(var(--i, 0) * 90ms); }
+
+  /* Vaivén vertical continuo, calcado del `FloatingCard` de radar-digital
+     (±6px, 5s, easeInOut). Es lo que allí evita que los bloques estáticos se
+     vean pegados al fondo. Se aplica a elementos decorativos, no a texto:
+     mover texto continuamente cansa la vista y estorba al leer. */
+  .vaiven {
+    animation: flotar-suave 5s ease-in-out infinite;
+  }
+  .vaiven-lento {
+    animation: flotar-suave 7s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  /* Barrido de brillo sobre un elemento. El `::after` va encima del contenido
+     pero sin capturar el ratón. */
+  .brillo {
+    position: relative;
+    overflow: hidden;
+  }
+  .brillo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgb(255 255 255 / 0.22) 50%,
+      transparent 100%
+    );
+    animation: brillo 4.65s ease-in-out infinite;
+  }
 
   /* Sin JS (o si falla), el contenido tiene que verse igual. */
   .no-js .reveal { opacity: 1; transform: none; }

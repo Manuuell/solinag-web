@@ -16,6 +16,7 @@
  */
 import { CORREO_VISIBLE, EMPRESA, SOCIAL, TELEFONO_VISIBLE } from "../data/sitio.js";
 import Icono from "./Icono.astro";
+import logoFooter from "../assets/logo-footer.svg?raw";
 
 const CONTACTO = [
   { icono: "ubicacion", texto: EMPRESA.direccion.completa },
@@ -45,20 +46,22 @@ const TITULO_COL =
       class="flex flex-col gap-9 md:flex-row md:items-center md:gap-0
              md:divide-x md:divide-white/12"
     >
-      {/* Marca. `logo-dark-bg.png` es el lockup completo —icono, "SOLINAG
-          SAS", eslogan y descriptor— ya en sus colores oficiales. A 132px de
-          alto el texto que trae horneado se vuelve legible por sí solo, así
-          que no hace falta reconstruirlo aparte con HTML: eso habría exigido
-          inventar un color para "SOLINAG" sobre fondo oscuro que este
-          proyecto no tiene decidido en ningún otro sitio. */}
-      <div class="md:flex-[1.1] md:pr-8">
-        <img
-          src="/assets/img/logo-dark-bg.png"
-          alt={`${EMPRESA.marca} — ${EMPRESA.slogan}`}
-          width="150"
-          height="132"
-          class="h-[132px] w-auto"
-        />
+      {/* Marca. `logo-footer.svg` es el lockup horizontal blanco+verde que
+          mandó Manuel (2026-08-26), copiado tal cual: ni un color ni una
+          coordenada tocados. Ya es la versión de fondo oscuro — el blanco da
+          15.87:1 sobre el azul del footer y el verde 8.16:1.
+
+          Se muestra entero, sin recortar el `viewBox` ni con overflow. Se
+          intentaron las dos cosas y ambas mutilan el logotipo: los <text> van
+          dentro de un <g> con `transform`, así que su bbox está en
+          coordenadas locales y no sirve para recortar; y el recorte por CSS
+          dejaba 8 de sus 18 elementos fuera del contenedor. Vale más el
+          margen sobrante que un logotipo cortado.
+
+          Va incrustado y no como <img> porque lleva <text> con Montserrat:
+          como imagen se renderiza aislado, sin las fuentes de la página. */}
+      <div class="md:flex-[1.1] md:pr-8 [&_svg]:block [&_svg]:h-auto [&_svg]:w-[300px] [&_svg]:max-w-full">
+        <Fragment set:html={logoFooter} />
       </div>
 
       <div class="md:flex-[1.3] md:px-8">
