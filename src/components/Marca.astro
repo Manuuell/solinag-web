@@ -1,20 +1,41 @@
 ---
-/** Logotipo + palabra "SOLINAG SAS". Va en el header y en el menú móvil. */
+/**
+ * Logotipo + palabra "SOLINAG SAS". Va en el header y en el menú móvil.
+ *
+ * `logo-header.svg` es el arte oficial (ícono + wordmark "SOLINAG" + "SAS"),
+ * del mismo paquete de marca que banner-solinag.svg y logo-footer.svg —
+ * reemplaza el ícono PNG + texto HTML aproximado que había antes.
+ *
+ * El lienzo nativo del archivo es 1920x641.38, pero el arte real (medido con
+ * getBBox()) solo ocupa una franja angosta arriba a la izquierda: sin
+ * recortar el viewBox, el logo saldría minúsculo dentro de su propio alto.
+ *   - Con "SAS": el arte va de x=101 a x=1836, y de y=174 a y=467.
+ *   - Sin "SAS": el wordmark solo, sin el texto pequeño, termina en x=1645.
+ * Los dos recortes de abajo son esas cajas + ~15px de aire por lado. Con el
+ * recorte angosto (mostrarSas=false), el texto "SAS" sigue en el archivo
+ * pero cae fuera del viewBox — el propio SVG lo recorta (comportamiento por
+ * defecto, sin tocar el marcado ni necesitar dos archivos).
+ */
+import { escoparClasesSvg } from "../utils/svg.js";
+import logoRaw from "../assets/logo-header.svg?raw";
+
 const { alturaLogo = 34, mostrarSas = true, class: clase = "" } = Astro.props;
+
+const viewBox = mostrarSas ? "86 159 1766 324" : "86 159 1575 324";
+const logo = escoparClasesSvg(logoRaw, "marca").replace(/viewBox="[^"]*"/, `viewBox="${viewBox}"`);
 ---
 
-<a href="/" class={`flex items-center gap-2.5 ${clase}`} aria-label="SOLINAG SAS — ir al inicio">
-  <img
-    src="/assets/img/logo-icon.png"
-    alt=""
-    width="34"
-    height="33"
-    style={`height:${alturaLogo}px`}
-    class="w-auto"
-  />
-  <span class="font-extrabold text-[16.5px] tracking-[-0.01em] text-blue-600">
-    SOLIN<span class="text-green-700">AG</span>{mostrarSas && (
-      <small class="text-[11px] font-bold text-muted"> SAS</small>
-    )}
-  </span>
+<a href="/" class={`flex items-center ${clase}`} aria-label="SOLINAG SAS — ir al inicio">
+  <span class="logo-svg" style={`height:${alturaLogo}px`} aria-hidden="true" set:html={logo} />
 </a>
+
+<style>
+  .logo-svg {
+    display: block;
+  }
+  .logo-svg :global(svg) {
+    height: 100%;
+    width: auto;
+    display: block;
+  }
+</style>
