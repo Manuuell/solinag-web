@@ -167,7 +167,15 @@ document.querySelectorAll("img").forEach((img) => {
      * reproducirse (autoplay bloqueado, o prefers-reduced-motion) esto no se
      * dispara y queda el póster, que es el comportamiento de siempre. */
     const escena = video.closest("section");
+    /* El cierre NO es un pestillo de ida: se pone y se quita según el estado
+     * real del video. Como pestillo daba un bug intermitente — el logotipo
+     * quedaba encima del video en marcha. Pasaba así: el clip termina, se pone
+     * la clase; más tarde el video vuelve a arrancar (Safari puede restaurar
+     * la página desde el bfcache con `currentTime` a cero, con lo que `ended`
+     * vuelve a ser false y los reintentos lo relanzan), y como nadie quitaba
+     * la clase, el logotipo se quedaba puesto sobre el taller reproduciéndose. */
     const cerrar = () => escena && escena.classList.add("hero-cierre-visible");
+    const reabrir = () => escena && escena.classList.remove("hero-cierre-visible");
 
     // Manda el observer. Arranca en true porque el hero ocupa la primera
     // pantalla y su primer callback todavía no ha llegado.
@@ -183,6 +191,9 @@ document.querySelectorAll("img").forEach((img) => {
         cerrar();
         return;
       }
+      // No ha terminado: si quedaba un cierre puesto de una vuelta anterior,
+      // hay que retirarlo antes de volver a dar al play.
+      reabrir();
       if (menosMovimiento.matches || !enPantalla) return;
       const intento = video.play();
       if (intento) intento.catch(() => {});
@@ -214,6 +225,11 @@ document.querySelectorAll("img").forEach((img) => {
 
     // El camino normal: el clip llega al final reproduciéndose.
     video.addEventListener("ended", cerrar);
+    // Y la garantía de que nunca convivan: en cuanto el video emite `playing`
+    // no puede haber un cierre encima, venga de donde venga ese play.
+    video.addEventListener("playing", () => {
+      if (!terminado()) reabrir();
+    });
     // Y la red para el caso sin evento descrito arriba: al pausarse, si resulta
     // que ya está terminado, el cierre entra igual.
     video.addEventListener("pause", () => {

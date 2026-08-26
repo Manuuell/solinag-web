@@ -218,9 +218,23 @@
 
   /* El video solo se retira donde hay relevo que lo sustituya. El mismo corte
      de 1280px que la capa del markup: por debajo, el arte pisaría el titular,
-     así que no entra y el video tiene que seguir mostrando su propio cierre. */
+     así que no entra y el video tiene que seguir mostrando su propio cierre.
+
+     `visibility` además de `opacity`, y no por gusto: los navegadores componen
+     el <video> en su propia capa y ahí las transiciones de opacidad son
+     terreno resbaladizo — si alguna se queda sin aplicar, el clip seguiría
+     visible bajo el logotipo, que es justo el fallo que se quiere evitar.
+     `visibility` no se interpola, salta; con el retardo igual al fundido, cae
+     justo cuando este termina y no lo corta. Si la opacidad funciona, esto no
+     se nota; si falla, el video desaparece igual. */
   @media (min-width: 1280px) {
-    .hero-cierre-visible [data-hero-video] { opacity: 0; }
+    .hero-cierre-visible [data-hero-video] {
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.9s var(--ease-out-soft),
+        visibility 0s linear 0.9s;
+    }
   }
 
   .scroll-progress {
