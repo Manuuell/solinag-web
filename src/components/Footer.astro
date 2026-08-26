@@ -113,29 +113,33 @@ const TITULO_COL =
       </span>
       <span>{EMPRESA.direccion.corta}</span>
 
-      {/* Créditos de desarrollo. El archivo que mandó Manuel tiene fondo
-          blanco sólido (sin canal alfa) y letras oscuras — invisible tal
-          cual sobre el azul del footer. La placa blanca lo resuelve sin
-          tocar el archivo: es el tratamiento estándar para un logo de
-          "hecho por" ajeno sobre fondo oscuro. */}
+      {/* Créditos de desarrollo. `sentralabs.png` es la variante del logo
+          pensada para fondo oscuro (texto blanco, fondo transparente) — ya
+          no hace falta la placa blanca que pedía la versión anterior de
+          fondo sólido. */}
       <a
         href="https://sentralabs.co"
         target="_blank"
         rel="noopener"
         aria-label="Sitio desarrollado por Sentra Labs — abre sentralabs.co"
-        class="flex items-center gap-2 text-white/50 transition-colors hover:text-white/85"
+        class="ml-auto flex items-center gap-2 text-white/50 transition-colors hover:text-white/85"
       >
         Desarrollado por
-        <span class="inline-flex items-center rounded-sm bg-white px-2.5 py-1.5">
-          <img
-            src="/assets/img/sentralabs.png"
-            alt="Sentra Labs"
-            width="300"
-            height="106"
-            class="h-[24px] w-auto"
-          />
-        </span>
+        <img
+          src="/assets/img/sentralabs.png"
+          alt="Sentra Labs"
+          width="1458"
+          height="513"
+          class="h-[30px] w-auto"
+        />
       </a>
     </div>
   </div>
+
+  {/* Reserva el alto del botón flotante de WhatsApp (22px de separación +
+      52px de botón) con el propio fondo del pie. El pie es siempre lo
+      último de cada página (ver Base.astro): al reservar aquí y no en el
+      body, el hueco queda pintado de azul oscuro en vez de dejar asomar el
+      gris claro del fondo de página debajo. */}
+  <div class="h-[calc(76px_+_env(safe-area-inset-bottom,0px))]" aria-hidden="true"></div>
 </footer>

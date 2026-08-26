@@ -272,13 +272,12 @@
     pointer-events: none;
   }
 
-  /* En móvil el botón de WhatsApp flota sobre el contenido: el body reserva su
-     alto (22px de separación + 52px de botón) para que el pie no quede tapado.
-     Antes aquí se reservaban 84px para una barra de navegación inferior que se
-     retiró — el menú hamburguesa ya cubre esos mismos destinos. */
-  @media (max-width: 720px) {
-    body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
-  }
+  /* El botón de WhatsApp flota sobre el contenido en cualquier ancho (es
+     `fixed` sin variantes responsive). Reservarle el alto en el `body`
+     dejaba asomar el gris claro de fondo de página bajo el pie —el body
+     no tiene el mismo azul oscuro que el footer—, así que la reserva va en
+     el pie (ver Footer.astro), que es siempre lo último de cada página y
+     pinta ese hueco con su propio fondo en vez de exponer el del body. */
 
   /* Cierre de marca del hero (ver el comentario del markup en index.astro).
      El video se desvanece para que su propio logotipo, borroso por la
