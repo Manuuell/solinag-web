@@ -60,12 +60,6 @@ const PORQUE = [
   { icono: "hoja", color: "text-green-700", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente." },
 ];
 
-const INSIGNIAS = [
-  { valor: "Agro", texto: "Soluciones agroindustriales" },
-  { valor: "Industria", texto: "Maquinaria y estructuras" },
-  { valor: "Sostenibilidad", texto: "Economía circular" },
-];
-
 const CHIPS_HERO = [
   { icono: "grafico", texto: "Ingeniería a medida" },
   { icono: "reloj", texto: "200–400 kg/h de capacidad" },
@@ -182,21 +176,13 @@ const CHIPS_HERO = [
       <div class="reveal-stagger max-w-[48rem]">
         {/* Sin logotipo aquí a propósito: el video ya cierra sobre él, y la
             cabecera lo lleva arriba. Repetirlo una tercera vez lo abarata. */}
-        <span
-          class="reveal inline-flex items-center gap-2.5 text-[12px] font-semibold
-                 tracking-[0.16em] text-green-500 uppercase"
-          style="--i:1"
-        >
-          <span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-          Agro · Industria · Sostenibilidad
-        </span>
 
         {/* La caja alta se hace con `uppercase`, no escribiendo el texto en
             mayúsculas: así el contenido real sigue siendo "Innovación que
             transforma" para Google y para los lectores de pantalla, que
             deletrean letra a letra lo que encuentran escrito en versales. */}
         <h1
-          class="reveal mt-7 text-[clamp(36px,6.6vw,86px)] leading-[0.98] tracking-[-0.02em]
+          class="reveal text-[clamp(36px,6.6vw,86px)] leading-[0.98] tracking-[-0.02em]
                  text-white uppercase"
           style="--i:2"
         >
@@ -235,22 +221,6 @@ const CHIPS_HERO = [
             Cotizar
           </a>
         </div>
-
-        {/* En móvil van apilados: a 375px, tres columnas dejan ~98px cada una
-            y "Sostenibilidad" no cabe — se salía de su celda y el
-            overflow-hidden de la sección la recortaba a media palabra. */}
-        <dl
-          class="reveal mt-12 grid max-w-lg grid-cols-1 gap-5 border-t border-white/12 pt-7
-                 sm:mt-16 sm:grid-cols-3 sm:gap-8 sm:pt-8"
-          style="--i:5"
-        >
-          {INSIGNIAS.map((i) => (
-            <div>
-              <dt class="text-[17px] font-bold text-white">{i.valor}</dt>
-              <dd class="mt-1 text-[12.5px] leading-snug text-white/45">{i.texto}</dd>
-            </div>
-          ))}
-        </dl>
       </div>
     </div>
   </section>

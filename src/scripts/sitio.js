@@ -12,14 +12,20 @@ import { WHATSAPP } from "../data/sitio.js";
 
 const hayHover = window.matchMedia("(hover: hover)").matches;
 
-/* Header: sombra y fondo más marcados al hacer scroll */
+/* Header: sombra y fondo más marcados al hacer scroll, y colapso de la
+ * franja superior. Un solo listener para las dos — mismo evento, mismo
+ * umbral de 8px — en vez de dos escuchando lo mismo por separado. */
 {
   const barra = document.querySelector("[data-header]");
+  const franja = document.querySelector("[data-franja]");
   if (barra) {
     const alScroll = () => {
+      const bajado = window.scrollY > 8;
       // Solo se revela el borde inferior: nada de cambiar fondo ni sombra.
-      barra.classList.toggle("border-line", window.scrollY > 8);
-      barra.classList.toggle("border-transparent", window.scrollY <= 8);
+      barra.classList.toggle("border-line", bajado);
+      barra.classList.toggle("border-transparent", !bajado);
+      // Simétrico a propósito: si se vuelve a subir hasta arriba, reaparece.
+      franja?.classList.toggle("franja-oculta", bajado);
     };
     alScroll();
     window.addEventListener("scroll", alScroll, { passive: true });

@@ -1,30 +1,35 @@
 ---
 /**
- * Pie de página. La columna "Soluciones" ya no repite los enlaces a mano: sale
- * del catálogo, así que un producto nuevo con ancla aparece aquí solo.
+ * Pie de página. Barra compacta de una fila — marca, contacto, redes —
+ * calcada de la maqueta que Manuel señaló (2026-08-25), en vez del footer
+ * de cuatro columnas que había antes.
+ *
+ * Se decidió a propósito quitar las columnas "Navegación" y "Soluciones":
+ * eran enlaces reales a páginas y categorías, y Manuel confirmó que quería
+ * el resultado compacto de la referencia aunque eso significara perderlos.
+ *
+ * Lo que SÍ se conserva pese a no estar en la referencia: la línea de
+ * copyright. Es texto legal (razón social, año), no un enlace de
+ * navegación — la decisión de quitar columnas no alcanza a esto, y
+ * retirar la única mención visible de la razón social del sitio sin que
+ * nadie lo pidiera es un paso peor de deshacer que dejarlo.
  */
-import { CORREO_VISIBLE, EMPRESA, NAV, SOCIAL, TELEFONO_VISIBLE, ruta } from "../data/sitio.js";
-import { PRODUCTOS } from "../data/productos.js";
+import { CORREO_VISIBLE, EMPRESA, SOCIAL, TELEFONO_VISIBLE } from "../data/sitio.js";
 import Icono from "./Icono.astro";
-
-const categorias = PRODUCTOS.filter((p) => p.ancla).map((p) => ({
-  href: ruta("soluciones", p.ancla),
-  texto: p.tag,
-}));
 
 const CONTACTO = [
   { icono: "ubicacion", texto: EMPRESA.direccion.completa },
   { icono: "telefono", texto: TELEFONO_VISIBLE },
   { icono: "correo", texto: CORREO_VISIBLE },
+  { icono: "web", texto: EMPRESA.url.replace(/^https?:\/\//, "") },
 ];
 
 const CONTENEDOR = "mx-auto w-full max-w-[1200px] px-6";
 const TITULO_COL =
-  "mb-[18px] text-[13px] uppercase tracking-[0.08em] text-white/50 font-extrabold";
-const ENLACE_COL = "text-[14.5px] text-white/82 transition-colors hover:text-green-500";
+  "mb-[14px] text-[12px] uppercase tracking-[0.08em] text-white/50 font-extrabold";
 ---
 
-<footer class="relative mt-30 overflow-hidden bg-blue-900 pt-18 pb-7 text-white/82">
+<footer class="relative overflow-hidden bg-blue-900 py-10 text-white/82">
   <!-- Halos de color del fondo -->
   <div
     class="pointer-events-none absolute inset-0"
@@ -35,76 +40,93 @@ const ENLACE_COL = "text-[14.5px] text-white/82 transition-colors hover:text-gre
   >
   </div>
 
-  <div class={`${CONTENEDOR} relative grid gap-8 md:gap-10 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1.1fr]`}>
-    <div class="col-span-full md:col-auto">
-      <img
-        src="/assets/img/logo-dark-bg.png"
-        alt={EMPRESA.marca}
-        width="89"
-        height="78"
-        class="mb-4 h-[78px] w-auto"
-      />
-      <p class="max-w-[34ch] text-[14.5px] text-white/60">
-        Soluciones de Ingeniería para la Industria y el Agro SAS. Innovación que transforma:
-        agro, industria y sostenibilidad.
-      </p>
-      <div class="mt-5 flex gap-2.5">
-        {SOCIAL.map((red) => (
-          <a
-            href={red.href}
-            target="_blank"
-            rel="noopener"
-            aria-label={red.nombre}
-            class="flex h-[38px] w-[38px] items-center justify-center rounded-full border
-                   border-white/12 bg-white/8 transition-[background-color,transform,color]
-                   duration-200 ease-spring hover:-translate-y-[3px] hover:bg-green-500
-                   hover:text-blue-900 [&_svg]:h-[17px] [&_svg]:w-[17px]"
-          >
-            <Icono nombre={red.id} />
-          </a>
-        ))}
+  <div class={`${CONTENEDOR} relative`}>
+    <div
+      class="flex flex-col gap-9 md:flex-row md:items-center md:gap-0
+             md:divide-x md:divide-white/12"
+    >
+      {/* Marca. `logo-dark-bg.png` es el lockup completo —icono, "SOLINAG
+          SAS", eslogan y descriptor— ya en sus colores oficiales. A 132px de
+          alto el texto que trae horneado se vuelve legible por sí solo, así
+          que no hace falta reconstruirlo aparte con HTML: eso habría exigido
+          inventar un color para "SOLINAG" sobre fondo oscuro que este
+          proyecto no tiene decidido en ningún otro sitio. */}
+      <div class="md:flex-[1.1] md:pr-8">
+        <img
+          src="/assets/img/logo-dark-bg.png"
+          alt={`${EMPRESA.marca} — ${EMPRESA.slogan}`}
+          width="150"
+          height="132"
+          class="h-[132px] w-auto"
+        />
+      </div>
+
+      <div class="md:flex-[1.3] md:px-8">
+        <h4 class={TITULO_COL}>Contacto</h4>
+        <ul class="flex flex-col gap-3">
+          {CONTACTO.map((c) => (
+            <li class="flex items-start gap-2.5 text-[14.5px]">
+              <Icono nombre={c.icono} class="mt-0.5 h-[17px] w-[17px] flex-none text-green-500" />
+              <span>{c.texto}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="md:flex-none md:pl-8">
+        <h4 class={TITULO_COL}>Síguenos en</h4>
+        <div class="flex gap-2.5">
+          {SOCIAL.map((red) => (
+            <a
+              href={red.href}
+              target="_blank"
+              rel="noopener"
+              aria-label={red.nombre}
+              class="flex h-[38px] w-[38px] items-center justify-center rounded-full border
+                     border-white/12 bg-white/8 transition-[background-color,transform,color]
+                     duration-200 ease-spring hover:-translate-y-[3px] hover:bg-green-500
+                     hover:text-blue-900 [&_svg]:h-[17px] [&_svg]:w-[17px]"
+            >
+              <Icono nombre={red.id} />
+            </a>
+          ))}
+        </div>
       </div>
     </div>
 
-    <div>
-      <h4 class={TITULO_COL}>Navegación</h4>
-      <ul class="flex flex-col gap-3">
-        {NAV.map((item) => (
-          <li><a href={item.href} class={ENLACE_COL}>{item.texto}</a></li>
-        ))}
-      </ul>
-    </div>
+    <div
+      class="relative mt-9 flex flex-wrap items-center justify-between gap-x-5 gap-y-3
+             border-t border-white/12 pt-6 text-[13px] text-white/50"
+    >
+      <span>
+        © {new Date().getFullYear()} {EMPRESA.marca} — {EMPRESA.razonSocialLegible}. Todos los
+        derechos reservados.
+      </span>
+      <span>{EMPRESA.direccion.corta}</span>
 
-    <div>
-      <h4 class={TITULO_COL}>Soluciones</h4>
-      <ul class="flex flex-col gap-3">
-        {categorias.map((c) => (
-          <li><a href={c.href} class={ENLACE_COL}>{c.texto}</a></li>
-        ))}
-      </ul>
+      {/* Créditos de desarrollo. El archivo que mandó Manuel tiene fondo
+          blanco sólido (sin canal alfa) y letras oscuras — invisible tal
+          cual sobre el azul del footer. La placa blanca lo resuelve sin
+          tocar el archivo: es el tratamiento estándar para un logo de
+          "hecho por" ajeno sobre fondo oscuro. */}
+      <a
+        href="https://sentralabs.co"
+        target="_blank"
+        rel="noopener"
+        aria-label="Sitio desarrollado por Sentra Labs — abre sentralabs.co"
+        class="flex items-center gap-2 text-white/50 transition-colors hover:text-white/85"
+      >
+        Desarrollado por
+        <span class="inline-flex items-center rounded-sm bg-white px-2.5 py-1.5">
+          <img
+            src="/assets/img/sentralabs.png"
+            alt="Sentra Labs"
+            width="300"
+            height="106"
+            class="h-[24px] w-auto"
+          />
+        </span>
+      </a>
     </div>
-
-    <div>
-      <h4 class={TITULO_COL}>Contacto</h4>
-      <ul class="flex flex-col gap-3">
-        {CONTACTO.map((c) => (
-          <li class="flex items-start gap-2.5 text-[14.5px]">
-            <Icono nombre={c.icono} class="mt-0.5 h-[17px] w-[17px] flex-none text-green-500" />
-            <span>{c.texto}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </div>
-
-  <div
-    class={`${CONTENEDOR} relative mt-14 flex flex-wrap items-center justify-between gap-2.5
-            border-t border-white/12 pt-6 text-[13px] text-white/50`}
-  >
-    <span>
-      © {new Date().getFullYear()} {EMPRESA.marca} — {EMPRESA.razonSocialLegible}. Todos los
-      derechos reservados.
-    </span>
-    <span>{EMPRESA.direccion.corta}</span>
   </div>
 </footer>
