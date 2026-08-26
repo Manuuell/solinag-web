@@ -149,19 +149,34 @@ const CHIPS_HERO = [
         y a 768px lo pisa por 114px. A 1280px ya sobran 66px de aire y a partir
         de ahí solo crece. Por debajo se deja el cierre del propio video, que
         es el comportamiento de siempre. */}
-    <div
-      class="pointer-events-none absolute inset-y-0 right-[5.5%] z-2 hidden items-center
-             justify-end min-[1280px]:flex"
+    {/* El relevo va sobre un lienzo del MISMO tamaño que el fotograma del
+        video (1078x720, aquí a 3x), con el logotipo compuesto exactamente en
+        las coordenadas que ocupa dentro del clip: x 57,9%-94,4%, y 23,3%-76,7%,
+        medidas sobre el último fotograma.
+
+        Por eso lleva `object-cover object-right`, las mismas clases que el
+        video: así el encuadre lo calcula el navegador con la misma regla, y
+        las dos capas coinciden en cualquier proporción de ventana. La versión
+        anterior colocaba el PNG con porcentajes del ancho y encajaba en
+        ventanas apaisadas, pero se desviaba hasta 168px en una ventana alta,
+        donde el video se recorta a lo ancho y su logotipo crece.
+
+        Prioridad de carga baja en vez de carga diferida: son 346 KB que no
+        deben competir con el video, pero la imagen SÍ está en el viewport y se
+        sabe que va a mostrarse, así que diferirla sería arriesgado — si no ha
+        cargado cuando el clip termina, el relevo se ve vacío. Con prioridad
+        baja se descarga igual, solo que sin estorbar al resto. */}
+    <img
+      src="/assets/img/hero-cierre.png"
+      alt=""
+      width="3234"
+      height="2160"
+      fetchpriority="low"
+      decoding="async"
+      class="hero-cierre pointer-events-none absolute inset-0 z-2 hidden h-full w-full
+             object-cover object-right min-[1280px]:block"
       aria-hidden="true"
-    >
-      <img
-        src="/assets/img/logo-dark-bg.png"
-        alt=""
-        width="1806"
-        height="1582"
-        class="hero-cierre h-auto w-[clamp(13rem,32vw,30rem)]"
-      />
-    </div>
+    />
 
     <div class="relative z-2 mx-auto w-full max-w-[1400px]">
       <div class="reveal-stagger max-w-[48rem]">
