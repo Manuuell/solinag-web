@@ -48,18 +48,6 @@ const EJES = [
   },
 ];
 
-// Los cuatro porqués. Igual que en los EJES, `color` es la clase del icono:
-// azul para lo que se diseña y se fabrica, verde para lo que innova y sostiene.
-// El verde es green-700 y no el corporativo green-500 porque estos iconos van
-// sobre fondo claro, donde green-500 da 1.4:1 y desaparece; a un icono WCAG le
-// pide 3:1, que es justo lo que cubre green-700.
-const PORQUE = [
-  { icono: "llave", color: "text-blue-600", titulo: "Ingeniería", texto: "Diseñamos soluciones a medida para tu necesidad." },
-  { icono: "fabrica", color: "text-blue-600", titulo: "Fabricación", texto: "Transformamos el diseño en equipos reales." },
-  { icono: "bombilla", color: "text-green-700", titulo: "Innovación", texto: "Aplicamos tecnología y mejoramos procesos." },
-  { icono: "hoja", color: "text-green-700", titulo: "Sostenibilidad", texto: "Comprometidos con el medio ambiente." },
-];
-
 const CHIPS_HERO = [
   { icono: "grafico", texto: "Ingeniería a medida" },
   { icono: "reloj", texto: "200–400 kg/h de capacidad" },
@@ -265,62 +253,6 @@ const CHIPS_HERO = [
             <p class="mx-auto max-w-[34ch] text-[14.5px] text-ink-soft">{e.texto}</p>
           </div>
         ))}
-      </div>
-    </Contenedor>
-  </Seccion>
-
-  {/* "¿Por qué SOLINAG?" sigue el mismo material de marca que los EJES de
-      arriba: columnas separadas por línea, sin tarjetas y con el icono
-      desnudo — fuera la cápsula redonda que llevaba antes.
-
-      Estaba sobre una banda azul oscuro; pasa a fondo claro, que es el uso
-      preferente del manual. Para que no se funda con las dos secciones claras
-      que la rodean, el bloque va en una tarjeta blanca sobre el gris de
-      página: separa sin recurrir otra vez al oscuro. */}
-  <Seccion>
-    <Contenedor>
-      <div class="reveal rounded-lg border border-line bg-surface px-6 py-14 md:px-10 md:py-16">
-        <div class="mb-12 text-center">
-          <h2 class="text-[clamp(22px,3vw,32px)] font-extrabold tracking-[0.06em] text-blue-600 uppercase">
-            ¿Por qué SOLINAG?
-          </h2>
-          {/* La regla corta bajo el título, del material de marca. Es
-              decorativa, pero green-500 sobre blanco no se ve: green-600 la
-              deja visible sin salirse de la escala del verde corporativo. */}
-          <span
-            class="mx-auto mt-5 block h-[3px] w-14 rounded-full bg-green-600"
-            aria-hidden="true"
-          ></span>
-          <p class="mx-auto mt-5 max-w-[46ch] text-[15.5px] text-ink-soft">
-            Un equipo de ingeniería a tu lado
-          </p>
-        </div>
-
-        {/* Los separadores solo entran en la fila de cuatro: con dos columnas
-            el `divide-x` le pintaría un borde suelto al primero de la segunda
-            fila, y apilado no significaría nada. */}
-        <div
-          class="reveal-stagger grid gap-12 sm:grid-cols-2 sm:gap-y-14
-                 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-line"
-        >
-          {PORQUE.map((p, i) => (
-            <div class="reveal px-6 text-center" style={`--i:${i}`}>
-              <div
-                class:list={[
-                  "mb-6 transition-transform duration-500 ease-spring hover:scale-105",
-                  "[&_svg]:mx-auto [&_svg]:h-12 [&_svg]:w-12",
-                  p.color,
-                ]}
-              >
-                <Icono nombre={p.icono} />
-              </div>
-              <h3 class="mb-2.5 text-[15px] font-extrabold tracking-[0.08em] text-blue-900 uppercase">
-                {p.titulo}
-              </h3>
-              <p class="mx-auto max-w-[24ch] text-[14px] text-ink-soft">{p.texto}</p>
-            </div>
-          ))}
-        </div>
       </div>
     </Contenedor>
   </Seccion>
