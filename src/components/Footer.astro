@@ -9,10 +9,11 @@
  * el resultado compacto de la referencia aunque eso significara perderlos.
  *
  * Lo que SÍ se conserva pese a no estar en la referencia: la línea de
- * copyright. Es texto legal (razón social, año), no un enlace de
- * navegación — la decisión de quitar columnas no alcanza a esto, y
- * retirar la única mención visible de la razón social del sitio sin que
- * nadie lo pidiera es un paso peor de deshacer que dejarlo.
+ * copyright. Es texto legal (marca y año), no un enlace de navegación — la
+ * decisión de quitar columnas no alcanza a esto. Desde 2026-08-26 lleva la
+ * marca ("SOLINAG SAS") y no la razón social completa: Manuel pidió
+ * acortarla. La razón social sigue publicada en los datos estructurados que
+ * lee Google (ver Base.astro).
  */
 import { CORREO_VISIBLE, EMPRESA, SOCIAL, TELEFONO_VISIBLE } from "../data/sitio.js";
 import Icono from "./Icono.astro";
@@ -33,10 +34,10 @@ const CONTACTO = [
 
 const CONTENEDOR = "mx-auto w-full max-w-[1200px] px-6";
 const TITULO_COL =
-  "mb-[14px] text-[12px] uppercase tracking-[0.08em] text-white/50 font-extrabold";
+  "mb-[10px] text-[12px] uppercase tracking-[0.08em] text-white/50 font-extrabold";
 ---
 
-<footer class="relative overflow-hidden bg-blue-900 py-10 text-white/82">
+<footer class="relative overflow-hidden bg-blue-900 pt-6 text-white/82">
   <!-- Halos de color del fondo -->
   <div
     class="pointer-events-none absolute inset-0"
@@ -72,10 +73,10 @@ const TITULO_COL =
 
       <div class="md:flex-[1.3] md:px-8">
         <h4 class={TITULO_COL}>Contacto</h4>
-        <ul class="flex flex-col gap-3">
+        <ul class="flex flex-col gap-2">
           {CONTACTO.map((c) => (
-            <li class="flex items-start gap-2.5 text-[14.5px]">
-              <Icono nombre={c.icono} class="mt-0.5 h-[17px] w-[17px] flex-none text-green-500" />
+            <li class="flex items-start gap-2.5 text-[14.5px] leading-[1.3]">
+              <Icono nombre={c.icono} class="mt-px h-[17px] w-[17px] flex-none text-green-500" />
               <span>{c.texto}</span>
             </li>
           ))}
@@ -104,13 +105,10 @@ const TITULO_COL =
     </div>
 
     <div
-      class="relative mt-9 flex flex-wrap items-center justify-between gap-x-5 gap-y-3
-             border-t border-white/12 pt-6 text-[13px] text-white/50"
+      class="relative mt-6 flex flex-wrap items-center justify-between gap-x-5 gap-y-3
+             border-t border-white/12 pt-4 text-[13px] text-white/50"
     >
-      <span>
-        © {new Date().getFullYear()} {EMPRESA.marca} — {EMPRESA.razonSocialLegible}. Todos los
-        derechos reservados.
-      </span>
+      <span>© {new Date().getFullYear()} {EMPRESA.marca}. Todos los derechos reservados.</span>
       <span>{EMPRESA.direccion.corta}</span>
 
       {/* Créditos de desarrollo. `sentralabs.png` es la variante del logo
@@ -140,6 +138,12 @@ const TITULO_COL =
       52px de botón) con el propio fondo del pie. El pie es siempre lo
       último de cada página (ver Base.astro): al reservar aquí y no en el
       body, el hueco queda pintado de azul oscuro en vez de dejar asomar el
-      gris claro del fondo de página debajo. */}
+      gris claro del fondo de página debajo.
+
+      Esta reserva ES el espacio inferior del pie: por eso el <footer> lleva
+      `pt-6` y ningún `pb`. Antes llevaba `py-10`, así que los 76px se
+      sumaban a 40px de relleno y dejaban 116px de azul vacío bajo el
+      copyright (2026-08-26: Manuel pidió acortar el pie). Si algún día se
+      le devuelve un `pb`, descontarlo de aquí. */}
   <div class="h-[calc(76px_+_env(safe-area-inset-bottom,0px))]" aria-hidden="true"></div>
 </footer>
