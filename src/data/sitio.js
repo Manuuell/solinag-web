@@ -42,6 +42,10 @@ export const EMPRESA = {
   slogan: "Innovación que transforma",
   descriptor: "Agro · Industria · Sostenibilidad",
   url: "https://www.solinag.com.co",
+  // Año de fundación, confirmado directamente (2026-08-26). No estaba
+  // disponible cuando se armó BandaCredibilidad -- de ahí que esa banda evite
+  // a propósito cifras de trayectoria.
+  fundacion: 2017,
 
   // Provisionales: son los valores mejor corroborados, pero sin confirmar.
   // Solo se muestran en pantalla si CONTACTO_VERIFICADO es true.

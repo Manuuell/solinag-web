@@ -8,8 +8,35 @@ import Boton from "../components/Boton.astro";
 import Icono from "../components/Icono.astro";
 import BandaCredibilidad from "../components/BandaCredibilidad.astro";
 import TarjetaVistazo from "../components/TarjetaVistazo.astro";
-import { ruta } from "../data/sitio.js";
+import { EMPRESA, ruta } from "../data/sitio.js";
 import { PRODUCTOS } from "../data/productos.js";
+import { escoparClasesSvg } from "../utils/svg.js";
+import logoSelloRaw from "../assets/logo-footer.svg?raw";
+
+// El sello de "¿Por qué nosotros?" reutiliza logo-footer.svg -- mismo
+// archivo del pie de página, ya en blanco+verde para fondo oscuro -- pero
+// solo con el ícono + "SOLINAG SAS", sin el eslogan de abajo.
+//
+// Recortar el viewBox NO alcanza: el eslogan cae dentro del mismo rectángulo
+// que el ícono (medido con getBBox(), el ícono por sí solo ya ocupa esa
+// altura; el eslogan queda geométricamente adentro, no debajo). Por eso se
+// quitan del propio marcado las dos líneas de texto y la raya divisoria
+// -- únicos usos de cls-1, cls-3 y cls-9 en este archivo -- y LUEGO se
+// recorta el viewBox a lo que queda: la unión de ícono (x:103-498) y
+// wordmark+SAS (x:592-1740), y:119-523.
+//
+// Prefijo de escopado distinto al de Footer.astro ("sello" vs
+// "logo-footer"): es el mismo archivo incrustado dos veces en la página, y
+// cada incrustación necesita sus propias clases (ver utils/svg.js).
+const SELLO_VIEWBOX = "103 119 1637 404";
+const logoSelloSinEslogan = logoSelloRaw
+  .replace(/<text class="cls-1"[\s\S]*?<\/text>/, "")
+  .replace(/<text class="cls-3"[\s\S]*?<\/text>/, "")
+  .replace(/<line class="cls-9"[^>]*\/>/, "");
+const logoSello = escoparClasesSvg(logoSelloSinEslogan, "sello").replace(
+  /viewBox="[^"]*"/,
+  `viewBox="${SELLO_VIEWBOX}"`
+);
 
 // El vistazo del inicio sale del catálogo: cuatro productos con foto real,
 // en vez de las tarjetas de icono genérico que había antes.
@@ -45,6 +72,23 @@ const EJES = [
     color: "text-green-700",
     titulo: "Sostenibilidad",
     texto: "Tecnología para reciclaje, aprovechamiento de recursos y economía circular con impacto ambiental positivo.",
+  },
+];
+
+// "¿Por qué nosotros?": reemplaza al bloque de pilares que se quitó de aquí
+// (ver commit e0e98f0) por repetir, palabra por palabra, "Lo que nos define"
+// en Nosotros. Estos dos puntos no se dicen en ningún otro lado del sitio —
+// a propósito, para no volver a duplicar contenido.
+const DIFERENCIADORES = [
+  {
+    icono: "proceso",
+    titulo: "Un solo equipo, de punta a punta",
+    texto: "Diseñamos, fabricamos, instalamos y damos mantenimiento con personal propio, sin subcontratar a terceros en el camino.",
+  },
+  {
+    icono: "fabrica",
+    titulo: "Fabricantes, no revendedores",
+    texto: "Cada equipo sale de nuestra planta en Turbaco. No importamos ni revendemos catálogo genérico de otros fabricantes.",
   },
 ];
 
@@ -253,6 +297,60 @@ const CHIPS_HERO = [
             <p class="mx-auto max-w-[34ch] text-[14.5px] text-ink-soft">{e.texto}</p>
           </div>
         ))}
+      </div>
+    </Contenedor>
+  </Seccion>
+
+  {/* "¿Por qué nosotros?" reemplaza el bloque de pilares duplicado que
+      vivía aquí. Estructura distinta a propósito -- un sello con el año de
+      fundación más una lista de dos puntos con ícono a la izquierda -- para
+      no repetir el patrón de columnas con ícono arriba que ya usan los EJES
+      justo encima. */}
+  <Seccion>
+    <Contenedor>
+      <div class="reveal rounded-lg border border-line bg-surface px-6 py-14 md:px-10 md:py-16">
+        <CabeceraSeccion
+          centrada
+          antetitulo="¿Por qué nosotros?"
+          titulo="Ingeniería y fabricación propias, sin intermediarios"
+        />
+
+        <div class="reveal-stagger grid items-center gap-10 lg:grid-cols-[auto_1fr]">
+          {/* El sello. Fondo oscuro y borde verde a propósito: es el único
+              elemento oscuro de una sección clara, así que concentra la
+              atención en el dato que de verdad diferencia -- los años de
+              trayectoria -- en vez de competir con los dos puntos de al
+              lado. */}
+          <div
+            class="reveal mx-auto flex h-44 w-44 flex-none flex-col items-center justify-center
+                   rounded-full border-4 border-green-500 bg-blue-900 text-center text-white shadow-blue"
+            style="--i:0"
+          >
+            {/* El logotipo real (ícono + "SOLINAG SAS") arriba, como firma del
+                sello: ya viene en blanco+verde, así que no hace falta ningún
+                color de más para que se vea bien sobre el azul oscuro. */}
+            <span class="mb-2 block w-[132px] [&>svg]:block [&>svg]:h-auto [&>svg]:w-full" set:html={logoSello} />
+            <span class="text-[11px] font-bold tracking-[0.14em] text-white/60 uppercase">Desde</span>
+            <span class="text-[38px] leading-none font-extrabold">{EMPRESA.fundacion}</span>
+          </div>
+
+          <div class="grid gap-7 sm:grid-cols-2">
+            {DIFERENCIADORES.map((d, i) => (
+              <div class="reveal flex items-start gap-4" style={`--i:${i + 1}`}>
+                <span
+                  class="grid h-11 w-11 flex-none place-items-center rounded-sm border border-line
+                         bg-blue-100 text-blue-600 [&_svg]:h-5 [&_svg]:w-5"
+                >
+                  <Icono nombre={d.icono} />
+                </span>
+                <div>
+                  <h3 class="text-[16px] font-extrabold">{d.titulo}</h3>
+                  <p class="mt-1 text-[14px] text-ink-soft">{d.texto}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </Contenedor>
   </Seccion>
