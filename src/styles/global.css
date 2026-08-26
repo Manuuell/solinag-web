@@ -498,8 +498,8 @@
     padding: 6px;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
-    background: rgb(255 255 255 / 0.75);
-    backdrop-filter: blur(16px);
+    background: rgb(255 255 255 / 0.55);
+    backdrop-filter: blur(20px);
     box-shadow: var(--shadow-sm);
   }
   @media (min-width: 721px) {
@@ -508,6 +508,7 @@
       max-width: 100%;
       overflow-x: auto;
       border-radius: 999px;
+      background: rgb(255 255 255 / 0.75);
     }
   }
   .subnav a {
