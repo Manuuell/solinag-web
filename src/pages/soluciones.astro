@@ -41,7 +41,7 @@ const VENTAJAS = [
     entradilla="Diseñamos y fabricamos soluciones de ingeniería para resolver necesidades reales de nuestros clientes, integrando diseño, fabricación y tecnología."
   />
 
-  <div class="sticky top-[70px] z-40 py-3.5 lg:top-[82px]">
+  <div class="pt-3.5 pb-2">
     <Contenedor>
       <nav class="subnav" aria-label="Categorías de soluciones" data-subnav>
         {categorias.map((c) => <a href={c.href}>{c.texto}</a>)}
@@ -49,13 +49,16 @@ const VENTAJAS = [
     </Contenedor>
   </div>
 
-  <Seccion compacta>
+  {/* pt-6 y no el py-16 parejo de Seccion: ya no es sticky, así que el hueco
+     de arriba solo tiene que separar de la barra de categorías, no de otra
+     sección — con py-16 completo quedaba un vacío de ~80px sin motivo. */}
+  <section class="relative pt-6 pb-16">
     <Contenedor>
       <div class="reveal-stagger grid gap-[22px] xl:grid-cols-2">
         {PRODUCTOS.map((p, i) => <TarjetaProducto producto={p} indice={i} />)}
       </div>
     </Contenedor>
-  </Seccion>
+  </section>
 
   <Seccion compacta>
     <Contenedor>
