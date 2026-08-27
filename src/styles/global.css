@@ -120,6 +120,29 @@
   100%      { transform: translateX(150%)  skewX(-12deg); }
 }
 
+/* Deriva de las luces ambientales del hero (ver .hero-aura).
+   Dos ritmos que no son múltiplos entre sí —23s y 31s— para que las dos luces
+   no vuelvan a coincidir en la misma posición y el vaivén no se lea como un
+   bucle corto. Además de moverse respiran: la deriva sola se lee como un
+   desplazamiento, y el cambio de intensidad es lo que la hace parecer luz.
+
+   Solo tocan `transform` y `opacity` -- las dos propiedades que el navegador
+   resuelve en la GPU--, así que el degradado se pinta una vez y no se vuelve a
+   repintar en cada fotograma.
+
+   No hace falta agrandar la capa para que el desplazamiento no destape un
+   borde: los degradados llegan a `transparent` bastante antes del límite del
+   elemento, así que lo que entra en cuadro al moverse ya es transparente. */
+@keyframes deriva-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1);       opacity: 0.82; }
+  50%      { transform: translate3d(4%, -3%, 0) scale(1.12); opacity: 1; }
+}
+
+@keyframes deriva-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.08);   opacity: 1; }
+  50%      { transform: translate3d(-5%, 4%, 0) scale(1);   opacity: 0.84; }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -264,7 +287,20 @@
     transition: opacity 0.9s var(--ease-out-soft);
   }
   .hero-cierre { opacity: 0; }
-  .hero-cierre-visible .hero-cierre { opacity: 1; }
+  /* Quieto sobre un fondo de un solo color, el logotipo se ve pegado -- es la
+     mitad de por qué la portada se veía plana al acabar el clip. Un vaivén de
+     ±6px (`flotar-suave`, el mismo del sistema) lo despega sin llamar la
+     atención: sobre un arte de ~500px de alto en pantalla es un 1%.
+
+     El retardo iguala al fundido de la regla de arriba, y no es cosmético:
+     hasta que este no termina, el arte tiene que estar EXACTAMENTE donde está
+     el logotipo del video (esa coincidencia es lo que hace invisible el
+     relevo), así que no puede empezar a moverse antes. */
+  .hero-cierre-visible .hero-cierre {
+    opacity: 1;
+    animation: flotar-suave 9s ease-in-out infinite;
+    animation-delay: 0.9s;
+  }
 
   /* El video solo se retira donde hay relevo que lo sustituya. El mismo corte
      de 1280px que la capa del markup: por debajo, el arte pisaría el titular,
@@ -285,6 +321,76 @@
         opacity 0.9s var(--ease-out-soft),
         visibility 0s linear 0.9s;
     }
+  }
+
+  /* Luces ambientales del hero.
+
+     El problema que resuelven: mientras el clip corre, el movimiento lo pone
+     él. Al terminar, a partir de 1280px el video se retira del todo (regla de
+     arriba) y lo que queda debajo es --color-blue-900 a secas -- un muro de un
+     solo color, con el logotipo y el texto pegados encima. Eso es lo que se ve
+     plano. Estas dos luces le devuelven profundidad y un movimiento lento.
+
+     Por eso van colgadas de .hero-cierre-visible y no siempre puestas: bajo el
+     video no se verían, y encenderlas antes solo gastaría GPU. La clase la
+     pone y la quita el JS según el estado real del video, así que si este
+     vuelve a arrancar (bfcache de Safari) las luces se apagan solas.
+
+     Van DESPUÉS del velo en el DOM, luego pintan encima de él, y antes del
+     logotipo y del texto, que quedan por delante. Medido el peor caso -- la
+     luz a plena intensidad justo detrás del texto, cosa que no llega a pasar
+     porque los centros caen fuera de la columna de texto -- sobre blue-900:
+       verde-500 @0.20   blanco 9.8:1 · verde-500 7.0:1
+       azul-400  @0.32   blanco 10.4:1
+     Los alfas de la tabla son los del pico del respiro (ver `deriva-a` y
+     `deriva-b`), o sea el peor momento del ciclo.
+     Con el video aún puesto (por debajo de 1280px) el velo ya garantiza lo
+     suyo contra un fotograma blanco y esto solo le suma color, no luz cruda.
+
+     Degradados y no `filter: blur()`: el desenfoque de una capa a pantalla
+     completa se repinta caro en cada fotograma y aquí no aporta nada que un
+     degradado con caída suave no dé ya. */
+  .hero-aura {
+    pointer-events: none;
+    opacity: 0;
+    /* Rápido al apagarse, lento al encenderse (ver la regla siguiente): si el
+       video se relanza, las luces tienen que quitarse de encima enseguida. */
+    transition: opacity 0.5s var(--ease-out-soft);
+  }
+  .hero-cierre-visible .hero-aura {
+    opacity: 1;
+    /* El retardo la hace florecer mientras el logotipo termina de entrar, en
+       vez de encenderse de golpe a la vez que él. */
+    transition: opacity 1.6s var(--ease-out-soft) 0.35s;
+  }
+
+  .hero-aura::before,
+  .hero-aura::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  /* Verde, abajo a la izquierda: el hueco que dejan los botones. */
+  .hero-aura::before {
+    background: radial-gradient(
+      46% 52% at 10% 88%,
+      rgb(137 243 54 / 0.20) 0%,
+      rgb(137 243 54 / 0.07) 44%,
+      transparent 70%
+    );
+    animation: deriva-a 23s ease-in-out infinite;
+  }
+  /* Azul, arriba a la derecha: detrás del logotipo, que es donde más se nota
+     el fondo vacío. Azul y no verde a propósito -- el logotipo lleva verde y
+     una luz verde detrás se lo comería. */
+  .hero-aura::after {
+    background: radial-gradient(
+      52% 58% at 82% 8%,
+      rgb(91 123 219 / 0.32) 0%,
+      rgb(91 123 219 / 0.12) 45%,
+      transparent 74%
+    );
+    animation: deriva-b 31s ease-in-out infinite;
   }
 
   .scroll-progress {

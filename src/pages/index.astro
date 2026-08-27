@@ -156,6 +156,13 @@ const CHIPS_HERO = [
 
     <div class="hero-veil absolute inset-0 z-1" aria-hidden="true"></div>
 
+    {/* Luces ambientales, encima del velo y detrás del logotipo y del texto.
+        Están apagadas mientras el clip corre y se encienden solas al acabar
+        —el CSS las cuelga de .hero-cierre-visible—, que es cuando el fondo se
+        queda en azul plano y la portada se veía muerta. Ver .hero-aura en
+        global.css, donde están las cuentas de contraste. */}
+    <div class="hero-aura absolute inset-0 z-1" aria-hidden="true"></div>
+
     {/* Cierre de marca, solo al terminar el clip.
 
         El logotipo con el que cierra el video ocupa 395x385 px del propio
