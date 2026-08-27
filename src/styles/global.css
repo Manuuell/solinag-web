@@ -231,32 +231,6 @@
   }
   .widget-stack .w-item.show { opacity: 1; transform: translateY(0); }
 
-  /* Colapso de la franja superior al bajar. `max-height` y no `height`: es
-     lo único que anima con contenido de alto variable sin conocerlo de
-     antemano. 200px es un techo de sobra sobre los ~191px reales (el banner
-     es 1920x190.81 a su ancho máximo) — `overflow: hidden` recorta el
-     resto, solo importa que el techo alcance. */
-  .franja-superior {
-    max-height: 200px;
-    transition: max-height 0.35s var(--ease-out-soft), opacity 0.25s ease;
-  }
-  .franja-superior.franja-oculta {
-    max-height: 0;
-    opacity: 0;
-  }
-  /* El SVG del banner no trae ancho/alto propio, así que sin esto ocuparía
-     su tamaño intrínseco por defecto (300x150 en la mayoría de motores) en
-     vez de llenar la franja. El `max-width` evita que un monitor ultra ancho
-     lo estire más allá de su resolución nativa — a partir de 1920px se queda
-     fijo y centrado en vez de agrandarse sin límite. */
-  .franja-superior svg {
-    display: block;
-    width: 100%;
-    max-width: 1920px;
-    height: auto;
-    margin: 0 auto;
-  }
-
   /* Superficie traslúcida reutilizable (header, tab bar, tarjetas del hero). */
   .glass {
     background: rgb(255 255 255 / 0.82);
