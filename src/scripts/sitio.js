@@ -71,7 +71,16 @@ const hayHover = window.matchMedia("(hover: hover)").matches;
 {
   const irAlAncla = () => {
     if (!location.hash || location.hash.length < 2) return;
-    const destino = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    let id;
+    try {
+      // Un hash con un "%" mal formado (p. ej. "#100%") hace que
+      // decodeURIComponent lance URIError — no es un caso hipotético, ya que
+      // el propio hash llega tal cual de la URL, sin validar.
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch {
+      return;
+    }
+    const destino = document.getElementById(id);
     if (!destino) return;
     // "auto" y no "smooth": es una corrección de posición, no una animación.
     destino.scrollIntoView({ behavior: "auto", block: "start" });
