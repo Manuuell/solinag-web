@@ -54,6 +54,12 @@ const VENTAJAS = [
      sección — con py-16 completo quedaba un vacío de ~80px sin motivo. */}
   <section class="relative pt-6 pb-16">
     <Contenedor>
+      {/* sr-only: el h1 de arriba (HeroPagina) presenta la página, pero antes
+          de esta grilla no hay ningún h2 -- las tarjetas de producto arrancan
+          directo en h3, saltándose un nivel. Este título le da a la
+          jerarquía de encabezados el escalón que le falta sin agregar un
+          título visible que el diseño no pide. */}
+      <h2 class="sr-only">Catálogo de maquinaria y soluciones de ingeniería</h2>
       <div class="reveal-stagger grid gap-[22px] xl:grid-cols-2">
         {PRODUCTOS.map((p, i) => <TarjetaProducto producto={p} indice={i} />)}
       </div>
