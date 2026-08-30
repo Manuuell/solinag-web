@@ -45,7 +45,7 @@ const indiceInicial = rotarGaleria ? Math.max(p.galeria.findIndex((g) => g.src =
         {p.galeria.map((g, i) => (
           <img
             src={g.src}
-            alt=""
+            alt={g.alt}
             loading="lazy"
             data-galeria-img
             class:list={[
