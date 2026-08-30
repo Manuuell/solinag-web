@@ -116,6 +116,18 @@ const NECESIDADES = [
           </div>
         ))}
       </div>
+
+      <div class="reveal mt-9 text-center">
+        <a
+          href={ruta("soluciones")}
+          class="group inline-flex items-center gap-1.5 font-bold text-blue-600
+                 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform
+                 hover:[&_svg]:translate-x-1"
+        >
+          Ver nuestras soluciones
+          <Icono nombre="flecha" />
+        </a>
+      </div>
     </Contenedor>
   </Seccion>
 
@@ -175,6 +187,15 @@ const NECESIDADES = [
           Un equipo propio de ingeniería, fabricación y campo trabaja cada solución de principio
           a fin, desde el primer plano hasta la puesta en marcha en tu operación.
         </p>
+        <a
+          href={ruta("proyectos")}
+          class="group mt-4 inline-flex items-center gap-1.5 font-bold text-blue-600
+                 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:transition-transform
+                 hover:[&_svg]:translate-x-1"
+        >
+          Ver proyectos destacados
+          <Icono nombre="flecha" />
+        </a>
         <img
           src="/assets/img/prod-ingeniero.jpg"
           alt="Ingeniero de SOLINAG en planta de reciclaje"
