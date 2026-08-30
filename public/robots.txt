@@ -1,4 +1,33 @@
-User-agent: *
+﻿User-agent: *
+Allow: /
+
+# Rastreo explícito para buscadores de IA generativa: sin esto, algunos
+# asistentes (Perplexity, ChatGPT con navegación) tratan la ausencia de
+# una regla propia como señal de exclusión, aunque el wildcard de arriba
+# ya los permita.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: FirecrawlAgent
+Allow: /
+
+User-agent: AndiBot
+Allow: /
+
+User-agent: ExaBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://www.solinag.com.co/sitemap.xml
+LLMs: https://www.solinag.com.co/llms.txt
