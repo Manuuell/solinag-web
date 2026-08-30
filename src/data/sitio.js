@@ -98,13 +98,9 @@ export function whatsapp(mensaje) {
 /**
  * URL interna de una página.
  *
- * En producción las páginas son /soluciones.html — así están indexadas, así
- * las lista sitemap.xml y a eso apuntan los canonical, de modo que los enlaces
- * internos deben coincidir. Pero el dev server de Astro registra la ruta como
- * /soluciones y da 404 con la extensión, así que en desarrollo se omite.
- *
- * El nginx del VPS resuelve las dos formas (try_files), o sea que ninguna de
- * las dos se rompe; esto solo mantiene la coherencia con el canonical.
+ * Con el build en formato "directory" (astro.config.mjs), Astro sirve cada
+ * página en /pagina/ — misma forma en desarrollo y en producción, así que ya
+ * no hace falta distinguir entre los dos.
  *
  * @param {string} pagina Nombre del archivo sin extensión; "" o "inicio" = raíz.
  * @param {string} [ancla] Fragmento opcional, sin la almohadilla.
@@ -112,14 +108,14 @@ export function whatsapp(mensaje) {
 export function ruta(pagina, ancla) {
   const fragmento = ancla ? `#${ancla}` : "";
   if (!pagina || pagina === "inicio") return `/${fragmento}`;
-  return import.meta.env.DEV ? `/${pagina}${fragmento}` : `/${pagina}.html${fragmento}`;
+  return `/${pagina}/${fragmento}`;
 }
 
 /**
  * Enlace al formulario de contacto.
  *
  * Si ya estás en Nosotros devuelve solo "#contacto": un enlace a
- * "/nosotros.html#contacto" desde "/nosotros" es otra URL para el navegador,
+ * "/nosotros/#contacto" desde "/nosotros/" es otra URL para el navegador,
  * así que recarga la página entera en vez de desplazarse dentro de ella.
  *
  * @param {string} [actual] Identificador de la página que se está viendo.

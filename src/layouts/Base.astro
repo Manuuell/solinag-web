@@ -26,12 +26,7 @@ const {
 
 // Astro.site + la ruta actual: los canonical siguen apuntando a producción,
 // como ya lo hacían las cuatro páginas del sitio original.
-//
-// Con build.format "file" la portada se genera como /index.html, pero su
-// canonical debe ser la raíz — es lo que estaba indexado y lo que lista
-// sitemap.xml. Sin esta normalización se declararía una URL distinta.
-const rutaCanonica = Astro.url.pathname.replace(/(^|\/)index\.html$/, "/");
-const canonical = new URL(rutaCanonica, Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImagen = new URL("/assets/img/logo-full.png", Astro.site).href;
 
 const LD = {

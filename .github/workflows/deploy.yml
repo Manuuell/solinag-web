@@ -38,11 +38,21 @@ jobs:
 
       # Si el build se vacía o falla a medias, sin esta comprobación el rsync
       # de más abajo borraría el sitio en producción con --delete.
+      #
+      # Formato "directory": index y 404 quedan planos (dist/index.html,
+      # dist/404.html -- Astro siempre genera el 404 así, sin carpeta propia);
+      # el resto vive en dist/pagina/index.html.
       - name: Verificar el build
         run: |
-          for pagina in index soluciones proyectos nosotros 404; do
+          for pagina in index 404; do
             if [ ! -s "dist/$pagina.html" ]; then
               echo "::error::Falta dist/$pagina.html o está vacío. No se despliega."
+              exit 1
+            fi
+          done
+          for pagina in soluciones proyectos nosotros; do
+            if [ ! -s "dist/$pagina/index.html" ]; then
+              echo "::error::Falta dist/$pagina/index.html o está vacío. No se despliega."
               exit 1
             fi
           done
@@ -89,7 +99,7 @@ jobs:
           curl -fsS --max-time 20 -o /dev/null -w "Inicio:     HTTP %{http_code}\n" \
             https://solinag.duckdns.org/
           curl -fsS --max-time 20 -o /dev/null -w "Soluciones: HTTP %{http_code}\n" \
-            https://solinag.duckdns.org/soluciones.html
+            https://solinag.duckdns.org/soluciones/
 
           # El CSS ya no vive en una ruta fija: Astro le pone un hash al nombre.
           # Se extrae del HTML y se comprueba que realmente se sirva, que es lo

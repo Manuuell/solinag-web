@@ -41,19 +41,18 @@ Ninguno de esos cambios requiere tocar más de un archivo.
 
 ### 1. Los enlaces internos se arman con `ruta()`
 
-No escribas `/soluciones.html` a mano. Usá el helper de `src/data/sitio.js`:
+No escribas `/soluciones/` a mano. Usá el helper de `src/data/sitio.js`:
 
 ```js
 import { ruta } from "../data/sitio.js";
 
-ruta("soluciones")             // /soluciones.html   (o /soluciones en dev)
-ruta("nosotros", "contacto")   // /nosotros.html#contacto
+ruta("soluciones")             // /soluciones/
+ruta("nosotros", "contacto")   // /nosotros/#contacto
 ruta("inicio")                 // /
 ```
 
-En producción las páginas son `.html` porque así están indexadas y así las
-lista `sitemap.xml`; el dev server de Astro usa rutas sin extensión. El helper
-resuelve esa diferencia sola.
+Misma forma en desarrollo y en producción (formato "directory" de Astro, ver
+`astro.config.mjs`): no hace falta que el helper distinga entre los dos.
 
 ### 2. El WhatsApp también tiene helper
 
